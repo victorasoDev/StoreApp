@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import uwu.victoraso.storeapp.ui.ProductDetail
 import uwu.victoraso.storeapp.ui.components.StoreAppScaffold
 import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.HomeSections
@@ -63,11 +64,11 @@ private fun NavGraphBuilder.storeAppNavGraph(
         addHomeGraph(onProductSelected)
     }
     composable(
-        route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/${MainDestinations.PRODUCT_ID_KEY}",
+        route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.PRODUCT_ID_KEY}}",
         arguments = listOf(navArgument(MainDestinations.PRODUCT_ID_KEY) { type = NavType.LongType })
     ) { navBackStackEntry ->
         val argument = requireNotNull(navBackStackEntry.arguments)
         val productId = argument.getLong(MainDestinations.PRODUCT_ID_KEY)
-        //TODO: ProductDetail(productId, upPress)
+        ProductDetail(productId, upPress)
     }
 }

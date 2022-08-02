@@ -198,37 +198,43 @@ private fun HighlightedProductItem(
                 .clickable(onClick = { onProductClick(product.id) })
                 .fillMaxSize()
         ) {
-            val gradientOffset = left - (scroll / 3f)
             Box(
                 modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
-                    .offsetGradientBackground(gradient, gradientWidth, gradientOffset)
+                    .height(160.dp)
+                    .fillMaxSize()
+            ) {
+                val gradientOffset = left - (scroll / 3f)
+                Box(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                        .offsetGradientBackground(gradient, gradientWidth, gradientOffset)
+                )
+                ProductImage(
+                    imageUrl = product.imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .align(Alignment.BottomCenter)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = product.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.h6,
+                color = StoreAppTheme.colors.textSecondary,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
-            ProductImage(
-                imageUrl = product.imageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(120.dp)
-                    .align(Alignment.CenterHorizontally) //TODO: Esto está distinto
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = product.tagline,
+                style = MaterialTheme.typography.body1,
+                color = StoreAppTheme.colors.textHelp,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = product.name,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.h6,
-            color = StoreAppTheme.colors.textSecondary,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = product.tagline,
-            style = MaterialTheme.typography.body1,
-            color = StoreAppTheme.colors.textHelp,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
     }
 }
 
