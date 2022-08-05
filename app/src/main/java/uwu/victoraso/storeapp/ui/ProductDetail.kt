@@ -27,10 +27,7 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
-import uwu.victoraso.storeapp.ui.components.ProductCollection
-import uwu.victoraso.storeapp.ui.components.ProductImage
-import uwu.victoraso.storeapp.ui.components.StoreAppDivider
-import uwu.victoraso.storeapp.ui.components.StoreAppSurface
+import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
@@ -61,7 +58,7 @@ fun ProductDetail(
         Header()
         Body(related, scroll)
         Title(product!!) { scroll.value }
-        Image(product.imageUrl) { scroll.value}
+        Image(product.imageUrl) { scroll.value }
         Up(upPress)
         CartBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
     }
@@ -272,7 +269,7 @@ private fun CollapsingImageLayout(
         val collapseFraction = collapseFractionProvider()
 
         val imageMaxSize = kotlin.math.min(ExpandedImageSize.roundToPx(), constraints.maxWidth)
-        val imageMinSize = kotlin.math.min(CollapsedImageSize.roundToPx(), constraints.minWidth)
+        val imageMinSize = kotlin.math.max(CollapsedImageSize.roundToPx(), constraints.minWidth)
         val imageWidth = lerp(imageMaxSize, imageMinSize, collapseFraction)
         val imagePlaceable = measurables[0].measure(Constraints.fixed(imageWidth, imageWidth))
 
@@ -304,8 +301,23 @@ private fun CartBottomBar(modifier: Modifier = Modifier) {
                     .then(HzPadding)
                     .heightIn(min = BottomBarHeight)
             ) {
-
+                QuantitySelector(
+                    count = count,
+                    decreaseItemCount = { if (count > 0) updateCount(count - 1) },
+                    increaseItemCount = { updateCount(count + 1) }
+                )
                 Spacer(modifier = Modifier.width(16.dp))
+                StoreAppButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(R.string.add_to_cart),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        maxLines = 1
+                    )
+                }
             }
 
         }
