@@ -1,12 +1,34 @@
 package uwu.victoraso.storeapp.ui.home.search
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -25,7 +47,7 @@ import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 fun Search(
     onProductClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    state: SearchState = RememberSearchState()
+    state: SearchState = rememberSearchState()
 ) {
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Column {
@@ -42,17 +64,21 @@ fun Search(
 
             LaunchedEffect(state.query.text) {
                 state.searching = true
-                state.searchResult = SearchRepo.search(state.query.text)
+                state.searchResults = SearchRepo.search(state.query.text)
                 state.searching = false
             }
             when (state.searchDisplay) {
                 SearchDisplay.Categories -> SearchCategories(state.categories)
-                    SearchDisplay.Suggestions -> SearchSuggestions(
-                        suggestions = state.suggestions,
-                        onSuggestionSelect = { suggestion -> state.query = TextFieldValue(suggestion) }
-                    )
-                    SearchDisplay.Results ->
-                    SearchDisplay.NoResults ->
+                SearchDisplay.Suggestions -> SearchSuggestions(
+                    suggestions = state.suggestions,
+                    onSuggestionSelect = { suggestion -> state.query = TextFieldValue(suggestion) }
+                )
+                SearchDisplay.Results -> SearchResults(
+                    state.searchResults,
+                    state.filters,
+                    onProductClick
+                )
+                SearchDisplay.NoResults -> NoResults(state.query.text)
             }
         }
     }
@@ -63,14 +89,14 @@ enum class SearchDisplay {
 }
 
 @Composable
-private fun RememberSearchState(
+private fun rememberSearchState(
     query: TextFieldValue = TextFieldValue(""),
     focused: Boolean = false,
     searching: Boolean = false,
     categories: List<SearchCategoryCollection> = SearchRepo.getCategories(),
     suggestions: List<SearchSuggestionGroup> = SearchRepo.getSuggestions(),
     filters: List<Filter> = ProductRepo.getFilters(),
-    searchResult: List<Product> = emptyList()
+    searchResults: List<Product> = emptyList()
 ): SearchState {
     return remember {
         SearchState(
@@ -80,7 +106,7 @@ private fun RememberSearchState(
             categories = categories,
             suggestions = suggestions,
             filters = filters,
-            searchResult = searchResult
+            searchResults = searchResults
         )
     }
 }
@@ -93,7 +119,7 @@ class SearchState(
     categories: List<SearchCategoryCollection>,
     suggestions: List<SearchSuggestionGroup>,
     filters: List<Filter>,
-    searchResult: List<Product>
+    searchResults: List<Product>
 ) {
     var query by mutableStateOf(query)
     var focused by mutableStateOf(focused)
@@ -101,12 +127,12 @@ class SearchState(
     var categories by mutableStateOf(categories)
     var suggestions by mutableStateOf(suggestions)
     var filters by mutableStateOf(filters)
-    var searchResult by mutableStateOf(searchResult)
+    var searchResults by mutableStateOf(searchResults)
     val searchDisplay: SearchDisplay
         get() = when {
             !focused && query.text.isEmpty() -> SearchDisplay.Categories
             focused && query.text.isEmpty() -> SearchDisplay.Suggestions
-            searchResult.isEmpty() -> SearchDisplay.NoResults
+            searchResults.isEmpty() -> SearchDisplay.NoResults
             else -> SearchDisplay.Results
         }
 }
@@ -130,7 +156,7 @@ private fun SearchBar(
             .height(56.dp)
             .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize()) {
             if (query.text.isEmpty()) {
                 SearchHint()
             }
@@ -144,8 +170,8 @@ private fun SearchBar(
                     IconButton(onClick = onClearQuery) {
                         Icon(
                             imageVector = mirroringBackIcon(),
-                            contentDescription = null,
-                            tint = StoreAppTheme.colors.iconPrimary
+                            tint = StoreAppTheme.colors.iconPrimary,
+                            contentDescription = null
                         )
                     }
                 }
@@ -166,7 +192,7 @@ private fun SearchBar(
                             .size(36.dp)
                     )
                 } else {
-                    Spacer(modifier = Modifier.width(IconSize))
+                    Spacer(Modifier.width(IconSize)) // balance arrow icon
                 }
             }
         }
@@ -185,12 +211,12 @@ private fun SearchHint() {
     ) {
         Icon(
             imageVector = Icons.Outlined.Search,
-            contentDescription = null,
-            tint = StoreAppTheme.colors.textHelp
+            tint = StoreAppTheme.colors.textHelp,
+            contentDescription = stringResource(R.string.label_search)
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(Modifier.width(8.dp))
         Text(
-            text = stringResource(id = R.string.search_storeapp),
+            text = stringResource(R.string.search_storeapp),
             color = StoreAppTheme.colors.textHelp
         )
     }
@@ -202,7 +228,7 @@ private fun SearchHint() {
 @Composable
 private fun SearchBarPreview() {
     StoreAppTheme {
-        StoreAppSurface {
+        StoreAppSurface() {
             SearchBar(
                 query = TextFieldValue(""),
                 onQueryChange = { },

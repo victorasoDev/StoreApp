@@ -1,4 +1,4 @@
-package uwu.victoraso.storeapp.ui
+package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
 import androidx.compose.foundation.*

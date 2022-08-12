@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import uwu.victoraso.storeapp.ui.ProductDetail
+import uwu.victoraso.storeapp.ui.productdetail.ProductDetail
 import uwu.victoraso.storeapp.ui.components.StoreAppScaffold
 import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.HomeSections

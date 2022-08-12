@@ -60,7 +60,11 @@ private fun SearchCategoryCollection(
                 else -> StoreAppTheme.colors.gradient2_3
             }
             collection.categories.forEach { category ->
-
+                SearchCategory(
+                    category = category,
+                    gradient = gradient,
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
         Spacer(modifier = Modifier.height(4.dp))

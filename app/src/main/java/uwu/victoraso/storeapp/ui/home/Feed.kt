@@ -86,6 +86,8 @@ private fun ProductCollectionList(
         ) + fadeIn(initialAlpha = 0.3f),
         exit = slideOutVertically() + shrinkHorizontally() + fadeOut()
     ) {
-//        FilterScreen()
+        FilterScreen(
+            onDismiss = { filtersVisible = false }
+        )
     }
 }
