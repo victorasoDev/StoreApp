@@ -9,6 +9,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
@@ -20,15 +22,21 @@ import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 @Composable
 fun Feed(
     onProductClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isRefreshing: Boolean,
+    refreshData: () -> Unit,
+    state: ProductListState
 ) {
     val productsCollection = remember { ProductRepo.getProducts() }
     val filters = remember { ProductRepo.getFilters() }
     Feed(
-        productsCollection,
-        filters,
-        onProductClick,
-        modifier
+        productCollections = productsCollection,
+        filters = filters,
+        onProductClick = onProductClick,
+        modifier = modifier,
+        isRefreshing = isRefreshing,
+        refreshData = refreshData,
+        state = state
     )
 }
 
@@ -37,12 +45,20 @@ private fun Feed(
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
     onProductClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isRefreshing: Boolean = false,
+    refreshData: () -> Unit,
+    state: ProductListState
 ) {
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
-        Box {
-            ProductCollectionList(productCollections = productCollections, filters = filters, onProductClick = onProductClick)
-            DestinationBar()
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+            onRefresh = refreshData
+        ) {
+            Box {
+                ProductCollectionList(productCollections = productCollections, filters = filters, onProductClick = onProductClick, state = state)
+                DestinationBar()
+            }
         }
     }
 }
@@ -52,7 +68,8 @@ private fun ProductCollectionList(
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
     onProductClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: ProductListState
 ) {
     var filtersVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -66,6 +83,7 @@ private fun ProductCollectionList(
                 )
                 FilterBar(filters, onShowFilter = { filtersVisible = true })
             }
+            //TODO: quitar el productCollection y poner state.products. Habría que obtener todas las collecciones distintas si quiero seguir pasandole collecicones como objetos
             itemsIndexed(productCollections) { index, productCollection ->
                 if (index > 0) {
                     StoreAppDivider(thickness = 2.dp)

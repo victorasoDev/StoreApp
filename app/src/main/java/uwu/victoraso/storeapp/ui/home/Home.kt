@@ -19,10 +19,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +38,7 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import androidx.compose.ui.util.lerp
 import androidx.core.os.ConfigurationCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -54,7 +52,17 @@ fun NavGraphBuilder.addHomeGraph(
     modifier: Modifier = Modifier
 ) {
     composable(HomeSections.FEED.route) { from ->
-        Feed(onProductClick = { id -> onProductSelected(id, from) }, modifier)
+        val viewModel: ProductListViewModel = hiltViewModel()
+        val state = viewModel.state.value
+        val isRefreshing = viewModel.isRefreshing.collectAsState()
+
+        Feed(
+            onProductClick = { id -> onProductSelected(id, from) },
+            modifier = modifier,
+            isRefreshing = isRefreshing.value,
+            refreshData = viewModel::getProductList,
+            state = state
+        )
     }
     composable(HomeSections.SEARCH.route) { from ->
         Search(onProductClick = { id -> onProductSelected(id, from) }, modifier)
