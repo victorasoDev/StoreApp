@@ -1,4 +1,4 @@
-package uwu.victoraso.storeapp.ui.home
+package uwu.victoraso.storeapp.ui.home.feed
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -18,6 +18,8 @@ import uwu.victoraso.storeapp.ui.components.FilterBar
 import uwu.victoraso.storeapp.ui.components.ProductCollection
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
+import uwu.victoraso.storeapp.ui.home.DestinationBar
+import uwu.victoraso.storeapp.ui.home.FilterScreen
 
 @Composable
 fun Feed(

@@ -1,4 +1,4 @@
-package uwu.victoraso.storeapp
+package uwu.victoraso.storeapp.db
 
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -20,4 +20,5 @@ object StoreAppModule {
     fun provideProductList(
         firestore: FirebaseFirestore
     ) = firestore.collection("products")
+
 }

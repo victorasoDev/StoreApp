@@ -43,6 +43,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import uwu.victoraso.storeapp.ui.home.cart.Cart
+import uwu.victoraso.storeapp.ui.home.feed.Feed
+import uwu.victoraso.storeapp.ui.home.feed.ProductListViewModel
+import uwu.victoraso.storeapp.ui.home.profile.Profile
 import uwu.victoraso.storeapp.ui.home.search.Search
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import java.util.*
