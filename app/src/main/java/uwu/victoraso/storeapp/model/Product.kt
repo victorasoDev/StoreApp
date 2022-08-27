@@ -1,16 +1,19 @@
 package uwu.victoraso.storeapp.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import kotlinx.parcelize.Parcelize
 
 @Immutable
+@Parcelize
 data class Product(
-    val id: Long,
-    val name: String,
-    val imageUrl: String,
-    val price: Long,
-    val tagline: String = "",
-    val tags: Set<String> = emptySet()
-)
+    var id: Long = 0,
+    var name: String = "",
+    var imageUrl: String = "",
+    var price: Long = 0,
+    var tagline: String = "",
+    var tags: Set<String> = emptySet()
+) : Parcelable
 
 /**
  * Static data

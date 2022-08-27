@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import uwu.victoraso.storeapp.repositories.ProductRepository
+import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.repositories.Result
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class ProductListViewModel
 @Inject
 constructor(
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
 
     private val _state: MutableState<ProductListState> = mutableStateOf(ProductListState())
@@ -48,6 +48,4 @@ constructor(
             }
         }.launchIn(viewModelScope)
     }
-
-
 }

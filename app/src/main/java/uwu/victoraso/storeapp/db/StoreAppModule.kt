@@ -15,10 +15,15 @@ object StoreAppModule {
     @Singleton
     fun provideFirestoreInstance() = FirebaseFirestore.getInstance()
 
-    @Provides
-    @Singleton
-    fun provideProductList(
-        firestore: FirebaseFirestore
-    ) = firestore.collection("products")
-
+//    @Provides
+//    @Singleton
+//    fun provideProductList(
+//        firestore: FirebaseFirestore
+//    ) = firestore.collection("products")
+//
+//    @Provides
+//    @Singleton
+//    fun provideProductCollection(
+//        firestore: FirebaseFirestore
+//    ) = firestore.collection("productCollection")
 }

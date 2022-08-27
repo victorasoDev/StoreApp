@@ -56,7 +56,7 @@ fun ProductCollection(
                 .padding(start = 24.dp)
         ) {
             Text(
-                text = productCollection.name,
+                text = productCollection.name!!,
                 style = MaterialTheme.typography.h6,
                 color = StoreAppTheme.colors.brand,
                 maxLines = 1,

@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.repositories.ProductRepository
+import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import javax.inject.Inject
 
 @HiltViewModel

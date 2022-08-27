@@ -1,14 +1,18 @@
 package uwu.victoraso.storeapp.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import com.google.firebase.firestore.DocumentReference
+import kotlinx.parcelize.Parcelize
 
 @Immutable
+@Parcelize
 data class ProductCollection(
-    val id: Long,
-    val name: String,
-    val products: List<Product>,
-    val type: CollectionType = CollectionType.Normal
-)
+    var id: Long? = null,
+    var name: String? = null,
+    var products: List<Product> = emptyList(),
+    var type: CollectionType = CollectionType.Normal
+) : Parcelable
 
 enum class CollectionType { Normal, Highlight }
 
