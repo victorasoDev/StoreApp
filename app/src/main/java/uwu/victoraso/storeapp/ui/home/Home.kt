@@ -52,6 +52,7 @@ import java.util.*
 
 fun NavGraphBuilder.addHomeGraph(
     onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductCreate: (NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable(HomeSections.FEED.route) { from ->
@@ -61,6 +62,7 @@ fun NavGraphBuilder.addHomeGraph(
 
         Feed(
             onProductClick = { id -> onProductSelected(id, from) },
+            onProductCreate = { onProductCreate(from) },
             modifier = modifier,
             isRefreshing = isRefreshing.value,
             refreshData = viewModel::getProductList,

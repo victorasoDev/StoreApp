@@ -12,7 +12,7 @@ data class Product(
     var imageUrl: String = "",
     var price: Long = 0,
     var tagline: String = "",
-    var tags: Set<String> = emptySet()
+    var categories: List<String> = emptyList(),
 ) : Parcelable
 
 /**

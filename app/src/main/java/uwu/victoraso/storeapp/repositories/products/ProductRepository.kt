@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.repositories.products
 
 import android.util.Log
+import androidx.compose.runtime.rememberCoroutineScope
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,17 +19,26 @@ class ProductRepository
 @Inject
 constructor(
     private val db: FirebaseFirestore
-): ProductRepositoryInterface {
+) : ProductRepositoryInterface {
+
+    companion object {
+        var lastIndex = 0L
+    }
+
+    init {
+        saveLastIndex()
+    }
 
     override fun addNewProduct(product: Product) {
         try {
-            db.document(product.id.toString()).set(product)
+            db.collection("products").document(product.id.toString()).set(product)
+            lastIndex += 1
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    override fun getProductList() : Flow<Result<List<Product>>> = flow {
+    override fun getProductList(): Flow<Result<List<Product>>> = flow {
         try {
             emit(Result.Loading())
 
@@ -43,7 +53,7 @@ constructor(
 //                .await()
 
             val collection = db.collection("products")
-                .whereEqualTo("id", 2)
+                .whereEqualTo("id", 1)
                 .get()
                 .addOnSuccessListener {
                     for (doc in it) {
@@ -79,4 +89,15 @@ constructor(
         }
     }
 
+    private fun saveLastIndex() {
+        db.collection("products")
+            .get()
+            .addOnSuccessListener {
+                lastIndex = it.size().toLong() + 1
+                Log.d(DEBUG_TAG, "lastIndex -> ${lastIndex}")
+            }
+            .addOnFailureListener {
+                Log.d(DEBUG_TAG, "${it}")
+            }
+    }
 }

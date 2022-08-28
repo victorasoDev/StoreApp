@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -18,6 +19,8 @@ import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.home.StoreAppBottomBar
 import uwu.victoraso.storeapp.ui.home.addHomeGraph
+import uwu.victoraso.storeapp.ui.productcreate.ProductCreate
+import uwu.victoraso.storeapp.ui.productcreate.ProductCreateViewModel
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
@@ -46,6 +49,7 @@ fun StoreApp() {
             ) {
                 storeAppNavGraph(
                     onProductSelected = appState::navigateToProductDetail,
+                    onProductCreate = appState::navigateToCreateProduct,
                     upPress = appState::upPress
                 )
             }
@@ -55,13 +59,14 @@ fun StoreApp() {
 
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductCreate: (NavBackStackEntry) -> Unit,
     upPress: () -> Unit
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
-        addHomeGraph(onProductSelected)
+        addHomeGraph(onProductSelected, onProductCreate)
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.PRODUCT_ID_KEY}}",
@@ -70,5 +75,16 @@ private fun NavGraphBuilder.storeAppNavGraph(
         val argument = requireNotNull(navBackStackEntry.arguments)
         val productId = argument.getLong(MainDestinations.PRODUCT_ID_KEY)
         ProductDetail(productId, upPress)
+    }
+    composable(
+        route = MainDestinations.PRODUCT_CREATE_ROUTE,
+    ) {
+        val viewModel: ProductCreateViewModel = hiltViewModel()
+        val state = viewModel.state
+
+        ProductCreate(
+            upPress = upPress,
+            addNewProduct = viewModel::addNewProduct
+        )
     }
 }

@@ -23,6 +23,7 @@ object MainDestinations {
     const val HOME_ROUTE = "home"
     const val PRODUCT_DETAIL_ROUTE = "product"
     const val PRODUCT_ID_KEY = "productId"
+    const val PRODUCT_CREATE_ROUTE = "productCreate"
 }
 
 @Composable
@@ -96,6 +97,13 @@ class StoreAppState(
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {
             navController.navigate("${MainDestinations.PRODUCT_DETAIL_ROUTE}/$productId")
+        }
+    }
+
+    fun navigateToCreateProduct(from: NavBackStackEntry) {
+        // In order to discard duplicated navigation events, check the lifecycle
+        if (from.lifecycleIsResumed()) {
+            navController.navigate(MainDestinations.PRODUCT_CREATE_ROUTE)
         }
     }
 }

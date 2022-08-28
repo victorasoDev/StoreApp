@@ -18,7 +18,10 @@ import uwu.victoraso.storeapp.ui.theme.AlphaNearOpaque
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
-fun DestinationBar(modifier: Modifier = Modifier) {
+fun DestinationBar(
+    modifier: Modifier = Modifier,
+    onProductCreate: () -> Unit
+) {
     Column(modifier = modifier.statusBarsPadding()) {
         TopAppBar(
             backgroundColor = StoreAppTheme.colors.uiBackground.copy(alpha = AlphaNearOpaque),
@@ -37,7 +40,7 @@ fun DestinationBar(modifier: Modifier = Modifier) {
                     .align(Alignment.CenterVertically)
             )
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { onProductCreate() },
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(
@@ -57,6 +60,6 @@ fun DestinationBar(modifier: Modifier = Modifier) {
 @Composable
 private fun PreviewDestinationBar() {
     StoreAppTheme {
-        DestinationBar()
+        DestinationBar(onProductCreate = { })
     }
 }
