@@ -1,5 +1,6 @@
 package uwu.victoraso.storeapp.ui.components
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,11 +27,15 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 
 @Composable
 fun FilterBar(
     filters: List<Filter>,
-    onShowFilter: () -> Unit
+    onShowFilter: () -> Unit,
+    /** TODO: Se podrá borrar en un futuro **/
+    addRemoveCategory: ((Boolean, String) -> Unit)? = null,
+//    removeCategory: ((Boolean) -> Unit)? = null,
 ) {
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
@@ -38,21 +43,21 @@ fun FilterBar(
         contentPadding = PaddingValues(start = 12.dp, end = 8.dp),
         modifier = Modifier.heightIn(min = 56.dp)
     ) {
-        item {
-            IconButton(onClick = onShowFilter) {
-                Icon(
-                    imageVector = Icons.Rounded.FilterList,
-                    tint = StoreAppTheme.colors.brand,
-                    contentDescription = "null",
-                    modifier = Modifier.diagonalGradientBorder(
-                        colors = StoreAppTheme.colors.interactiveSecondary,
-                        shape = CircleShape
-                    )
-                )
-            }
-        }
+//        item {
+//            IconButton(onClick = onShowFilter) {
+//                Icon(
+//                    imageVector = Icons.Rounded.FilterList,
+//                    tint = StoreAppTheme.colors.brand,
+//                    contentDescription = "null",
+//                    modifier = Modifier.diagonalGradientBorder(
+//                        colors = StoreAppTheme.colors.interactiveSecondary,
+//                        shape = CircleShape
+//                    )
+//                )
+//            }
+//        }
         items(filters) { filter ->
-            FilterChip(filter = filter, shape = MaterialTheme.shapes.small)
+            FilterChip(filter = filter, shape = MaterialTheme.shapes.small, addRemoveCategory = addRemoveCategory)
         }
     }
 }
@@ -61,7 +66,8 @@ fun FilterBar(
 fun FilterChip(
     filter: Filter,
     modifier: Modifier = Modifier,
-    shape: Shape = MaterialTheme.shapes.small
+    shape: Shape = MaterialTheme.shapes.small,
+    addRemoveCategory: ((Boolean, String) -> Unit)? = null,
 ) {
     val (selected, setSelected) = filter.enabled //TODO: what is this
     val backgroundColor by animateColorAsState(
@@ -76,6 +82,15 @@ fun FilterChip(
         if (selected) Color.Black else StoreAppTheme.colors.textSecondary
     )
 
+    if (selected) {
+        if (addRemoveCategory != null) {
+            addRemoveCategory(true, filter.name)
+        }
+    } else {
+        if (addRemoveCategory != null) {
+            addRemoveCategory(false, filter.name)
+        }
+    }
     StoreAppSurface(
         modifier = Modifier.heightIn(28.dp),
         color = backgroundColor,

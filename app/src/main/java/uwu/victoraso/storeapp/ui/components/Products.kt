@@ -1,6 +1,8 @@
 package uwu.victoraso.storeapp.ui.components
 
 import android.content.res.Configuration
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -32,6 +34,7 @@ import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.products
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.mirroringIcon
 
 private val gradientWidth
@@ -44,6 +47,7 @@ private val gradientWidth
 fun ProductCollection(
     productCollection: ProductCollection,
     onProductClick: (Long) -> Unit,
+    onProductList: () -> Unit,
     modifier: Modifier = Modifier,
     index: Int = 0,
     highlight: Boolean = true
@@ -66,7 +70,7 @@ fun ProductCollection(
                     .wrapContentWidth(Alignment.Start)
             )
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { onProductList() },
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(
@@ -161,7 +165,12 @@ fun ProductItem(
                 .clickable(onClick = { onProductClick(product.id) })
                 .padding(8.dp)
         ) {
-            //TODO:
+            ProductImage(
+                imageUrl = product.imageUrl,
+                elevation = 4.dp,
+                contentDescription = null,
+                modifier = Modifier.size(120.dp)
+            )
             Text(
                 text = product.name,
                 style = MaterialTheme.typography.subtitle1,

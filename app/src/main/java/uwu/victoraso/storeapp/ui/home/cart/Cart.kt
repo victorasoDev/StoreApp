@@ -224,6 +224,7 @@ fun CartContent(
             ProductCollection(
                 productCollection = inspiredByCart,
                 onProductClick = onProductClick,
+                onProductList = { /*TODO*/ },
                 highlight = true
             )
             Spacer(modifier = Modifier.height(56.dp))

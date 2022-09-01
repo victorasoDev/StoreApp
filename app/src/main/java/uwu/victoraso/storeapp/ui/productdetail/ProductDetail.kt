@@ -173,6 +173,7 @@ private fun Body(
                         key(productCollection.id) {
                             ProductCollection(
                                 productCollection = productCollection,
+                                onProductList = { },
                                 onProductClick = { },
                                 highlight = false
                             )

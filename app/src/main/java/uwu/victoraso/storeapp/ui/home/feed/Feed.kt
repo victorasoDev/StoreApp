@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import uwu.victoraso.storeapp.model.Filter
@@ -24,6 +25,7 @@ import uwu.victoraso.storeapp.ui.home.FilterScreen
 @Composable
 fun Feed(
     onProductClick: (Long) -> Unit,
+    onProductList: () -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
@@ -36,6 +38,7 @@ fun Feed(
         productCollections = productsCollection,
         filters = filters,
         onProductClick = onProductClick,
+        onProductList = onProductList,
         onProductCreate = onProductCreate,
         modifier = modifier,
         isRefreshing = isRefreshing,
@@ -49,6 +52,7 @@ private fun Feed(
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
     onProductClick: (Long) -> Unit,
+    onProductList: () -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
     isRefreshing: Boolean = false,
@@ -61,7 +65,13 @@ private fun Feed(
             onRefresh = refreshData
         ) {
             Box {
-                ProductCollectionList(productCollections = productCollections, filters = filters, onProductClick = onProductClick, state = state)
+                ProductCollectionList(
+                    productCollections = productCollections,
+                    filters = filters,
+                    onProductClick = onProductClick,
+                    onProductList = onProductList,
+                    state = state
+                )
                 DestinationBar(onProductCreate = onProductCreate)
             }
         }
@@ -73,6 +83,7 @@ private fun ProductCollectionList(
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
     onProductClick: (Long) -> Unit,
+    onProductList: () -> Unit,
     modifier: Modifier = Modifier,
     state: ProductListState
 ) {
@@ -97,6 +108,7 @@ private fun ProductCollectionList(
                 ProductCollection(
                     productCollection = productCollection,
                     onProductClick = onProductClick,
+                    onProductList = onProductList,
                     index = index
                 )
             }

@@ -14,7 +14,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.model.SnackbarManager
 import uwu.victoraso.storeapp.ui.home.HomeSections
@@ -24,6 +23,7 @@ object MainDestinations {
     const val PRODUCT_DETAIL_ROUTE = "product"
     const val PRODUCT_ID_KEY = "productId"
     const val PRODUCT_CREATE_ROUTE = "productCreate"
+    const val PRODUCT_LIST_ROUTE = "productList"
 }
 
 @Composable
@@ -104,6 +104,13 @@ class StoreAppState(
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {
             navController.navigate(MainDestinations.PRODUCT_CREATE_ROUTE)
+        }
+    }
+
+    fun navigateToProductList(from: NavBackStackEntry) {
+        // In order to discard duplicated navigation events, check the lifecycle
+        if (from.lifecycleIsResumed()) {
+            navController.navigate(MainDestinations.PRODUCT_LIST_ROUTE)
         }
     }
 }

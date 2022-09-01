@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import uwu.victoraso.storeapp.ui.collection.ProductList
+import uwu.victoraso.storeapp.ui.collection.ProductListViewModel
 import uwu.victoraso.storeapp.ui.productdetail.ProductDetail
 import uwu.victoraso.storeapp.ui.components.StoreAppScaffold
 import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
@@ -50,6 +52,7 @@ fun StoreApp() {
                 storeAppNavGraph(
                     onProductSelected = appState::navigateToProductDetail,
                     onProductCreate = appState::navigateToCreateProduct,
+                    onProductList = appState::navigateToProductList,
                     upPress = appState::upPress
                 )
             }
@@ -60,13 +63,14 @@ fun StoreApp() {
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, NavBackStackEntry) -> Unit,
     onProductCreate: (NavBackStackEntry) -> Unit,
+    onProductList: (NavBackStackEntry) -> Unit,
     upPress: () -> Unit
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
-        addHomeGraph(onProductSelected, onProductCreate)
+        addHomeGraph(onProductSelected, onProductCreate, onProductList)
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.PRODUCT_ID_KEY}}",
@@ -81,10 +85,20 @@ private fun NavGraphBuilder.storeAppNavGraph(
     ) {
         val viewModel: ProductCreateViewModel = hiltViewModel()
         val state = viewModel.state
-
         ProductCreate(
             upPress = upPress,
             addNewProduct = viewModel::addNewProduct
+        )
+    }
+    composable(
+        route = MainDestinations.PRODUCT_LIST_ROUTE,
+    ) {
+        val viewModel: ProductListViewModel = hiltViewModel()
+        val state = viewModel.state
+        ProductList(
+            onProductSelected = onProductSelected,
+            upPress = upPress,
+            viewModel = viewModel
         )
     }
 }
