@@ -47,7 +47,7 @@ private val gradientWidth
 fun ProductCollection(
     productCollection: ProductCollection,
     onProductClick: (Long) -> Unit,
-    onProductList: () -> Unit,
+    onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
     index: Int = 0,
     highlight: Boolean = true
@@ -60,7 +60,7 @@ fun ProductCollection(
                 .padding(start = 24.dp)
         ) {
             Text(
-                text = productCollection.name!!,
+                text = productCollection.name,
                 style = MaterialTheme.typography.h6,
                 color = StoreAppTheme.colors.brand,
                 maxLines = 1,
@@ -70,7 +70,7 @@ fun ProductCollection(
                     .wrapContentWidth(Alignment.Start)
             )
             IconButton(
-                onClick = { onProductList() },
+                onClick = { onProductList(productCollection.name) },
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(

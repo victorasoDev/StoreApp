@@ -14,12 +14,15 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Filter
+import uwu.victoraso.storeapp.model.StoreAppFilters
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -94,15 +97,16 @@ private fun Body(
     scroll: ScrollState,
     addNewProduct: (/*name*/String, /*price*/String, /*tagline*/String, /*categories*/List<String>) -> Unit
 ) {
+    Log.d(DEBUG_TAG, "Body")
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var tagline by remember { mutableStateOf("") }
-    val categories = ArrayList<String>()
+    val categories by remember { mutableStateOf(ArrayList<String>()) }
+    val filters = StoreAppFilters()
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
             .verticalScroll(scroll)
     ) {
         Spacer(
@@ -132,19 +136,22 @@ private fun Body(
         )
         Spacer(modifier = Modifier.padding(4.dp))
         FilterBar(
-            filters = listOf(Filter("Food"), Filter("Items"), Filter("Other")),
+            filters = filters,
             onShowFilter = { },
             addRemoveCategory = { selected, filterName ->
                 if (selected) {
                     if (!categories.contains(filterName)) categories.add(filterName)
                 } else {
-                    if (!categories.contains(filterName)) categories.remove(filterName)
+                    if (categories.contains(filterName)) categories.remove(filterName)
                 }
                 Log.d(DEBUG_TAG, categories.toString())
             }
         )
         StoreAppButton(
-            onClick = { addNewProduct(name, price, tagline, categories) },
+            onClick = {
+                addNewProduct(name, price, tagline, categories)
+
+            },
             modifier = Modifier.align(CenterHorizontally)
         ) {
             Text(text = "Save Product")
@@ -165,7 +172,8 @@ fun StoreAppTextField(
         onValueChange = onValueChange,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp),
+            .padding(bottom = 8.dp)
+            .padding(horizontal = 16.dp),
         placeholder = { Text(text = placeholder) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,

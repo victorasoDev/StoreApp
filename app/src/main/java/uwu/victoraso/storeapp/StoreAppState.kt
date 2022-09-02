@@ -24,6 +24,7 @@ object MainDestinations {
     const val PRODUCT_ID_KEY = "productId"
     const val PRODUCT_CREATE_ROUTE = "productCreate"
     const val PRODUCT_LIST_ROUTE = "productList"
+    const val CATEGORY_ID_KEY = "categoryId"
 }
 
 @Composable
@@ -107,10 +108,10 @@ class StoreAppState(
         }
     }
 
-    fun navigateToProductList(from: NavBackStackEntry) {
+    fun navigateToProductList(category: String, from: NavBackStackEntry) {
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {
-            navController.navigate(MainDestinations.PRODUCT_LIST_ROUTE)
+            navController.navigate("${MainDestinations.PRODUCT_LIST_ROUTE}/$category")
         }
     }
 }

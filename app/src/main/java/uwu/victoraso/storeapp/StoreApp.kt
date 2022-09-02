@@ -63,7 +63,7 @@ fun StoreApp() {
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, NavBackStackEntry) -> Unit,
     onProductCreate: (NavBackStackEntry) -> Unit,
-    onProductList: (NavBackStackEntry) -> Unit,
+    onProductList: (String, NavBackStackEntry) -> Unit,
     upPress: () -> Unit
 ) {
     navigation(
@@ -91,12 +91,17 @@ private fun NavGraphBuilder.storeAppNavGraph(
         )
     }
     composable(
-        route = MainDestinations.PRODUCT_LIST_ROUTE,
-    ) {
+        route = "${MainDestinations.PRODUCT_LIST_ROUTE}/{${MainDestinations.CATEGORY_ID_KEY}}",
+        arguments = listOf(navArgument(MainDestinations.CATEGORY_ID_KEY) { type = NavType.StringType })
+    ) { navBackStackEntry ->
+        val argument = requireNotNull(navBackStackEntry.arguments)
+        val category = argument.getString(MainDestinations.CATEGORY_ID_KEY)
+
         val viewModel: ProductListViewModel = hiltViewModel()
         val state = viewModel.state
         ProductList(
             onProductSelected = onProductSelected,
+            category = category!!,
             upPress = upPress,
             viewModel = viewModel
         )

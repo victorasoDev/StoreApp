@@ -8,8 +8,8 @@ import kotlinx.parcelize.Parcelize
 @Immutable
 @Parcelize
 data class ProductCollection(
-    var id: Long? = null,
-    var name: String? = null,
+    var id: Long,
+    var name: String,
     var products: List<Product> = emptyList(),
     var type: CollectionType = CollectionType.Normal
 ) : Parcelable

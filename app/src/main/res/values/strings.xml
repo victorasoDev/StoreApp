@@ -62,4 +62,17 @@
     <string name="alphabetical">Alphabetical</string>
     <string name="close">Close</string>
 
+    <!--Filter Products (sin traducir porque son los filtros que se guardan en BD)-->
+    <string name="product_type_processor" translatable="false">Processors</string>
+    <string name="product_type_motherboard" translatable="false">Motherboards</string>
+    <string name="product_type_graphics" translatable="false">Graphic Cards</string>
+    <string name="product_type_storage" translatable="false">Storages</string>
+    <string name="product_type_cooling" translatable="false">Cooling systems</string>
+    <string name="product_type_ram" translatable="false">RAMs</string>
+    <string name="product_type_laptop" translatable="false">Laptops</string>
+    <string name="product_type_computer" translatable="false">Builds</string>
+    <string name="product_type_monitors" translatable="false">Monitors</string>
+    <string name="product_type_mouse" translatable="false">Mouses</string>
+    <string name="product_type_keyboard" translatable="false">Keyboards</string>
+
 </resources>

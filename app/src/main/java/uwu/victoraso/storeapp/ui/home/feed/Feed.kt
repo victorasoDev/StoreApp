@@ -25,7 +25,7 @@ import uwu.victoraso.storeapp.ui.home.FilterScreen
 @Composable
 fun Feed(
     onProductClick: (Long) -> Unit,
-    onProductList: () -> Unit,
+    onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
@@ -52,7 +52,7 @@ private fun Feed(
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
     onProductClick: (Long) -> Unit,
-    onProductList: () -> Unit,
+    onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
     isRefreshing: Boolean = false,
@@ -83,7 +83,7 @@ private fun ProductCollectionList(
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
     onProductClick: (Long) -> Unit,
-    onProductList: () -> Unit,
+    onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
     state: ProductListState
 ) {
