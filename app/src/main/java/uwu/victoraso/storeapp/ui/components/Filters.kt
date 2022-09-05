@@ -36,6 +36,7 @@ fun FilterBar(
     /** TODO: Se podrá borrar en un futuro **/
     addRemoveCategory: ((Boolean, String) -> Unit)? = null,
 //    removeCategory: ((Boolean) -> Unit)? = null,
+
 ) {
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,

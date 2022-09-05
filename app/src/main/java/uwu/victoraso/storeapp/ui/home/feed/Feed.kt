@@ -9,7 +9,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import uwu.victoraso.storeapp.model.Filter
@@ -72,7 +71,7 @@ private fun Feed(
                     onProductList = onProductList,
                     state = state
                 )
-                DestinationBar(onProductCreate = onProductCreate)
+                DestinationBar(onDestinationBarButtonClick = onProductCreate)
             }
         }
     }

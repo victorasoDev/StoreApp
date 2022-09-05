@@ -97,12 +97,11 @@ private fun Body(
     scroll: ScrollState,
     addNewProduct: (/*name*/String, /*price*/String, /*tagline*/String, /*categories*/List<String>) -> Unit
 ) {
-    Log.d(DEBUG_TAG, "Body")
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var tagline by remember { mutableStateOf("") }
-    val categories by remember { mutableStateOf(ArrayList<String>()) }
-    val filters = StoreAppFilters()
+    var categories by remember { mutableStateOf(ArrayList<String>()) }
+    val filters by remember { mutableStateOf(StoreAppFilters) }
 
     Column(
         modifier = Modifier
@@ -150,7 +149,11 @@ private fun Body(
         StoreAppButton(
             onClick = {
                 addNewProduct(name, price, tagline, categories)
-
+                //TODO: hay mejor forma de vaciar los campos?
+                name = ""
+                price = ""
+                tagline = ""
+                categories = ArrayList()
             },
             modifier = Modifier.align(CenterHorizontally)
         ) {

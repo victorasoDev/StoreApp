@@ -20,7 +20,7 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 @Composable
 fun DestinationBar(
     modifier: Modifier = Modifier,
-    onProductCreate: () -> Unit
+    onDestinationBarButtonClick: () -> Unit
 ) {
     Column(modifier = modifier.statusBarsPadding()) {
         TopAppBar(
@@ -40,7 +40,7 @@ fun DestinationBar(
                     .align(Alignment.CenterVertically)
             )
             IconButton(
-                onClick = { onProductCreate() },
+                onClick = { onDestinationBarButtonClick() },
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(
@@ -60,6 +60,6 @@ fun DestinationBar(
 @Composable
 private fun PreviewDestinationBar() {
     StoreAppTheme {
-        DestinationBar(onProductCreate = { })
+        DestinationBar(onDestinationBarButtonClick = { })
     }
 }

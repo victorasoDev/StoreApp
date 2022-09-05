@@ -100,7 +100,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
         val viewModel: ProductListViewModel = hiltViewModel()
         val state = viewModel.state
         ProductList(
-            onProductSelected = onProductSelected,
+            onProductSelected = { id -> onProductSelected(id, navBackStackEntry) },
             category = category!!,
             upPress = upPress,
             viewModel = viewModel

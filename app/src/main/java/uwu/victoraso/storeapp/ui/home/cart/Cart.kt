@@ -83,7 +83,7 @@ fun Cart(
                 onProductClick = onProductClick,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
-            DestinationBar(modifier = Modifier.align(Alignment.TopCenter), onProductCreate = { })
+            DestinationBar(modifier = Modifier.align(Alignment.TopCenter), onDestinationBarButtonClick = { })
             CheckoutBar(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }

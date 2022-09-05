@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.compose.rememberNavController
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductRepo
 import uwu.victoraso.storeapp.ui.components.ProductImage
@@ -36,7 +37,7 @@ import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
 @Composable
 fun ProductList(
-    onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductSelected: (Long) -> Unit,
     category: String,
     upPress: () -> Unit,
     modifier: Modifier = Modifier,
@@ -55,7 +56,7 @@ fun ProductList(
 
 @Composable
 fun ProductList(
-    onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductSelected: (Long) -> Unit,
     category: String,
     upPress: () -> Unit,
     addProduct: (Long) -> Unit,
@@ -124,7 +125,7 @@ private fun Up(upPress: () -> Unit) {
 @Composable
 fun ListContent(
     productList: List<Product>,
-    onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductSelected: (Long) -> Unit,
     addProduct: (Long) -> Unit,
     removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -154,7 +155,7 @@ fun ListContent(
 @Composable
 fun ProductListItem(
     product: Product,
-    onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductSelected: (Long) -> Unit,
     addProduct: (Long) -> Unit,
     removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -162,7 +163,7 @@ fun ProductListItem(
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { /*onProductSelected()*/ }
+            .clickable { onProductSelected(product.id) }
             .background(StoreAppTheme.colors.uiBackground)
             .padding(horizontal = 24.dp)
     ) {
