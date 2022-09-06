@@ -46,6 +46,7 @@ import uwu.victoraso.storeapp.ui.home.cart.Cart
 import uwu.victoraso.storeapp.ui.home.feed.Feed
 import uwu.victoraso.storeapp.ui.home.feed.ProductListViewModel
 import uwu.victoraso.storeapp.ui.home.profile.Profile
+import uwu.victoraso.storeapp.ui.home.profile.ProfileViewModel
 import uwu.victoraso.storeapp.ui.home.search.Search
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import java.util.*
@@ -78,7 +79,8 @@ fun NavGraphBuilder.addHomeGraph(
         Cart(onProductClick = { id -> onProductSelected(id, from) }, modifier)
     }
     composable(HomeSections.PROFILE.route) {
-        Profile(modifier)
+        val viewModel: ProfileViewModel = hiltViewModel()
+        Profile(modifier, viewModel)
     }
 }
 

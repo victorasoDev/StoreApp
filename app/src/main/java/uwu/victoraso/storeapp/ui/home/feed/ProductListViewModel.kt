@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.repositories.Result
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +31,7 @@ constructor(
 
     init {
         getProductList()
-        Log.d("debugprueba", state.value.products.toString())
+        Log.d(DEBUG_TAG, state.value.products.toString())
     }
 
     fun getProductList() {
