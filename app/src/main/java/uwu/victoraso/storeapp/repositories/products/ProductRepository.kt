@@ -19,8 +19,8 @@ class ProductRepository
 @Inject
 constructor(
     private val db: FirebaseFirestore
-) : ProductRepositoryInterface {
-
+) : ProductRepositoryInterface
+{
     companion object {
         var lastIndex = 0L
     }
@@ -100,4 +100,9 @@ constructor(
                 Log.d(DEBUG_TAG, "${it}")
             }
     }
+}
+
+sealed interface ProductRepositoryInterface {
+    fun addNewProduct(product: Product)
+    fun getProductList(): Flow<Result<List<Product>>>
 }
