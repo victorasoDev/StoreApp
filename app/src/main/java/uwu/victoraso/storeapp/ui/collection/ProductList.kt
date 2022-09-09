@@ -12,6 +12,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -22,19 +23,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductRepo
 import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
+import uwu.victoraso.storeapp.ui.home.feed.ProductListUiState
+import uwu.victoraso.storeapp.ui.home.feed.ProductListViewModel
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ProductList(
     onProductSelected: (Long) -> Unit,
@@ -44,8 +48,11 @@ fun ProductList(
     viewModel: ProductListViewModel
 ) {
     Log.d(DEBUG_TAG, category)
+    val productListUiState: ProductListUiState by viewModel.productListUiState.collectAsStateWithLifecycle()
+
     ProductList(
         onProductSelected = onProductSelected,
+        productListUiState = productListUiState,
         category = category,
         upPress = upPress,
         addProduct = viewModel::addProductToCart,
@@ -57,6 +64,7 @@ fun ProductList(
 @Composable
 fun ProductList(
     onProductSelected: (Long) -> Unit,
+    productListUiState: ProductListUiState,
     category: String,
     upPress: () -> Unit,
     addProduct: (Long) -> Unit,
@@ -64,6 +72,17 @@ fun ProductList(
     modifier: Modifier = Modifier
 ) {
     val productList = ProductRepo.getInspiredByCart().products
+    when(productListUiState) {
+        is ProductListUiState.Success -> {
+            Log.d(DEBUG_TAG, " - " + productListUiState.mainList.size.toString()) //TODO
+        }
+        ProductListUiState.Loading -> {
+            Log.d(DEBUG_TAG, " - Loading") //TODO
+        }
+        ProductListUiState.Error -> {
+            Log.d(DEBUG_TAG, " - Error") //TODO
+        }
+    }
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
             Header(category)
@@ -79,7 +98,7 @@ fun ProductList(
     }
 }
 
-@Composable //TODO: juntar con el de ProductCreate con el parámetro título, para usarlo en distintos sitios
+@Composable //TODO juntar con el de ProductCreate con el parámetro título, para usarlo en distintos sitios
 private fun Header(categoryName: String) {
     Spacer(
         modifier = Modifier

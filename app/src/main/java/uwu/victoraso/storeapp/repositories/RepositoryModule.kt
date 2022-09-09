@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import uwu.victoraso.storeapp.repositories.products.ProductDataSource
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import javax.inject.Singleton
 
@@ -15,8 +16,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideProductRepository(
-        database: FirebaseFirestore
+        database: FirebaseFirestore,
+        productDataSource: ProductDataSource
     ): ProductRepository {
-        return ProductRepository(database)
+        return ProductRepository(database, productDataSource)
     }
 }

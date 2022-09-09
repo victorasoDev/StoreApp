@@ -26,27 +26,22 @@ fun Profile(
     Log.d(DEBUG_TAG, "antes de profileUiState")
     val profileUiState: ProfileUiState by viewModel.profileUiState.collectAsStateWithLifecycle()
 
-    StoreAppSurface(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-
-            when(profileUiState) {
-                ProfileUiState.Loading -> {
-                    Log.d(DEBUG_TAG,  "Loading")
-                }
-                ProfileUiState.Error -> {
-                    Log.d(DEBUG_TAG,  "Error")
-                }
-                is ProfileUiState.Success -> {
-                    Log.d(DEBUG_TAG,  "Success")
-                    ProfileTest(
-                        viewModel = viewModel,
-                        userProfile = (profileUiState as ProfileUiState.Success).userProfile
-                    )
+    when (profileUiState) {
+        is ProfileUiState.Success -> {
+            StoreAppSurface(modifier = modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    ProfileTest(viewModel = viewModel, userProfile = (profileUiState as ProfileUiState.Success).userProfile)
                 }
             }
+        }
+        ProfileUiState.Loading -> {
+            //TODO()
+        }
+        ProfileUiState.Error -> {
+            //TODO()
         }
     }
 }

@@ -26,7 +26,7 @@ class PreferencesDataSource @Inject constructor(
             )
         }
 
-    val adressName: Flow<String> = userPreferences.data.map { preferences ->
+    private val adressName: Flow<String> = userPreferences.data.map { preferences ->
         Log.d(DEBUG_TAG, "saved -> ${preferences[USER_ADRESS_PREFERENCE]}")
         preferences[USER_ADRESS_PREFERENCE] ?: "Not adress provided"
     }

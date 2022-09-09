@@ -1,16 +1,13 @@
 package uwu.victoraso.storeapp.repositories.products
 
 import android.util.Log
-import androidx.compose.runtime.rememberCoroutineScope
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.repositories.Result
-import uwu.victoraso.storeapp.repositories.products.ProductRepositoryInterface
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +15,8 @@ import javax.inject.Singleton
 class ProductRepository
 @Inject
 constructor(
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore,
+    private val productDataSource: ProductDataSource,
 ) : ProductRepositoryInterface
 {
     companion object {
@@ -29,14 +27,9 @@ constructor(
         saveLastIndex()
     }
 
-    override fun addNewProduct(product: Product) {
-        try {
-            db.collection("products").document(product.id.toString()).set(product)
-            lastIndex += 1
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+    override fun addNewProduct(product: Product): Boolean = productDataSource.addNewProduct(product)
+
+    override fun getMainList(): Flow<List<Product>> = productDataSource.getMainList()
 
     override fun getProductList(): Flow<Result<List<Product>>> = flow {
         try {
@@ -89,6 +82,11 @@ constructor(
         }
     }
 
+
+
+    /**
+     * DEBUG
+     * **/
     private fun saveLastIndex() {
         db.collection("products")
             .get()
@@ -100,9 +98,13 @@ constructor(
                 Log.d(DEBUG_TAG, "${it}")
             }
     }
+    /**
+     * DEBUG
+     * **/
 }
 
 sealed interface ProductRepositoryInterface {
-    fun addNewProduct(product: Product)
+    fun addNewProduct(product: Product): Boolean
     fun getProductList(): Flow<Result<List<Product>>>
+    fun getMainList(): Flow<List<Product>>
 }
