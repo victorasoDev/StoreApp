@@ -35,6 +35,29 @@ class ProductDataSource @Inject constructor(
         emit(productList)
     }
 
+    /**
+     * Get processor products stored in StoreApp FireStore Database
+     */
+    fun getProductsByCategory(category: String): Flow<List<Product>> = flow {
+        val productList = ArrayList<Product>()
+        db.collection("products")
+            .whereArrayContains("categories", category)
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    productList.add(doc.toObject(Product::class.java))
+                    Log.d(DEBUG_TAG, "ProductDataSource -> ${doc.data}")
+                }
+            }
+            .addOnFailureListener {
+                Log.d(DEBUG_TAG, "ProductDataSource -> ${it}")
+            }
+            .await()
+
+        Log.d(DEBUG_TAG, "ProductDataSource SIZE Arraylist-> ${productList.size}")
+        emit(productList)
+    }
+
     fun addNewProduct(product: Product): Boolean {
         try {
             db.collection("products").document(product.id.toString()).set(product)

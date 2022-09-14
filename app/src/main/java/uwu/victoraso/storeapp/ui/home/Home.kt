@@ -44,7 +44,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import uwu.victoraso.storeapp.ui.home.cart.Cart
 import uwu.victoraso.storeapp.ui.home.feed.Feed
-import uwu.victoraso.storeapp.ui.home.feed.ProductListViewModel
+import uwu.victoraso.storeapp.ui.home.feed.FeedViewModel
 import uwu.victoraso.storeapp.ui.home.profile.Profile
 import uwu.victoraso.storeapp.ui.home.profile.ProfileViewModel
 import uwu.victoraso.storeapp.ui.home.search.Search
@@ -58,18 +58,14 @@ fun NavGraphBuilder.addHomeGraph(
     modifier: Modifier = Modifier
 ) {
     composable(HomeSections.FEED.route) { from ->
-        val viewModel: ProductListViewModel = hiltViewModel()
-        val state = viewModel.state.value
-        val isRefreshing = viewModel.isRefreshing.collectAsState()
+        val viewModel: FeedViewModel = hiltViewModel()
 
         Feed(
             onProductClick = { id -> onProductSelected(id, from) },
             onProductCreate = { onProductCreate(from) },
             onProductList = { category -> onProductList(category, from) },
             modifier = modifier,
-            isRefreshing = isRefreshing.value,
-            refreshData = viewModel::getProductList,
-            state = state
+            viewModel = viewModel,
         )
     }
     composable(HomeSections.SEARCH.route) { from ->

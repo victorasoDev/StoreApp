@@ -31,6 +31,8 @@ constructor(
 
     override fun getMainList(): Flow<List<Product>> = productDataSource.getMainList()
 
+    override fun getProductsByCategory(category: String): Flow<List<Product>> = productDataSource.getProductsByCategory(category)
+
     override fun getProductList(): Flow<Result<List<Product>>> = flow {
         try {
             emit(Result.Loading())
@@ -107,4 +109,5 @@ sealed interface ProductRepositoryInterface {
     fun addNewProduct(product: Product): Boolean
     fun getProductList(): Flow<Result<List<Product>>>
     fun getMainList(): Flow<List<Product>>
+    fun getProductsByCategory(category: String): Flow<List<Product>>
 }

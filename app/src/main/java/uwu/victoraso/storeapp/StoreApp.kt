@@ -20,7 +20,7 @@ import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.home.StoreAppBottomBar
 import uwu.victoraso.storeapp.ui.home.addHomeGraph
-import uwu.victoraso.storeapp.ui.home.feed.ProductListViewModel
+import uwu.victoraso.storeapp.ui.collection.ProductListViewModel
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreate
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreateViewModel
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -96,13 +96,13 @@ private fun NavGraphBuilder.storeAppNavGraph(
     ) { navBackStackEntry ->
         val argument = requireNotNull(navBackStackEntry.arguments)
         val category = argument.getString(MainDestinations.CATEGORY_ID_KEY)
+        ProductListViewModel.categorySelected = category!!
 
         val viewModel: ProductListViewModel = hiltViewModel()
-        val state = viewModel.state
         ProductList(
             onProductSelected = { id -> onProductSelected(id, navBackStackEntry) },
-            category = category!!,
-            upPress = upPress,
+            category = category,
+            upPress = upPress, //TODO esto no va
             viewModel = viewModel
         )
     }

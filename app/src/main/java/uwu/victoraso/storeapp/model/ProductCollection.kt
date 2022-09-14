@@ -40,7 +40,7 @@ object ProductRepo {
 
 private val tastyTreats = ProductCollection(
     id = 1L,
-    name = "Android's picks",
+    name = "Processors",
     type = CollectionType.Highlight,
     products = products.subList(0, 13)
 )

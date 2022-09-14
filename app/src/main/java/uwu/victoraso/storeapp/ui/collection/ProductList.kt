@@ -26,12 +26,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.model.ProductRepo
 import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
-import uwu.victoraso.storeapp.ui.home.feed.ProductListUiState
-import uwu.victoraso.storeapp.ui.home.feed.ProductListViewModel
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
@@ -47,7 +44,6 @@ fun ProductList(
     modifier: Modifier = Modifier,
     viewModel: ProductListViewModel
 ) {
-    Log.d(DEBUG_TAG, category)
     val productListUiState: ProductListUiState by viewModel.productListUiState.collectAsStateWithLifecycle()
 
     ProductList(
@@ -71,10 +67,22 @@ fun ProductList(
     removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val productList = ProductRepo.getInspiredByCart().products
     when(productListUiState) {
         is ProductListUiState.Success -> {
             Log.d(DEBUG_TAG, " - " + productListUiState.mainList.size.toString()) //TODO
+            StoreAppSurface(modifier = modifier.fillMaxSize()) {
+                Box {
+                    Header(category)
+                    Up(upPress = upPress)
+                    ListContent(
+                        productList = productListUiState.mainList,
+                        onProductSelected = onProductSelected,
+                        addProduct = addProduct,
+                        removeProduct = removeProduct,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    )
+                }
+            }
         }
         ProductListUiState.Loading -> {
             Log.d(DEBUG_TAG, " - Loading") //TODO
@@ -82,19 +90,7 @@ fun ProductList(
         ProductListUiState.Error -> {
             Log.d(DEBUG_TAG, " - Error") //TODO
         }
-    }
-    StoreAppSurface(modifier = modifier.fillMaxSize()) {
-        Box {
-            Header(category)
-            Up(upPress = upPress)
-            ListContent(
-                productList = productList,
-                onProductSelected = onProductSelected,
-                addProduct = addProduct,
-                removeProduct = removeProduct,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-        }
+        else -> {  }
     }
 }
 

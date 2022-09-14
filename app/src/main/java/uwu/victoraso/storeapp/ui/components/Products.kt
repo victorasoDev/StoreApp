@@ -33,6 +33,7 @@ import uwu.victoraso.storeapp.model.CollectionType
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.products
+import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.mirroringIcon

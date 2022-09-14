@@ -1,4 +1,4 @@
-package uwu.victoraso.storeapp.ui.home.feed
+package uwu.victoraso.storeapp.ui.collection
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
@@ -22,12 +22,6 @@ constructor(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
 
-    private val _state: MutableState<ProductListState> = mutableStateOf(ProductListState())
-    val state: State<ProductListState> = _state
-
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> = _isRefreshing
-
     var productListUiState: StateFlow<ProductListUiState> = productListStateStream(
         productRepository = productRepository
     )
@@ -37,27 +31,6 @@ constructor(
             initialValue = ProductListUiState.Loading
         )
 
-    init {
-        getProductList()
-        Log.d(DEBUG_TAG, state.value.products.toString())
-    }
-
-    fun getProductList() {
-        productRepository.getProductList().onEach { result ->
-            when(result) {
-                is Result.Error -> {
-                    _state.value = ProductListState(error = result.message ?: "Unknown error")
-                }
-                is Result.Loading -> {
-                    _state.value = ProductListState(isLoading = true)
-                }
-                is Result.Success -> {
-                    _state.value = ProductListState(products = result.data ?: emptyList())
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
     fun addProductToCart(id: Long) {
 
     }
@@ -65,22 +38,27 @@ constructor(
     fun removeProductFromCart(id: Long) {
 
     }
+
+    companion object {
+        var categorySelected = ""
+    }
 }
 
 private fun productListStateStream(
     productRepository: ProductRepository,
 ): Flow<ProductListUiState> {
-    val productList: Flow<List<Product>> = productRepository.getMainList()
-    Log.d(DEBUG_TAG,"productList in ViewModel -> ${productList.asResult()}")
-
-    return productList
+//    val productList: Flow<List<Product>> = productRepository.getMainList()
+    val processorProducts: Flow<List<Product>> = productRepository.getProductsByCategory(ProductListViewModel.categorySelected)
+//    Log.d(DEBUG_TAG,"productList in ViewModel -> ${productList.asResult()}")
+    Log.d(DEBUG_TAG,"processorProducts in ViewModel -> ${processorProducts.asResult()}")
+    return processorProducts
         .asResult()
         .map { result ->
             when (result) {
                 is uwu.victoraso.storeapp.ds.Result.Success -> {
                     Log.d(DEBUG_TAG," --- Success")
                     ProductListUiState.Success(
-                        productList.first()
+                        processorProducts.first()
                     )
                 }
                 is uwu.victoraso.storeapp.ds.Result.Loading -> {

@@ -1,5 +1,6 @@
 package uwu.victoraso.storeapp.ui.home.feed
 
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,45 +10,50 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
+import uwu.victoraso.storeapp.ui.collection.ProductListState
+import uwu.victoraso.storeapp.ui.collection.ProductListUiState
 import uwu.victoraso.storeapp.ui.components.FilterBar
 import uwu.victoraso.storeapp.ui.components.ProductCollection
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.FilterScreen
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun Feed(
     onProductClick: (Long) -> Unit,
     onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
-    isRefreshing: Boolean,
-    refreshData: () -> Unit,
-    state: ProductListState
+    viewModel: FeedViewModel,
 ) {
+    val feedUiState: FeedScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val productsCollection = remember { ProductRepo.getProducts() }
     val filters = remember { ProductRepo.getFilters() }
     Feed(
+        feedUiState = feedUiState,
         productCollections = productsCollection,
         filters = filters,
         onProductClick = onProductClick,
         onProductList = onProductList,
         onProductCreate = onProductCreate,
         modifier = modifier,
-        isRefreshing = isRefreshing,
-        refreshData = refreshData,
-        state = state
     )
 }
 
 @Composable
 private fun Feed(
+    feedUiState: FeedScreenUiState,
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
     onProductClick: (Long) -> Unit,
@@ -55,13 +61,23 @@ private fun Feed(
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
     isRefreshing: Boolean = false,
-    refreshData: () -> Unit,
-    state: ProductListState
 ) {
+    when (feedUiState.processors) {
+        FeedUiState.Loading -> {
+            Log.d(DEBUG_TAG, "Feed Loading")
+        }
+        is FeedUiState.Success -> {
+            Log.d(DEBUG_TAG, "Feed Success -> ${feedUiState.processors.productCollection.products.size}")
+        }
+        FeedUiState.Loading -> {
+            Log.d(DEBUG_TAG, "Feed Error")
+        }
+        else -> {}
+    }
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-            onRefresh = refreshData
+            onRefresh = {  }
         ) {
             Box {
                 ProductCollectionList(
@@ -69,7 +85,6 @@ private fun Feed(
                     filters = filters,
                     onProductClick = onProductClick,
                     onProductList = onProductList,
-                    state = state
                 )
                 DestinationBar(onDestinationBarButtonClick = onProductCreate)
             }
@@ -84,7 +99,6 @@ private fun ProductCollectionList(
     onProductClick: (Long) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
-    state: ProductListState
 ) {
     var filtersVisible by rememberSaveable { mutableStateOf(false) }
 
