@@ -159,12 +159,14 @@ fun ProductItem(
             end = 4.dp,
             bottom = 8.dp
         )
+            .width(200.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .clickable(onClick = { onProductClick(product.id) })
                 .padding(8.dp)
+                .fillMaxSize()
         ) {
             ProductImage(
                 imageUrl = product.imageUrl,
@@ -176,7 +178,9 @@ fun ProductItem(
                 text = product.name,
                 style = MaterialTheme.typography.subtitle1,
                 color = StoreAppTheme.colors.textSecondary,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
         }
     }

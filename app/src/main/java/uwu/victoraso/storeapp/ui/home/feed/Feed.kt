@@ -5,6 +5,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -38,11 +39,12 @@ fun Feed(
 ) {
     val feedUiState: FeedScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val productsCollection = remember { ProductRepo.getProducts() }
+//    val productsCollection = remember { ProductRepo.getProducts() }
+    val productsCollections = getProductsCollections(feedUiState)
     val filters = remember { ProductRepo.getFilters() }
     Feed(
         feedUiState = feedUiState,
-        productCollections = productsCollection,
+        productCollections = productsCollections,
         filters = filters,
         onProductClick = onProductClick,
         onProductList = onProductList,
@@ -59,37 +61,55 @@ private fun Feed(
     onProductClick: (Long) -> Unit,
     onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
-    modifier: Modifier = Modifier,
-    isRefreshing: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
+
     when (feedUiState.processors) {
         FeedUiState.Loading -> {
             Log.d(DEBUG_TAG, "Feed Loading")
+            StoreAppSurface(modifier = modifier.fillMaxSize()) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(text = "Loading")
+                }
+            }
         }
         is FeedUiState.Success -> {
             Log.d(DEBUG_TAG, "Feed Success -> ${feedUiState.processors.productCollection.products.size}")
+            StoreAppSurface(modifier = modifier.fillMaxSize()) {
+                Box {
+                    ProductCollectionList(
+                        productCollections = productCollections,
+                        filters = filters,
+                        onProductClick = onProductClick,
+                        onProductList = onProductList,
+                    )
+                    DestinationBar(onDestinationBarButtonClick = onProductCreate)
+                }
+            }
         }
         FeedUiState.Loading -> {
             Log.d(DEBUG_TAG, "Feed Error")
         }
         else -> {}
     }
-    StoreAppSurface(modifier = modifier.fillMaxSize()) {
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-            onRefresh = {  }
-        ) {
-            Box {
-                ProductCollectionList(
-                    productCollections = productCollections,
-                    filters = filters,
-                    onProductClick = onProductClick,
-                    onProductList = onProductList,
-                )
-                DestinationBar(onDestinationBarButtonClick = onProductCreate)
-            }
-        }
-    }
+
+}
+
+fun getProductsCollections(feedUiState: FeedScreenUiState): List<ProductCollection> {
+    val productCollection = ArrayList<ProductCollection>()
+    if (feedUiState.processors is FeedUiState.Success) productCollection.add(feedUiState.processors.productCollection)
+    if (feedUiState.motherboards is FeedUiState.Success) productCollection.add(feedUiState.motherboards.productCollection)
+    if (feedUiState.graphicCards is FeedUiState.Success) productCollection.add(feedUiState.graphicCards.productCollection)
+    if (feedUiState.storages is FeedUiState.Success) productCollection.add(feedUiState.storages.productCollection)
+    if (feedUiState.coolingSystems is FeedUiState.Success) productCollection.add(feedUiState.coolingSystems.productCollection)
+    if (feedUiState.rams is FeedUiState.Success) productCollection.add(feedUiState.rams.productCollection)
+    if (feedUiState.laptops is FeedUiState.Success) productCollection.add(feedUiState.laptops.productCollection)
+    if (feedUiState.builds is FeedUiState.Success) productCollection.add(feedUiState.builds.productCollection)
+    if (feedUiState.monitors is FeedUiState.Success) productCollection.add(feedUiState.monitors.productCollection)
+    if (feedUiState.mouses is FeedUiState.Success) productCollection.add(feedUiState.mouses.productCollection)
+    if (feedUiState.keyboards is FeedUiState.Success) productCollection.add(feedUiState.keyboards.productCollection)
+
+    return productCollection
 }
 
 @Composable
