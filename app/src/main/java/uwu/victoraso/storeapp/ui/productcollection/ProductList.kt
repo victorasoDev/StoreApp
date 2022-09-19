@@ -1,4 +1,4 @@
-package uwu.victoraso.storeapp.ui.collection
+package uwu.victoraso.storeapp.ui.productcollection
 
 import android.util.Log
 import androidx.compose.foundation.background

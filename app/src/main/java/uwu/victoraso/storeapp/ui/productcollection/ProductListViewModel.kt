@@ -1,16 +1,13 @@
-package uwu.victoraso.storeapp.ui.collection
+package uwu.victoraso.storeapp.ui.productcollection
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import uwu.victoraso.storeapp.ds.asResult
-import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.repositories.Result
+import uwu.victoraso.storeapp.repositories.asResult
+import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
@@ -19,7 +16,7 @@ import javax.inject.Inject
 class ProductListViewModel
 @Inject
 constructor(
-    private val productRepository: ProductRepository,
+    productRepository: ProductRepository,
 ) : ViewModel() {
 
     var productListUiState: StateFlow<ProductListUiState> = productListStateStream(
@@ -55,17 +52,17 @@ private fun productListStateStream(
         .asResult()
         .map { result ->
             when (result) {
-                is uwu.victoraso.storeapp.ds.Result.Success -> {
+                is Result.Success -> {
                     Log.d(DEBUG_TAG," --- Success")
                     ProductListUiState.Success(
                         processorProducts.first()
                     )
                 }
-                is uwu.victoraso.storeapp.ds.Result.Loading -> {
+                is Result.Loading -> {
                     Log.d(DEBUG_TAG," --- Loading")
                     ProductListUiState.Loading
                 }
-                is uwu.victoraso.storeapp.ds.Result.Error -> {
+                is Result.Error -> {
                     Log.d(DEBUG_TAG," --- Error")
                     ProductListUiState.Error
                 }

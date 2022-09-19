@@ -1,11 +1,7 @@
-package uwu.victoraso.storeapp.ds
+package uwu.victoraso.storeapp.repositories.userpreferences
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
 import uwu.victoraso.storeapp.model.UserProfile
-import uwu.victoraso.storeapp.repositories.Result
 import javax.inject.Inject
 
 class UserPreferencesRepository @Inject constructor(
@@ -21,6 +17,6 @@ class UserPreferencesRepository @Inject constructor(
 }
 
 sealed interface UserPreferencesRepositoryInterface {
-    val getUserProfile : Flow<UserProfile> //TODO: hacer suspend esta función
+    val getUserProfile : Flow<UserProfile>
     suspend fun setUserAdress(adress: String)
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -97,7 +98,8 @@ private fun Body(
     scroll: ScrollState,
     addNewProduct: (/*name*/String, /*price*/String, /*tagline*/String, /*categories*/List<String>) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
+    // con el by accedes directamente al value, así no tienes por qué llamar a name.value (solo a name)
+    var name by rememberSaveable { mutableStateOf("") } //rememberSaveable te guarda el estado aunque rotes la pantalla
     var price by remember { mutableStateOf("") }
     var tagline by remember { mutableStateOf("") }
     var categories by remember { mutableStateOf(ArrayList<String>()) }

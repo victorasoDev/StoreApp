@@ -1,4 +1,4 @@
-package uwu.victoraso.storeapp.ui.collection
+package uwu.victoraso.storeapp.ui.productcollection
 
 import uwu.victoraso.storeapp.model.Product
 

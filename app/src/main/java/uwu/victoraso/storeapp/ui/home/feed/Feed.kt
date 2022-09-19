@@ -13,13 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
-import uwu.victoraso.storeapp.ui.collection.ProductListState
-import uwu.victoraso.storeapp.ui.collection.ProductListUiState
 import uwu.victoraso.storeapp.ui.components.FilterBar
 import uwu.victoraso.storeapp.ui.components.ProductCollection
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider

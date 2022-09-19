@@ -1,13 +1,13 @@
-package uwu.victoraso.storeapp.ds
+package uwu.victoraso.storeapp.repositories.userpreferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import uwu.victoraso.storeapp.ds.USER_ADRESS_PREFERENCE
 import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject

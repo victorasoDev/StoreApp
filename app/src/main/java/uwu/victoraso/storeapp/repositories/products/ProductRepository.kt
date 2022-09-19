@@ -33,59 +33,6 @@ constructor(
 
     override fun getProductsByCategory(category: String): Flow<List<Product>> = productDataSource.getProductsByCategory(category)
 
-    override fun getProductList(): Flow<Result<List<Product>>> = flow {
-        try {
-            emit(Result.Loading())
-
-//            val docRef = StoreAppModule.provideFirestoreInstance().collection("products").document("p-001")
-//            docRef.get()
-//                .addOnSuccessListener { document ->
-//                    Log.d("debugprueba", document.data.toString())
-//                }
-//                .addOnFailureListener {
-//                    Log.d("debugprueba", it.toString())
-//                }
-//                .await()
-
-            val collection = db.collection("products")
-                .whereEqualTo("id", 1)
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        Log.d(DEBUG_TAG, "${doc.data}")
-                    }
-                }
-                .addOnFailureListener {
-                    Log.d(DEBUG_TAG, "${it}")
-                }
-                .await()
-
-            val docRefAllElements = db.collection("products")
-                .whereEqualTo("id", "p-001")
-                .get()
-                .addOnSuccessListener {
-                    for (doc in it) {
-                        //Aquí habría que parsear a objeto
-                        Log.d(DEBUG_TAG, "${doc.data}")
-                    }
-                }
-                .addOnFailureListener {
-                    Log.d(DEBUG_TAG, it.toString())
-                }
-                .await()
-
-//            val productList = productList.get().await().map { product ->
-//                product.toObject(Product::class.java)
-//            }
-
-            emit(Result.Success(data = emptyList()))
-        } catch (e: Exception) {
-            emit(Result.Error(message = e.localizedMessage ?: "Unknown error"))
-        }
-    }
-
-
-
     /**
      * DEBUG
      * **/
@@ -107,7 +54,6 @@ constructor(
 
 sealed interface ProductRepositoryInterface {
     fun addNewProduct(product: Product): Boolean
-    fun getProductList(): Flow<Result<List<Product>>>
     fun getMainList(): Flow<List<Product>>
     fun getProductsByCategory(category: String): Flow<List<Product>>
 }

@@ -5,8 +5,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import uwu.victoraso.storeapp.ds.UserPreferencesRepository
-import uwu.victoraso.storeapp.ds.asResult
+import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
+import uwu.victoraso.storeapp.repositories.Result
+import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.model.UserProfile
 import javax.inject.Inject
 
@@ -41,15 +42,15 @@ private fun profileUiStateStream(
         .asResult()
         .map { result ->
             when (result) {
-                is uwu.victoraso.storeapp.ds.Result.Success -> {
+                is Result.Success -> {
                     ProfileUiState.Success(
                         userProfile.first()
                     )
                 }
-                is uwu.victoraso.storeapp.ds.Result.Loading -> {
+                is Result.Loading -> {
                     ProfileUiState.Loading
                 }
-                is uwu.victoraso.storeapp.ds.Result.Error -> {
+                is Result.Error -> {
                     ProfileUiState.Error
                 }
             }
