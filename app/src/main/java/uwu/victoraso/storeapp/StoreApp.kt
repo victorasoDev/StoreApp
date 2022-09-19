@@ -23,6 +23,7 @@ import uwu.victoraso.storeapp.ui.home.addHomeGraph
 import uwu.victoraso.storeapp.ui.productcollection.ProductListViewModel
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreate
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreateViewModel
+import uwu.victoraso.storeapp.ui.productdetail.ProductDetailViewModel
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
@@ -78,7 +79,9 @@ private fun NavGraphBuilder.storeAppNavGraph(
     ) { navBackStackEntry ->
         val argument = requireNotNull(navBackStackEntry.arguments)
         val productId = argument.getLong(MainDestinations.PRODUCT_ID_KEY)
-        ProductDetail(productId, upPress)
+        val viewModel: ProductDetailViewModel = hiltViewModel()
+
+        ProductDetail(productId, upPress, viewModel)
     }
     composable(
         route = MainDestinations.PRODUCT_CREATE_ROUTE,

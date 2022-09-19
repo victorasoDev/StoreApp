@@ -23,10 +23,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.firestore.FirebaseFirestore
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
+import uwu.victoraso.storeapp.repositories.products.ProductDataSource
+import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -44,23 +49,40 @@ private val ExpandedImageSize = 300.dp
 private val CollapsedImageSize = 150.dp
 private val HzPadding = Modifier.padding(horizontal = 24.dp)
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ProductDetail(
     productId: Long,
-    upPress: () -> Unit
+    upPress: () -> Unit,
+    viewModel: ProductDetailViewModel
 ) {
-    val product = remember(productId) { ProductRepo.getProduct(productId) }
-    val related = remember(productId) { ProductRepo.getRelated(productId) }
+    val productDetailScreenUiState: ProductDetailScreenUiState by viewModel.uiState(productId, "Processors").collectAsStateWithLifecycle()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        val scroll = rememberScrollState(0)
+    when (productDetailScreenUiState.product) {
+        is ProductDetailUiState.Success -> {
+            val product = (productDetailScreenUiState.product as ProductDetailUiState.Success).product
+            val relatedProducts = if (productDetailScreenUiState.relatedProducts is RelatedProductsUiState.Success) {
+                    (productDetailScreenUiState.relatedProducts as RelatedProductsUiState.Success).productCollection
+                } else {
+                    ProductCollection(0L, "No related")
+                }
 
-        Header()
-        Body(related, scroll)
-        Title(product!!) { scroll.value }
-        Image(product.imageUrl) { scroll.value }
-        Up(upPress)
-        CartBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
+            Box(modifier = Modifier.fillMaxSize()) {
+                val scroll = rememberScrollState(0)
+                Header()
+                Body(listOf(relatedProducts), scroll) // TODO: el body espera un par de colecciones
+                Title(product) { scroll.value }
+                Image(product.imageUrl) { scroll.value }
+                Up(upPress)
+                CartBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
+            }
+        }
+        is ProductDetailUiState.Loading -> {
+
+        }
+        is ProductDetailUiState.Error -> {
+
+        }
     }
 }
 
@@ -207,7 +229,7 @@ private fun Title(
             .statusBarsPadding()
             .offset {
                 val scroll = scrollProvider()
-                val offset = (maxOffset - scroll)
+                val offset = (maxOffset - scroll).coerceAtLeast(minOffset)
                 IntOffset(x = 0, y = offset.toInt())
             }
             .background(color = StoreAppTheme.colors.uiBackground)
@@ -333,7 +355,8 @@ private fun SnackDetailPreview() {
     StoreAppTheme {
         ProductDetail(
             productId = 1L,
-            upPress = { }
+            upPress = { },
+            viewModel = ProductDetailViewModel(ProductRepository(FirebaseFirestore.getInstance(), ProductDataSource(FirebaseFirestore.getInstance())))
         )
     }
 }

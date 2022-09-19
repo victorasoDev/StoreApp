@@ -15,6 +15,28 @@ import javax.inject.Singleton
 class ProductDataSource @Inject constructor(
     private val db: FirebaseFirestore
 ) {
+
+    /**
+     * Get product details by productID
+     */
+    fun getProductDetailsById(productId: Long): Flow<Product> = flow {
+        var product = Product()
+        db.collection("products")
+            .whereEqualTo("id", productId)
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    product = doc.toObject(Product::class.java)
+                    Log.d(DEBUG_TAG, "ProductDataSource -> ${doc.data}")
+                }
+            }
+            .addOnFailureListener {
+                Log.d(DEBUG_TAG, "ProductDataSource -> ${it}")
+            }
+            .await()
+        emit(product)
+    }
+
     fun getMainList(): Flow<List<Product>> = flow {
         val productList = ArrayList<Product>()
         db.collection("products")
@@ -36,7 +58,7 @@ class ProductDataSource @Inject constructor(
     }
 
     /**
-     * Get processor products stored in StoreApp FireStore Database
+     * Get products by category stored in StoreApp FireStore Database
      */
     fun getProductsByCategory(category: String): Flow<List<Product>> = flow {
         val productList = ArrayList<Product>()

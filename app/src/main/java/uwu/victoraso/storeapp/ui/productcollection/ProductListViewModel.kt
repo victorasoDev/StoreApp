@@ -36,7 +36,7 @@ constructor(
 
     }
 
-    companion object {
+    companion object { //TODO: quitar cuando sepa como pasarle el parámetro
         var categorySelected = ""
     }
 }
@@ -44,18 +44,16 @@ constructor(
 private fun productListStateStream(
     productRepository: ProductRepository,
 ): Flow<ProductListUiState> {
-//    val productList: Flow<List<Product>> = productRepository.getMainList()
-    val processorProducts: Flow<List<Product>> = productRepository.getProductsByCategory(ProductListViewModel.categorySelected)
-//    Log.d(DEBUG_TAG,"productList in ViewModel -> ${productList.asResult()}")
-    Log.d(DEBUG_TAG,"processorProducts in ViewModel -> ${processorProducts.asResult()}")
-    return processorProducts
+    val productListByCategory: Flow<List<Product>> = productRepository.getProductsByCategory(ProductListViewModel.categorySelected)
+    Log.d(DEBUG_TAG,"processorProducts in ViewModel -> ${productListByCategory.asResult()}")
+    return productListByCategory
         .asResult()
         .map { result ->
             when (result) {
                 is Result.Success -> {
                     Log.d(DEBUG_TAG," --- Success")
                     ProductListUiState.Success(
-                        processorProducts.first()
+                        productListByCategory.first()
                     )
                 }
                 is Result.Loading -> {
