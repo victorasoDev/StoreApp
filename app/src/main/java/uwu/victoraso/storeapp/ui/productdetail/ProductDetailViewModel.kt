@@ -1,12 +1,15 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.model.CollectionType
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
@@ -14,16 +17,25 @@ import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.home.feed.FeedUiState
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailViewModel
 @Inject
 constructor(
-    productRepository: ProductRepository
+    productRepository: ProductRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val productDetailStream: Flow<Result<Product>> = productRepository.getProductDetailsById(1).asResult()
+    private val productId: Long = checkNotNull(savedStateHandle[MainDestinations.PRODUCT_ID_KEY])
+
+    init {
+        Log.d(DEBUG_TAG, productId.toString())
+    }
+//    private val categoryId: String = checkNotNull(savedStateHandle[MainDestinations.CATEGORY_ID_KEY])
+
+    private val productDetailStream: Flow<Result<Product>> = productRepository.getProductDetailsById(productId = productId).asResult()
     private val relatedProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory("Processors").asResult()
 
     val uiState: StateFlow<ProductDetailScreenUiState> =

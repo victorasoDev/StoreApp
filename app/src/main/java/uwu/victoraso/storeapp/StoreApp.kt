@@ -77,11 +77,9 @@ private fun NavGraphBuilder.storeAppNavGraph(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.PRODUCT_ID_KEY}}",
         arguments = listOf(navArgument(MainDestinations.PRODUCT_ID_KEY) { type = NavType.LongType })
     ) { navBackStackEntry ->
-        val argument = requireNotNull(navBackStackEntry.arguments)
-        val productId = argument.getLong(MainDestinations.PRODUCT_ID_KEY)
         val viewModel: ProductDetailViewModel = hiltViewModel()
 
-        ProductDetail(productId, upPress, viewModel)
+        ProductDetail(upPress, viewModel)
     }
     composable(
         route = MainDestinations.PRODUCT_CREATE_ROUTE,

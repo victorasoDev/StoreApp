@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.firestore.FirebaseFirestore
@@ -52,11 +53,10 @@ private val HzPadding = Modifier.padding(horizontal = 24.dp)
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ProductDetail(
-    productId: Long,
     upPress: () -> Unit,
     viewModel: ProductDetailViewModel
 ) {
-    val productDetailScreenUiState: ProductDetailScreenUiState by viewModel.uiState(productId, "Processors").collectAsStateWithLifecycle()
+    val productDetailScreenUiState: ProductDetailScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (productDetailScreenUiState.product) {
         is ProductDetailUiState.Success -> {
@@ -143,7 +143,7 @@ private fun Body(
                         text = stringResource(R.string.detail_header),
                         style = MaterialTheme.typography.overline,
                         color = StoreAppTheme.colors.textHelp,
-                        modifier = HzPadding
+                        modifier = HzPadding.padding(top = 20.dp) //TODO: cambiar? cuando el nombre tiene dos lineas, este texto desaparece sin el padding 20
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     var seeMore by remember { mutableStateOf(true) }
@@ -354,9 +354,11 @@ private fun CartBottomBar(modifier: Modifier = Modifier) {
 private fun SnackDetailPreview() {
     StoreAppTheme {
         ProductDetail(
-            productId = 1L,
             upPress = { },
-            viewModel = ProductDetailViewModel(ProductRepository(FirebaseFirestore.getInstance(), ProductDataSource(FirebaseFirestore.getInstance())))
+            viewModel = ProductDetailViewModel(
+                ProductRepository(FirebaseFirestore.getInstance(), ProductDataSource(FirebaseFirestore.getInstance())),
+                SavedStateHandle()
+                )
         )
     }
 }
