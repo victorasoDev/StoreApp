@@ -3,10 +3,14 @@ package uwu.victoraso.storeapp.ui.productcollection
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -29,6 +33,8 @@ import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
+import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
+import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
@@ -72,8 +78,6 @@ fun ProductList(
             Log.d(DEBUG_TAG, " - " + productListUiState.mainList.size.toString()) //TODO
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
                 Box {
-                    Header(category)
-                    Up(upPress = upPress)
                     ListContent(
                         productList = productListUiState.mainList,
                         onProductSelected = onProductSelected,
@@ -81,6 +85,7 @@ fun ProductList(
                         removeProduct = removeProduct,
                         modifier = Modifier.align(Alignment.TopCenter)
                     )
+                    StoreAppTopBar(upPress = upPress, screenTitle = category)
                 }
             }
         }
@@ -93,49 +98,6 @@ fun ProductList(
     }
 }
 
-@Composable //TODO juntar con el de ProductCreate con el parámetro título, para usarlo en distintos sitios
-private fun Header(categoryName: String) {
-    Spacer(
-        modifier = Modifier
-            .height(55.dp)
-            .fillMaxWidth()
-            .background(Brush.horizontalGradient(StoreAppTheme.colors.tornado1))
-    )
-    Text(
-        text = categoryName,
-        style = MaterialTheme.typography.subtitle1,
-        fontSize = 18.sp,
-        color = StoreAppTheme.colors.textInteractive,
-        textAlign = TextAlign.Center,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier
-            .padding(top = 15.dp)
-            .fillMaxWidth()
-    )
-}
-
-@Composable
-private fun Up(upPress: () -> Unit) {
-    IconButton(
-        onClick = upPress,
-        modifier = Modifier
-            .statusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 10.dp)
-            .size(36.dp)
-            .background(
-                color = Neutral8.copy(alpha = 0.32f),
-                shape = CircleShape
-            )
-    ) {
-        Icon(
-            imageVector = mirroringBackIcon(),
-            tint = StoreAppTheme.colors.iconInteractive,
-            contentDescription = null
-        )
-    }
-}
-
 @Composable
 fun ListContent(
     productList: List<Product>,
@@ -145,7 +107,8 @@ fun ListContent(
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
-    LazyColumn(modifier = modifier) {
+    val lazyColumnState = rememberLazyListState()
+    LazyColumn(modifier = modifier, state = lazyColumnState) {
         item {
             Spacer(
                 modifier = Modifier.windowInsetsTopHeight(

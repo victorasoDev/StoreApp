@@ -44,52 +44,8 @@ fun ProductCreate(
     ) {
         val scroll = rememberScrollState(0)
 
-        Header()
         Body(scroll, addNewProduct)
-        Up(upPress)
-    }
-}
-
-@Composable
-private fun Header() {
-    Spacer(
-        modifier = Modifier
-            .height(55.dp)
-            .fillMaxWidth()
-            .background(Brush.horizontalGradient(StoreAppTheme.colors.tornado1))
-    )
-    Text(
-        text = "Product creation",
-        style = MaterialTheme.typography.subtitle1,
-        fontSize = 18.sp,
-        color = StoreAppTheme.colors.textInteractive,
-        textAlign = TextAlign.Center,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier
-            .padding(top = 15.dp)
-            .fillMaxWidth()
-    )
-}
-
-@Composable
-private fun Up(upPress: () -> Unit) {
-    IconButton(
-        onClick = upPress,
-        modifier = Modifier
-            .statusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 10.dp)
-            .size(36.dp)
-            .background(
-                color = Neutral8.copy(alpha = 0.32f),
-                shape = CircleShape
-            )
-    ) {
-        Icon(
-            imageVector = mirroringBackIcon(),
-            tint = StoreAppTheme.colors.iconInteractive,
-            contentDescription = null
-        )
+        StoreAppTopBar(upPress = upPress, screenTitle = "Product creation")
     }
 }
 

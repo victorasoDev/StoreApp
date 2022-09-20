@@ -85,10 +85,9 @@ private fun Feed(
                 }
             }
         }
-        FeedUiState.Loading -> {
+        FeedUiState.Error -> {
             Log.d(DEBUG_TAG, "Feed Error")
         }
-        else -> {}
     }
 
 }
