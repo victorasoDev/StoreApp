@@ -33,7 +33,11 @@ fun StoreApp() {
         StoreAppScaffold(
             bottomBar = {
                 if (appState.shouldShowBottomBar) {
-                    StoreAppBottomBar(tabs = appState.bottomBarTabs, currentRoute = appState.currentRoute!!, navigateToRoute = appState::navigateToBottomBarRoute)
+                    StoreAppBottomBar(
+                        tabs = appState.bottomBarTabs,
+                        currentRoute = appState.currentRoute!!,
+                        navigateToRoute = appState::navigateToBottomBarRoute
+                    )
                 }
             },
             snackbarHost = {
@@ -79,15 +83,20 @@ private fun NavGraphBuilder.storeAppNavGraph(
             navArgument(MainDestinations.PRODUCT_ID_KEY) { type = NavType.LongType },
             navArgument(MainDestinations.CATEGORY_ID_KEY) { type = NavType.StringType }
         )
-    ) {
+    ) { navBackStackEntry ->
+
         val viewModel: ProductDetailViewModel = hiltViewModel()
-        ProductDetail(upPress, viewModel)
+        ProductDetail(
+            upPress = upPress,
+            viewModel = viewModel,
+            onProductList = { category -> onProductList(category, navBackStackEntry) },
+            onProductClick =  { id, category -> onProductSelected(id, category, navBackStackEntry) }
+        )
     }
     composable(
         route = MainDestinations.PRODUCT_CREATE_ROUTE,
     ) {
         val viewModel: ProductCreateViewModel = hiltViewModel()
-        val state = viewModel.state
         ProductCreate(
             upPress = upPress,
             addNewProduct = viewModel::addNewProduct

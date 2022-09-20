@@ -2,9 +2,13 @@ package uwu.victoraso.storeapp.ui.home.feed
 
 import android.util.Log
 import androidx.compose.animation.*
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -35,7 +39,6 @@ fun Feed(
 ) {
     val feedUiState: FeedScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-//    val productsCollection = remember { ProductRepo.getProducts() }
     val productsCollections = getProductsCollections(feedUiState)
     val filters = remember { ProductRepo.getFilters() }
     Feed(
@@ -59,7 +62,6 @@ private fun Feed(
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     when (feedUiState.processors) {
         FeedUiState.Loading -> {
             Log.d(DEBUG_TAG, "Feed Loading")
@@ -117,9 +119,10 @@ private fun ProductCollectionList(
     modifier: Modifier = Modifier,
 ) {
     var filtersVisible by rememberSaveable { mutableStateOf(false) }
+    val lazyColumnState = rememberLazyListState()
 
     Box(modifier = modifier) {
-        LazyColumn {
+        LazyColumn (state = lazyColumnState) {
             item {
                 Spacer(
                     modifier = Modifier.windowInsetsTopHeight(

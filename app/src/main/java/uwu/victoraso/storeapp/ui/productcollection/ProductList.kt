@@ -90,7 +90,6 @@ fun ProductList(
         ProductListUiState.Error -> {
             Log.d(DEBUG_TAG, " - Error") //TODO
         }
-        else -> {  }
     }
 }
 

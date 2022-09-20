@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -36,6 +38,7 @@ import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
@@ -54,34 +57,62 @@ private val HzPadding = Modifier.padding(horizontal = 24.dp)
 @Composable
 fun ProductDetail(
     upPress: () -> Unit,
-    viewModel: ProductDetailViewModel
+    viewModel: ProductDetailViewModel,
+    onProductList: (String) -> Unit,
+    onProductClick: (Long, String) -> Unit,
 ) {
     val productDetailScreenUiState: ProductDetailScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    when (productDetailScreenUiState.product) {
+    val productDetailState = productDetailScreenUiState.product
+    val relatedState = productDetailScreenUiState.relatedProducts
+
+    ProductDetail(
+        upPress = upPress,
+        productDetailState = productDetailState,
+        relatedState = relatedState,
+        onProductList = onProductList,
+        onProductClick = onProductClick,
+    )
+}
+
+@Composable
+private fun ProductDetail(
+    upPress: () -> Unit,
+    productDetailState: ProductDetailUiState,
+    relatedState: RelatedProductsUiState,
+    onProductList: (String) -> Unit,
+    onProductClick: (Long, String) -> Unit,
+    ) {
+    when (productDetailState) {
         is ProductDetailUiState.Success -> {
-            val product = (productDetailScreenUiState.product as ProductDetailUiState.Success).product
-            val relatedProducts = if (productDetailScreenUiState.relatedProducts is RelatedProductsUiState.Success) {
-                    (productDetailScreenUiState.relatedProducts as RelatedProductsUiState.Success).productCollection
-                } else {
-                    ProductCollection(0L, "No related")
-                }
+            val product = productDetailState.product
 
             Box(modifier = Modifier.fillMaxSize()) {
                 val scroll = rememberScrollState(0)
                 Header()
-                Body(listOf(relatedProducts), scroll) // TODO: el body espera un par de colecciones
+                Body(
+                    relatedState = relatedState,
+                    productId = product.id,
+                    onProductList = onProductList,
+                    onProductClick = onProductClick,
+                    scroll = scroll
+                ) // TODO: el body espera un par de colecciones
                 Title(product) { scroll.value }
                 Image(product.imageUrl) { scroll.value }
                 Up(upPress)
                 CartBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
             }
+
         }
         is ProductDetailUiState.Loading -> {
-
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Loading") //TODO: crear vista de carga personalizada
+            }
         }
         is ProductDetailUiState.Error -> {
-
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Error")
+            }
         }
     }
 }
@@ -119,7 +150,11 @@ private fun Up(upPress: () -> Unit) {
 
 @Composable
 private fun Body(
-    related: List<ProductCollection>,
+//    related: List<ProductCollection>,
+    relatedState: RelatedProductsUiState,
+    productId: Long,
+    onProductList: (String) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     scroll: ScrollState
 ) {
     Column {
@@ -191,14 +226,36 @@ private fun Body(
                     Spacer(modifier = Modifier.height(16.dp))
                     StoreAppDivider()
 
-                    related.forEach { productCollection ->
-                        key(productCollection.id) {
+                    when (relatedState) {
+                        is RelatedProductsUiState.Success -> {
+                            // eliminar el producto de la ficha del listado de relacionados
+                            relatedState.productCollection.products = relatedState.productCollection.products.filter { product -> product.id != productId }
                             ProductCollection(
-                                productCollection = productCollection,
-                                onProductList = { },
-                                onProductClick = {id, category -> },
+                                productCollection = relatedState.productCollection,
+                                onProductList = onProductList,
+                                onProductClick = onProductClick,
                                 highlight = false
                             )
+                            /*related.forEach { productCollection ->
+                                key(productCollection.id) {
+                                    ProductCollection(
+                                        productCollection = productCollection,
+                                        onProductList = { },
+                                        onProductClick = {id, category -> },
+                                        highlight = false
+                                    )
+                                }
+                            }*/
+                        }
+                        is RelatedProductsUiState.Loading -> {
+                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Text(text = "Loading") //TODO: crear vista de carga personalizada
+                            }
+                        }
+                        is RelatedProductsUiState.Error -> {
+                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Text(text = "Error") //TODO: crear vista de carga personalizada
+                            }
                         }
                     }
 
@@ -227,10 +284,9 @@ private fun Title(
         modifier = Modifier
             .heightIn(min = TitleHeight)
             .statusBarsPadding()
-            .offset {
-                val scroll = scrollProvider()
-                val offset = (maxOffset - scroll).coerceAtLeast(minOffset)
-                IntOffset(x = 0, y = offset.toInt())
+            .graphicsLayer { //https://medium.com/androiddevelopers/jetpack-compose-debugging-recomposition-bfcf4a6f8d37
+                val offset = (maxOffset - scrollProvider()).coerceAtLeast(minOffset)
+                translationY = offset
             }
             .background(color = StoreAppTheme.colors.uiBackground)
     ) {
@@ -358,7 +414,9 @@ private fun SnackDetailPreview() {
             viewModel = ProductDetailViewModel(
                 ProductRepository(FirebaseFirestore.getInstance(), ProductDataSource(FirebaseFirestore.getInstance())),
                 SavedStateHandle()
-                )
+                ),
+            onProductList = {},
+            onProductClick = {id, category -> }
         )
     }
 }
