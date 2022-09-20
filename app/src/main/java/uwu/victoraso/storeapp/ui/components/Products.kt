@@ -47,7 +47,7 @@ private val gradientWidth
 @Composable
 fun ProductCollection(
     productCollection: ProductCollection,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
     index: Int = 0,
@@ -99,7 +99,7 @@ private val HighlightCardPadding = 16.dp
 private fun HighlightedProducts(
     index: Int,
     products: List<Product>,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scroll = rememberScrollState(0)
@@ -133,7 +133,7 @@ private fun HighlightedProducts(
 @Composable
 private fun Products(
     products: List<Product>,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -149,7 +149,7 @@ private fun Products(
 @Composable
 fun ProductItem(
     product: Product,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     StoreAppSurface(
@@ -164,7 +164,7 @@ fun ProductItem(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .clickable(onClick = { onProductClick(product.id) })
+                .clickable(onClick = { onProductClick(product.id, product.categories.first()) })
                 .padding(8.dp)
                 .fillMaxSize()
         ) {
@@ -189,7 +189,7 @@ fun ProductItem(
 @Composable
 private fun HighlightedProductItem(
     product: Product,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     index: Int,
     gradient: List<Color>,
     gradientWidth: Float,
@@ -209,7 +209,7 @@ private fun HighlightedProductItem(
     ) {
         Column(
             modifier = Modifier
-                .clickable(onClick = { onProductClick(product.id) })
+                .clickable(onClick = { onProductClick(product.id, product.categories.first()) })
                 .fillMaxSize()
         ) {
             Box(
@@ -287,7 +287,7 @@ private fun ProductCardPreview() {
         val product = products.first()
         HighlightedProductItem(
             product = product,
-            onProductClick = { },
+            onProductClick = { id, category -> },
             index = 0,
             gradient = StoreAppTheme.colors.gradient6_1,
             gradientWidth = gradientWidth,

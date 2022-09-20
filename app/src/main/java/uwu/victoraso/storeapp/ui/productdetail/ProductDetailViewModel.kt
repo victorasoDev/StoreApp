@@ -29,14 +29,10 @@ constructor(
 ) : ViewModel() {
 
     private val productId: Long = checkNotNull(savedStateHandle[MainDestinations.PRODUCT_ID_KEY])
-
-    init {
-        Log.d(DEBUG_TAG, productId.toString())
-    }
-//    private val categoryId: String = checkNotNull(savedStateHandle[MainDestinations.CATEGORY_ID_KEY])
+    private val category: String = checkNotNull(savedStateHandle[MainDestinations.CATEGORY_ID_KEY])
 
     private val productDetailStream: Flow<Result<Product>> = productRepository.getProductDetailsById(productId = productId).asResult()
-    private val relatedProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory("Processors").asResult()
+    private val relatedProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory(category = category).asResult()
 
     val uiState: StateFlow<ProductDetailScreenUiState> =
         combine(
@@ -69,7 +65,7 @@ constructor(
                     is Result.Success -> RelatedProductsUiState.Success(
                         ProductCollection(
                             id = 1L,
-                            name = "Processors",
+                            name = relatedProductsResult.data.first().categories.first(),
                             products = relatedProductsResult.data,
                             type = CollectionType.Highlight
                         )

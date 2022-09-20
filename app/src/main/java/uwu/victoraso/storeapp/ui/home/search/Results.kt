@@ -36,7 +36,7 @@ import uwu.victoraso.storeapp.ui.utils.formatPrice
 fun SearchResults(
     searchResults: List<Product>,
     filters: List<Filter>,
-    onProductClick: (Long) -> Unit
+    onProductClick: (Long, String) -> Unit
 ) {
     Column {
 

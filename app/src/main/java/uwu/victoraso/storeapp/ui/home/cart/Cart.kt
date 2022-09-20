@@ -44,7 +44,7 @@ import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @Composable
 fun Cart(
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory())
 ) {
@@ -69,7 +69,7 @@ fun Cart(
     increaseItemCount: (Long) -> Unit,
     decreaseItemCount: (Long) -> Unit,
     inspiredByCart: ProductCollection,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
@@ -96,7 +96,7 @@ fun CartContent(
     increaseItemCount: (Long) -> Unit,
     decreaseItemCount: (Long) -> Unit,
     inspiredByCart: ProductCollection,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
@@ -238,14 +238,14 @@ fun CartItem(
     removeProduct: (Long) -> Unit,
     increaseItemCount: (Long) -> Unit,
     decreaseItemCount: (Long) -> Unit,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val product = orderLine.product
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onProductClick(product.id) }
+            .clickable { onProductClick(product.id, product.categories.first()) }
             .background(StoreAppTheme.colors.uiBackground)
             .padding(horizontal = 24.dp)
     ) {
@@ -455,7 +455,7 @@ private fun CartPreview() {
             increaseItemCount = {},
             decreaseItemCount = {},
             inspiredByCart = ProductRepo.getInspiredByCart(),
-            onProductClick = {}
+            onProductClick = {id, category -> }
         )
     }
 }

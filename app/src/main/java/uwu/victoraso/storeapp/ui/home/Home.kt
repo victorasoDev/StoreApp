@@ -52,7 +52,7 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import java.util.*
 
 fun NavGraphBuilder.addHomeGraph(
-    onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
     onProductCreate: (NavBackStackEntry) -> Unit,
     onProductList: (String, NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
@@ -61,7 +61,7 @@ fun NavGraphBuilder.addHomeGraph(
         val viewModel: FeedViewModel = hiltViewModel()
 
         Feed(
-            onProductClick = { id -> onProductSelected(id, from) },
+            onProductClick = { id, category -> onProductSelected(id, category, from) },
             onProductCreate = { onProductCreate(from) },
             onProductList = { category -> onProductList(category, from) },
             modifier = modifier,
@@ -69,10 +69,10 @@ fun NavGraphBuilder.addHomeGraph(
         )
     }
     composable(HomeSections.SEARCH.route) { from ->
-        Search(onProductClick = { id -> onProductSelected(id, from) }, modifier)
+        Search(onProductClick = { id, category -> onProductSelected(id, category, from) }, modifier)
     }
     composable(HomeSections.CART.route) { from ->
-        Cart(onProductClick = { id -> onProductSelected(id, from) }, modifier)
+        Cart(onProductClick = { id, category -> onProductSelected(id, category, from) }, modifier)
     }
     composable(HomeSections.PROFILE.route) {
         val viewModel: ProfileViewModel = hiltViewModel()

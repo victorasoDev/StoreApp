@@ -45,7 +45,7 @@ import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
 @Composable
 fun Search(
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier,
     state: SearchState = rememberSearchState()
 ) {

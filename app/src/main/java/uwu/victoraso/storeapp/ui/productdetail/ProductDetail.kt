@@ -196,7 +196,7 @@ private fun Body(
                             ProductCollection(
                                 productCollection = productCollection,
                                 onProductList = { },
-                                onProductClick = { },
+                                onProductClick = {id, category -> },
                                 highlight = false
                             )
                         }

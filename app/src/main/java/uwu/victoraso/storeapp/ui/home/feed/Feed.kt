@@ -27,7 +27,7 @@ import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun Feed(
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
@@ -54,7 +54,7 @@ private fun Feed(
     feedUiState: FeedScreenUiState,
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier
@@ -112,7 +112,7 @@ fun getProductsCollections(feedUiState: FeedScreenUiState): List<ProductCollecti
 private fun ProductCollectionList(
     productCollections: List<ProductCollection>,
     filters: List<Filter>,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {

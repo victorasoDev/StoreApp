@@ -94,10 +94,10 @@ class StoreAppState(
         }
     }
 
-    fun navigateToProductDetail(productId: Long, from: NavBackStackEntry) {
+    fun navigateToProductDetail(productId: Long, category: String, from: NavBackStackEntry) {
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {
-            navController.navigate("${MainDestinations.PRODUCT_DETAIL_ROUTE}/$productId")
+            navController.navigate("${MainDestinations.PRODUCT_DETAIL_ROUTE}/$category/$productId")
         }
     }
 

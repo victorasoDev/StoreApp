@@ -62,7 +62,7 @@ fun StoreApp() {
 }
 
 private fun NavGraphBuilder.storeAppNavGraph(
-    onProductSelected: (Long, NavBackStackEntry) -> Unit,
+    onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
     onProductCreate: (NavBackStackEntry) -> Unit,
     onProductList: (String, NavBackStackEntry) -> Unit,
     upPress: () -> Unit
@@ -74,11 +74,13 @@ private fun NavGraphBuilder.storeAppNavGraph(
         addHomeGraph(onProductSelected, onProductCreate, onProductList)
     }
     composable(
-        route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.PRODUCT_ID_KEY}}",
-        arguments = listOf(navArgument(MainDestinations.PRODUCT_ID_KEY) { type = NavType.LongType })
-    ) { navBackStackEntry ->
+        route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.CATEGORY_ID_KEY}}/{${MainDestinations.PRODUCT_ID_KEY}}",
+        arguments = listOf(
+            navArgument(MainDestinations.PRODUCT_ID_KEY) { type = NavType.LongType },
+            navArgument(MainDestinations.CATEGORY_ID_KEY) { type = NavType.StringType }
+        )
+    ) {
         val viewModel: ProductDetailViewModel = hiltViewModel()
-
         ProductDetail(upPress, viewModel)
     }
     composable(
@@ -101,7 +103,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
 
         val viewModel: ProductListViewModel = hiltViewModel()
         ProductList(
-            onProductSelected = { id -> onProductSelected(id, navBackStackEntry) },
+            onProductSelected = { id -> onProductSelected(id, category, navBackStackEntry) },
             category = category,
             upPress = upPress, //TODO esto no va
             viewModel = viewModel
