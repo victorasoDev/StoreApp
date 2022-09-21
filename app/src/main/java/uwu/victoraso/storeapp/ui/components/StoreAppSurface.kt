@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -26,6 +27,7 @@ fun StoreAppSurface(
     shape: Shape = RectangleShape,
     color: Color = StoreAppTheme.colors.uiBackground,
     contentColor: Color = StoreAppTheme.colors.textSecondary,
+    contentAlignment: Alignment = Alignment.TopStart,
     border: BorderStroke? = null,
     elevation: Dp = 0.dp,
     content: @Composable () -> Unit
@@ -39,7 +41,8 @@ fun StoreAppSurface(
                 color = getBackgroundColorForElevation(color = color, elevation = elevation),
                 shape = shape
             )
-            .clip(shape)
+            .clip(shape),
+        contentAlignment = contentAlignment
     ) {
             CompositionLocalProvider(LocalContentColor provides contentColor, content = content)
     }

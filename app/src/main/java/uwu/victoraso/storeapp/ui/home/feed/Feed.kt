@@ -130,7 +130,6 @@ private fun ProductCollectionList(
                 )
                 FilterBar(filters, onShowFilter = { filtersVisible = true })
             }
-            //TODO: quitar el productCollection y poner state.products. Habría que obtener todas las collecciones distintas si quiero seguir pasandole collecicones como objetos
             itemsIndexed(productCollections) { index, productCollection ->
                 if (index > 0) {
                     StoreAppDivider(thickness = 2.dp)

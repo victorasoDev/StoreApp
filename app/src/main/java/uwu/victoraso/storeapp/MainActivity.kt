@@ -14,3 +14,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+//TODO: notifications -> https://developer.android.com/training/notify-user/build-notification

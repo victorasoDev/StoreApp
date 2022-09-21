@@ -1,8 +1,6 @@
 package uwu.victoraso.storeapp.ui.components
 
 import android.content.res.Configuration
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,8 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,9 +30,8 @@ import uwu.victoraso.storeapp.model.CollectionType
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.products
-import uwu.victoraso.storeapp.repositories.products.ProductRepository
+import uwu.victoraso.storeapp.ui.theme.AlphaNearOpaque
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.mirroringIcon
 
 private val gradientWidth
@@ -85,9 +81,18 @@ fun ProductCollection(
             }
         }
         if (highlight && productCollection.type == CollectionType.Highlight) {
-            HighlightedProducts(index = index, products = productCollection.products, onProductClick = onProductClick)
+            HighlightedProducts(
+                index = index,
+                products = productCollection.products,
+                onProductClick = onProductClick,
+                onProductList = onProductList
+            )
         } else {
-            Products(products = productCollection.products, onProductClick = onProductClick)
+            Products(
+                products = productCollection.products,
+                onProductClick = onProductClick,
+                onProductList = onProductList
+            )
         }
     }
 }
@@ -100,6 +105,7 @@ private fun HighlightedProducts(
     index: Int,
     products: List<Product>,
     onProductClick: (Long, String) -> Unit,
+    onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scroll = rememberScrollState(0)
@@ -118,14 +124,22 @@ private fun HighlightedProducts(
         contentPadding = PaddingValues(start = 24.dp, end = 24.dp)
     ) {
         itemsIndexed(products) { index, product ->
-            HighlightedProductItem(
-                product = product,
-                onProductClick = onProductClick,
-                index = index,
-                gradient = gradient,
-                gradientWidth = gradientWidth,
-                scroll = scroll.value
-            )
+            if (products.lastIndex != index) {
+                HighlightedProductItem(
+                    product = product,
+                    onProductClick = onProductClick,
+                    index = index,
+                    gradient = gradient,
+                    gradientWidth = gradientWidth,
+                    scroll = scroll.value
+                )
+            } else {
+                ViewMoreHighlightCard(
+                    modifier = modifier,
+                    onProductList = onProductList,
+                    productCollectionCategory = products.first().categories.first()
+                )
+            }
         }
     }
 }
@@ -134,14 +148,24 @@ private fun HighlightedProducts(
 private fun Products(
     products: List<Product>,
     onProductClick: (Long, String) -> Unit,
+    onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
         modifier = modifier,
-        contentPadding = PaddingValues(start = 12.dp, end = 12.dp)
+        contentPadding = PaddingValues(start = 12.dp, end = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        items(products) { product ->
-            ProductItem(product = product, onProductClick = onProductClick)
+        itemsIndexed(products) { index, product ->
+            if (products.lastIndex != index) {
+                ProductItem(product = product, onProductClick = onProductClick)
+            } else {
+                ViewMoreCard(
+                    modifier = modifier,
+                    onProductList = onProductList,
+                    productCollectionCategory = products.first().categories.first()
+                )
+            }
         }
     }
 }
@@ -154,11 +178,12 @@ fun ProductItem(
 ) {
     StoreAppSurface(
         shape = MaterialTheme.shapes.medium,
-        modifier = modifier.padding(
-            start = 4.dp,
-            end = 4.dp,
-            bottom = 8.dp
-        )
+        modifier = modifier
+            .padding(
+                start = 4.dp,
+                end = 4.dp,
+                bottom = 8.dp
+            )
             .width(200.dp)
     ) {
         Column(
@@ -278,20 +303,103 @@ fun ProductImage(
     }
 }
 
+@Composable
+private fun ViewMoreHighlightCard(
+    modifier: Modifier,
+    onProductList: (String) -> Unit,
+    productCollectionCategory: String
+) {
+    StoreAppCard(
+        modifier = modifier
+            .size(
+                width = 170.dp,
+                height = 250.dp
+            )
+            .padding(bottom = 16.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable { onProductList(productCollectionCategory) },
+            contentAlignment = Alignment.Center,
+        ) {
+            IconButton(onClick = { onProductList(productCollectionCategory) }) {
+                Icon(
+                    imageVector = mirroringIcon(
+                        ltrIcon = Icons.Outlined.ReadMore,
+                        rtlIcon = Icons.Outlined.ReadMore
+                    ),
+                    tint = StoreAppTheme.colors.brand,
+                    contentDescription = null
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ViewMoreCard(
+    modifier: Modifier,
+    onProductList: (String) -> Unit,
+    productCollectionCategory: String
+) {
+    StoreAppSurface(
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier
+            .padding(
+                start = 4.dp,
+                end = 4.dp,
+                bottom = 8.dp
+            )
+            .width(100.dp),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .clickable(onClick = { onProductList(productCollectionCategory) })
+                .padding(8.dp)
+        ) {
+            StoreAppSurface(
+                color = StoreAppTheme.colors.uiBackground.copy(AlphaNearOpaque),
+                shape = CircleShape,
+                modifier = modifier.size(120.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                IconButton(onClick = { onProductList(productCollectionCategory) }) {
+                    Icon(
+                        imageVector = mirroringIcon(
+                            ltrIcon = Icons.Outlined.ReadMore,
+                            rtlIcon = Icons.Outlined.ReadMore
+                        ),
+                        tint = StoreAppTheme.colors.brand,
+                        contentDescription = null
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
 @Preview("default")
 @Preview("dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview("large font", fontScale = 2f)
 @Composable
 private fun ProductCardPreview() {
     StoreAppTheme {
-        val product = products.first()
-        HighlightedProductItem(
-            product = product,
-            onProductClick = { id, category -> },
-            index = 0,
-            gradient = StoreAppTheme.colors.gradient6_1,
-            gradientWidth = gradientWidth,
-            scroll = 0
+//        val product = products.first()
+//        HighlightedProductItem(
+//            product = product,
+//            onProductClick = { id, category -> },
+//            index = 0,
+//            gradient = StoreAppTheme.colors.gradient6_1,
+//            gradientWidth = gradientWidth,
+//            scroll = 0
+//        )
+        ViewMoreCard(
+            modifier = Modifier,
+            onProductList = {},
+            productCollectionCategory = "Untitled"
         )
     }
 }
