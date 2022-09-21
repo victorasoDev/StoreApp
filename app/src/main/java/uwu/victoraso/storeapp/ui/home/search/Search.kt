@@ -48,7 +48,6 @@ import uwu.victoraso.storeapp.ui.productdetail.ProductDetailScreenUiState
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun Search(
     onProductClick: (Long, String) -> Unit,
