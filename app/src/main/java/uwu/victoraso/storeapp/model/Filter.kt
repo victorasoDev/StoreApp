@@ -63,8 +63,7 @@ val StoreAppFilters = listOf(
     Filter(name = "Builds"),
     Filter(name = "Monitors"),
     Filter(name = "Mouses"),
-    Filter(name = "Keyboards"),
-
+    Filter(name = "Keyboards")
 )
 
 var sortDefault = sortFilters[0].name

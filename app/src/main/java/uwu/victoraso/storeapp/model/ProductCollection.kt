@@ -25,7 +25,7 @@ object ProductRepo {
     fun getProduct(productId: Long) = products.find { it.id == productId } //Super cool function
     fun getRelated(productId: Long) = related
     fun getInspiredByCart() = inspiredByCart
-    fun getFilters() = filters
+    fun getFilters() = StoreAppFilters
     fun getPriceFilters() = priceFilters
     fun getCart() = cart
     fun getSortFilters() = sortFilters

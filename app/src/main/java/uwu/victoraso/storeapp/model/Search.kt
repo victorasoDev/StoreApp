@@ -99,20 +99,20 @@ private val searchSuggestions = listOf(
         id = 0L,
         name = "Recent searches",
         suggestions = listOf(
-            "Cheese",
-            "Apple Sauce"
+            "MSI 3080",
+            "intel core i7"
         )
     ),
     SearchSuggestionGroup(
         id = 1L,
         name = "Popular searches",
         suggestions = listOf(
-            "Organic",
-            "Gluten Free",
-            "Paleo",
-            "Vegan",
-            "Vegitarian",
-            "Whole30"
+            "Processors",
+            "Graphic Cards",
+            "Builds",
+            "Laptops",
+            "Keyboards",
+            "Monitors"
         )
     )
 )

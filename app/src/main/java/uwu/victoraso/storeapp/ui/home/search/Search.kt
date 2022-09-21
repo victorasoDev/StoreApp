@@ -36,17 +36,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.*
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
+import uwu.victoraso.storeapp.ui.productdetail.ProductDetailScreenUiState
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun Search(
     onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: SearchViewModel,
     state: SearchState = rememberSearchState()
 ) {
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
@@ -64,7 +71,7 @@ fun Search(
 
             LaunchedEffect(state.query.text) {
                 state.searching = true
-                state.searchResults = SearchRepo.search(state.query.text)
+                state.searchResults = viewModel.search(state.query.text).firstOrNull() ?: emptyList()
                 state.searching = false
             }
             when (state.searchDisplay) {

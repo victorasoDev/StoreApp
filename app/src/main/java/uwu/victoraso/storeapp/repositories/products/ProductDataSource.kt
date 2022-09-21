@@ -80,6 +80,32 @@ class ProductDataSource @Inject constructor(
         emit(productList)
     }
 
+    /**
+     * Get products input text stored in StoreApp FireStore Database
+     */
+    fun getProductsByInputText(inputText: String): Flow<List<Product>> = flow {
+        val productList = ArrayList<Product>()
+        Log.d(DEBUG_TAG, "inputText -> $inputText")
+        db.collection("products")
+            .orderBy("name")
+            .startAt(inputText)
+            .endAt("$inputText~")
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    productList.add(doc.toObject(Product::class.java))
+                    Log.d(DEBUG_TAG, "ProductDataSource -> ${doc.data}")
+                }
+            }
+            .addOnFailureListener {
+                Log.d(DEBUG_TAG, "ProductDataSource -> ${it}")
+            }
+            .await()
+
+        Log.d(DEBUG_TAG, "ProductDataSource SIZE Arraylist-> ${productList.size}")
+        emit(productList)
+    }
+
     fun addNewProduct(product: Product): Boolean {
         try {
             db.collection("products").document(product.id.toString()).set(product)

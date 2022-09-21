@@ -1,10 +1,11 @@
 package uwu.victoraso.storeapp.ui.home.search
 
-import android.app.appsearch.SearchResult
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -24,12 +25,9 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.products
-import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import androidx.constraintlayout.compose.ConstraintLayout
-import uwu.victoraso.storeapp.ui.components.ProductImage
-import uwu.victoraso.storeapp.ui.components.StoreAppButton
-import uwu.victoraso.storeapp.ui.components.StoreAppDivider
+import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @Composable
@@ -39,21 +37,32 @@ fun SearchResults(
     onProductClick: (Long, String) -> Unit
 ) {
     Column {
-
+        FilterBar(filters = filters, onShowFilter = { /*TODO*/ })
+        Text(
+            text = stringResource(id = R.string.search_count, searchResults.size),
+            style = MaterialTheme.typography.h6,
+            color = StoreAppTheme.colors.textPrimary,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
+        )
+        LazyColumn {
+            itemsIndexed(searchResults) { index, product ->
+                SearchResult(product = product, onProductClick = onProductClick, showDivider = index != 0)
+            }
+        }
     }
 }
 
 @Composable
 private fun SearchResult(
     product: Product,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Long, String) -> Unit,
     showDivider: Boolean,
     modifier: Modifier = Modifier
 ) {
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onProductClick(product.id) }
+            .clickable { onProductClick(product.id, product.categories.first()) }
             .padding(horizontal = 24.dp)
     ) {
         val (divider, image, name, tag, priceSpacer, price, add) = createRefs()
@@ -191,7 +200,7 @@ private fun SearchResultPreview() {
         StoreAppSurface {
             SearchResult(
                 product = products[0],
-                onProductClick = { },
+                onProductClick = {id, category -> },
                 showDivider = false
             )
         }

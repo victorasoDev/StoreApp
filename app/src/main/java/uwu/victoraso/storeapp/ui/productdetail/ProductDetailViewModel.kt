@@ -1,9 +1,5 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,8 +12,6 @@ import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
-import uwu.victoraso.storeapp.ui.home.feed.FeedUiState
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
 
 @HiltViewModel
