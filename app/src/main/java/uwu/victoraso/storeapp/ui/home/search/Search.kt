@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,6 +56,8 @@ fun Search(
     viewModel: SearchViewModel,
     state: SearchState = rememberSearchState()
 ) {
+    val focusManager = LocalFocusManager.current //TODO pasar a una clase para acceder desde otros sitios?
+
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Column {
             Spacer(modifier = Modifier.statusBarsPadding())
@@ -63,7 +66,14 @@ fun Search(
                 onQueryChange = { state.query = it },
                 searchFocused = state.focused,
                 onSearchFocusChange = { state.focused = it },
-                onClearQuery = { state.query = TextFieldValue("") },
+                onClearQuery = {
+                    if (state.query.text.isNotEmpty()) {
+                        state.query = TextFieldValue("")
+                    } else {
+                        focusManager.clearFocus()
+                        state.focused = false
+                    }
+                },
                 searching = state.searching
             )
             StoreAppDivider()

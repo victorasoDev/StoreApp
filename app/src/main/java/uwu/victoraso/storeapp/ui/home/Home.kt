@@ -43,6 +43,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import uwu.victoraso.storeapp.ui.home.cart.Cart
+import uwu.victoraso.storeapp.ui.home.cart.RealCartViewModel
 import uwu.victoraso.storeapp.ui.home.feed.Feed
 import uwu.victoraso.storeapp.ui.home.feed.FeedViewModel
 import uwu.victoraso.storeapp.ui.home.profile.Profile
@@ -78,7 +79,12 @@ fun NavGraphBuilder.addHomeGraph(
         )
     }
     composable(HomeSections.CART.route) { from ->
-        Cart(onProductClick = { id, category -> onProductSelected(id, category, from) }, modifier)
+        val viewModel: RealCartViewModel = hiltViewModel()
+        Cart(
+            onProductClick = { id, category -> onProductSelected(id, category, from) },
+            modifier = modifier,
+            realViewModel = viewModel
+        )
     }
     composable(HomeSections.PROFILE.route) {
         val viewModel: ProfileViewModel = hiltViewModel()

@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.OrderLine
@@ -38,18 +40,26 @@ import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
+import uwu.victoraso.storeapp.ui.productdetail.ProductDetailScreenUiState
 import uwu.victoraso.storeapp.ui.theme.AlphaNearOpaque
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun Cart(
     onProductClick: (Long, String) -> Unit,
+    //TODO onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory())
+    viewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory()),
+    realViewModel: RealCartViewModel
 ) {
+
+    val cartUiState: CartScreenUiState by realViewModel.uiState.collectAsStateWithLifecycle()
+
+    val inspiredByCart: InspiredByCartProductsUiState = cartUiState.inspiredByCartProductsUiState
+
     val orderLines by viewModel.orderLines.collectAsState()
-    val inspiredByCart = remember { ProductRepo.getInspiredByCart() }
 
     Cart(
         orderLines = orderLines,
@@ -68,7 +78,7 @@ fun Cart(
     removeProduct: (Long) -> Unit,
     increaseItemCount: (Long) -> Unit,
     decreaseItemCount: (Long) -> Unit,
-    inspiredByCart: ProductCollection,
+    inspiredByCart: InspiredByCartProductsUiState,
     onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -95,7 +105,7 @@ fun CartContent(
     removeProduct: (Long) -> Unit,
     increaseItemCount: (Long) -> Unit,
     decreaseItemCount: (Long) -> Unit,
-    inspiredByCart: ProductCollection,
+    inspiredByCart: InspiredByCartProductsUiState,
     onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -220,14 +230,17 @@ fun CartContent(
                 shippingCosts = 369
             )
         }
-        item {
-            ProductCollection(
-                productCollection = inspiredByCart,
-                onProductClick = onProductClick,
-                onProductList = { /*TODO*/ },
-                highlight = true
-            )
-            Spacer(modifier = Modifier.height(56.dp))
+        /** Check flow status before print the collection **/
+        if (inspiredByCart is InspiredByCartProductsUiState.Success) {
+            item {
+                ProductCollection(
+                    productCollection = inspiredByCart.productCollection,
+                    onProductClick = onProductClick,
+                    onProductList = { /*TODO*/ },
+                    highlight = true
+                )
+                Spacer(modifier = Modifier.height(56.dp))
+            }
         }
     }
 }
@@ -454,7 +467,7 @@ private fun CartPreview() {
             removeProduct = {},
             increaseItemCount = {},
             decreaseItemCount = {},
-            inspiredByCart = ProductRepo.getInspiredByCart(),
+            inspiredByCart = InspiredByCartProductsUiState.Success(ProductCollection(2L, "Untitled")),
             onProductClick = {id, category -> }
         )
     }

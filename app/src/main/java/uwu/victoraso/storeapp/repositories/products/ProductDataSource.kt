@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.repositories.products
 
 import android.util.Log
+import androidx.compose.ui.text.toUpperCase
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -81,7 +82,8 @@ class ProductDataSource @Inject constructor(
     }
 
     /**
-     * Get products input text stored in StoreApp FireStore Database
+     * Get products input text stored in StoreApp FireStore Database.
+     * Firebase Datastore is case sensitive, I cannot search ignoring the lower and upper cases
      */
     fun getProductsByInputText(inputText: String): Flow<List<Product>> = flow {
         val productList = ArrayList<Product>()
@@ -90,6 +92,7 @@ class ProductDataSource @Inject constructor(
             .orderBy("name")
             .startAt(inputText)
             .endAt("$inputText~")
+            .limit(20L)
             .get()
             .addOnSuccessListener {
                 for (doc in it) {
