@@ -47,7 +47,8 @@ fun ProductCollection(
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
     index: Int = 0,
-    highlight: Boolean = true
+    highlight: Boolean = true,
+    showMore: Boolean = true // showMore -> if true lastItem and arrow is visible
 ) {
     Column(modifier = modifier) {
         Row(
@@ -66,18 +67,20 @@ fun ProductCollection(
                     .weight(1f)
                     .wrapContentWidth(Alignment.Start)
             )
-            IconButton(
-                onClick = { onProductList(productCollection.name) },
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Icon(
-                    imageVector = mirroringIcon(
-                        ltrIcon = Icons.Outlined.ArrowForward,
-                        rtlIcon = Icons.Outlined.ArrowBack
-                    ),
-                    tint = StoreAppTheme.colors.brand,
-                    contentDescription = null
-                )
+            if (showMore) {
+                IconButton(
+                    onClick = { onProductList(productCollection.name) },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    Icon(
+                        imageVector = mirroringIcon(
+                            ltrIcon = Icons.Outlined.ArrowForward,
+                            rtlIcon = Icons.Outlined.ArrowBack
+                        ),
+                        tint = StoreAppTheme.colors.brand,
+                        contentDescription = null
+                    )
+                }
             }
         }
         if (highlight && productCollection.type == CollectionType.Highlight) {
@@ -85,7 +88,8 @@ fun ProductCollection(
                 index = index,
                 products = productCollection.products,
                 onProductClick = onProductClick,
-                onProductList = onProductList
+                onProductList = onProductList,
+                showMore = showMore
             )
         } else {
             Products(
@@ -106,8 +110,9 @@ private fun HighlightedProducts(
     products: List<Product>,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
+    showMore: Boolean
+    ) {
     val scroll = rememberScrollState(0)
     val gradient = when ((index / 2) % 2) {
         0 -> StoreAppTheme.colors.gradient6_1
@@ -134,11 +139,13 @@ private fun HighlightedProducts(
                     scroll = scroll.value
                 )
             } else {
-                ViewMoreHighlightCard(
-                    modifier = modifier,
-                    onProductList = onProductList,
-                    productCollectionCategory = products.first().categories.first()
-                )
+                if (showMore) {
+                    ViewMoreHighlightCard(
+                        modifier = modifier,
+                        onProductList = onProductList,
+                        productCollectionCategory = products.first().categories.first()
+                    )
+                }
             }
         }
     }

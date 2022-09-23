@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.first
@@ -53,7 +54,7 @@ import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 fun Search(
     onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel,
+    viewModel: SearchViewModel = hiltViewModel(),
     state: SearchState = rememberSearchState()
 ) {
     val focusManager = LocalFocusManager.current //TODO pasar a una clase para acceder desde otros sitios?

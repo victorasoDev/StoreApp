@@ -84,11 +84,8 @@ private fun NavGraphBuilder.storeAppNavGraph(
             navArgument(MainDestinations.CATEGORY_ID_KEY) { type = NavType.StringType }
         )
     ) { navBackStackEntry ->
-
-        val viewModel: ProductDetailViewModel = hiltViewModel()
         ProductDetail(
             upPress = upPress,
-            viewModel = viewModel,
             onProductList = { category -> onProductList(category, navBackStackEntry) },
             onProductClick =  { id, category -> onProductSelected(id, category, navBackStackEntry) }
         )
@@ -108,14 +105,12 @@ private fun NavGraphBuilder.storeAppNavGraph(
     ) { navBackStackEntry ->
         val argument = requireNotNull(navBackStackEntry.arguments)
         val category = argument.getString(MainDestinations.CATEGORY_ID_KEY)
-        ProductListViewModel.categorySelected = category!!
+        ProductListViewModel.categorySelected = category!! //TODO: en product details se le pasa como argumento, cambiar esto
 
-        val viewModel: ProductListViewModel = hiltViewModel()
         ProductList(
             onProductSelected = { id -> onProductSelected(id, category, navBackStackEntry) },
             category = category,
-            upPress = upPress, //TODO esto no va
-            viewModel = viewModel
+            upPress = upPress
         )
     }
 }

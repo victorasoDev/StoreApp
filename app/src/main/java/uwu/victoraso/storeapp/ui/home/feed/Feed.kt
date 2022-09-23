@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.model.Filter
@@ -35,16 +36,15 @@ fun Feed(
     onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: FeedViewModel,
+    viewModel: FeedViewModel = hiltViewModel()
 ) {
     val feedUiState: FeedScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val productsCollections = getProductsCollections(feedUiState)
-    val filters = remember { ProductRepo.getFilters() }
+
     Feed(
         feedUiState = feedUiState,
         productCollections = productsCollections,
-        filters = filters,
         onProductClick = onProductClick,
         onProductList = onProductList,
         onProductCreate = onProductCreate,
@@ -56,7 +56,6 @@ fun Feed(
 private fun Feed(
     feedUiState: FeedScreenUiState,
     productCollections: List<ProductCollection>,
-    filters: List<Filter>,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     onProductCreate: () -> Unit,
@@ -77,7 +76,6 @@ private fun Feed(
                 Box {
                     ProductCollectionList(
                         productCollections = productCollections,
-                        filters = filters,
                         onProductClick = onProductClick,
                         onProductList = onProductList,
                     )
@@ -112,7 +110,6 @@ fun getProductsCollections(feedUiState: FeedScreenUiState): List<ProductCollecti
 @Composable
 private fun ProductCollectionList(
     productCollections: List<ProductCollection>,
-    filters: List<Filter>,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -128,7 +125,6 @@ private fun ProductCollectionList(
                         WindowInsets.statusBars.add(WindowInsets(top = 56.dp))
                     )
                 )
-                FilterBar(filters, onShowFilter = { filtersVisible = true })
             }
             itemsIndexed(productCollections) { index, productCollection ->
                 if (index > 0) {

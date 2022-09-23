@@ -2,6 +2,7 @@ package uwu.victoraso.storeapp.ui.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -38,6 +39,7 @@ fun DestinationBar(
                 modifier = Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically)
+                    .padding(start = 45.dp) //TODO habrá otra forma de centrarlo?
             )
             IconButton(
                 onClick = { onDestinationBarButtonClick() },

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,10 +50,10 @@ import uwu.victoraso.storeapp.ui.utils.formatPrice
 @Composable
 fun Cart(
     onProductClick: (Long, String) -> Unit,
-    //TODO onProductList: (String) -> Unit,
+    onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory()),
-    realViewModel: RealCartViewModel
+    realViewModel: RealCartViewModel = hiltViewModel()
 ) {
 
     val cartUiState: CartScreenUiState by realViewModel.uiState.collectAsStateWithLifecycle()
@@ -68,6 +69,7 @@ fun Cart(
         decreaseItemCount = viewModel::decreaseProductCount,
         inspiredByCart = inspiredByCart,
         onProductClick = onProductClick,
+        onProductList = onProductList,
         modifier = modifier
     )
 }
@@ -80,6 +82,7 @@ fun Cart(
     decreaseItemCount: (Long) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
     onProductClick: (Long, String) -> Unit,
+    onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
@@ -91,6 +94,7 @@ fun Cart(
                 decreaseItemCount = decreaseItemCount,
                 inspiredByCart = inspiredByCart,
                 onProductClick = onProductClick,
+                onProductList = onProductList,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
             DestinationBar(modifier = Modifier.align(Alignment.TopCenter), onDestinationBarButtonClick = { })
@@ -107,6 +111,7 @@ fun CartContent(
     decreaseItemCount: (Long) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
     onProductClick: (Long, String) -> Unit,
+    onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
@@ -236,8 +241,9 @@ fun CartContent(
                 ProductCollection(
                     productCollection = inspiredByCart.productCollection,
                     onProductClick = onProductClick,
-                    onProductList = { /*TODO*/ },
-                    highlight = true
+                    onProductList = onProductList,
+                    highlight = true,
+                    showMore = false
                 )
                 Spacer(modifier = Modifier.height(56.dp))
             }
@@ -468,7 +474,8 @@ private fun CartPreview() {
             increaseItemCount = {},
             decreaseItemCount = {},
             inspiredByCart = InspiredByCartProductsUiState.Success(ProductCollection(2L, "Untitled")),
-            onProductClick = {id, category -> }
+            onProductClick = {id, category -> },
+            onProductList = {category -> }
         )
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,7 +22,7 @@ import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 @Composable
 fun Profile(
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
     Log.d(DEBUG_TAG, "antes de profileUiState")
     val profileUiState: ProfileUiState by viewModel.profileUiState.collectAsStateWithLifecycle()

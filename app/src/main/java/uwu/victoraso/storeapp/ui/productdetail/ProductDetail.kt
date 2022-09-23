@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,7 +58,7 @@ private val HzPadding = Modifier.padding(horizontal = 24.dp)
 @Composable
 fun ProductDetail(
     upPress: () -> Unit,
-    viewModel: ProductDetailViewModel,
+    viewModel: ProductDetailViewModel = hiltViewModel(),
     onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
 ) {

@@ -60,35 +60,30 @@ fun NavGraphBuilder.addHomeGraph(
     modifier: Modifier = Modifier
 ) {
     composable(HomeSections.FEED.route) { from ->
-        val viewModel: FeedViewModel = hiltViewModel()
-
         Feed(
             onProductClick = { id, category -> onProductSelected(id, category, from) },
             onProductCreate = { onProductCreate(from) },
             onProductList = { category -> onProductList(category, from) },
             modifier = modifier,
-            viewModel = viewModel,
         )
     }
     composable(route = HomeSections.SEARCH.route) { from ->
-        val viewModel: SearchViewModel = hiltViewModel()
         Search(
             onProductClick = { id, category -> onProductSelected(id, category, from) },
-            modifier = modifier,
-            viewModel = viewModel
+            modifier = modifier
         )
     }
     composable(HomeSections.CART.route) { from ->
-        val viewModel: RealCartViewModel = hiltViewModel()
         Cart(
             onProductClick = { id, category -> onProductSelected(id, category, from) },
             modifier = modifier,
-            realViewModel = viewModel
+            onProductList = { category -> onProductList(category, from) },
         )
     }
     composable(HomeSections.PROFILE.route) {
-        val viewModel: ProfileViewModel = hiltViewModel()
-        Profile(modifier, viewModel)
+        Profile(
+            modifier = modifier,
+        )
     }
 }
 

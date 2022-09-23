@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.model.Product
@@ -48,7 +49,7 @@ fun ProductList(
     category: String,
     upPress: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProductListViewModel
+    viewModel: ProductListViewModel = hiltViewModel()
 ) {
     val productListUiState: ProductListUiState by viewModel.productListUiState.collectAsStateWithLifecycle()
 
