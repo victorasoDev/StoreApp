@@ -1,7 +1,8 @@
 package uwu.victoraso.storeapp.model
 
 data class UserProfile(
-    val username: String,
     val name: String,
-    val adress: String
+    val email: String,
+    val adress: String,
+    val phone: String
 )

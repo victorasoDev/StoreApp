@@ -26,11 +26,13 @@ class ProfileViewModel
             initialValue = ProfileUiState.Loading
         )
 
-    fun setAdress(adress: String) {
-        viewModelScope.launch {
-            userPreferencesRepository.setUserAdress(adress)
-        }
-    }
+    fun setUserName(username: String) { viewModelScope.launch { userPreferencesRepository.setUserName(username) } }
+
+    fun setUserEmail(email: String) { viewModelScope.launch { userPreferencesRepository.setUserEmail(email) } }
+
+    fun setUserAdress(adress: String) { viewModelScope.launch { userPreferencesRepository.setUserAdress(adress) } }
+
+    fun setUserPhone(phone: String) { viewModelScope.launch { userPreferencesRepository.setUserPhone(phone) } }
 }
 
 private fun profileUiStateStream(

@@ -23,7 +23,10 @@ import javax.inject.Singleton
 
 
 const val USER_PREFERENCES = "user_preferences"
+val USER_NAME_PREFERENCE = stringPreferencesKey("user_name")
+val USER_EMAIL_PREFERENCE = stringPreferencesKey("user_email")
 val USER_ADRESS_PREFERENCE = stringPreferencesKey("user_adress")
+val USER_PHONE_PREFERENCE = stringPreferencesKey("user_phone")
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -394,19 +394,19 @@ private fun ViewMoreCard(
 @Composable
 private fun ProductCardPreview() {
     StoreAppTheme {
-//        val product = products.first()
-//        HighlightedProductItem(
-//            product = product,
-//            onProductClick = { id, category -> },
-//            index = 0,
-//            gradient = StoreAppTheme.colors.gradient6_1,
-//            gradientWidth = gradientWidth,
-//            scroll = 0
-//        )
-        ViewMoreCard(
-            modifier = Modifier,
-            onProductList = {},
-            productCollectionCategory = "Untitled"
+        val product = products.first()
+        HighlightedProductItem(
+            product = product,
+            onProductClick = { id, category -> },
+            index = 0,
+            gradient = StoreAppTheme.colors.gradient6_1,
+            gradientWidth = gradientWidth,
+            scroll = 0
         )
+//        ViewMoreCard(
+//            modifier = Modifier,
+//            onProductList = {},
+//            productCollectionCategory = "Untitled"
+//        )
     }
 }

@@ -21,6 +21,7 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 @Composable
 fun DestinationBar(
     modifier: Modifier = Modifier,
+    title: String = "Welcome to StoreApp",
     onDestinationBarButtonClick: () -> Unit
 ) {
     Column(modifier = modifier.statusBarsPadding()) {
@@ -30,7 +31,7 @@ fun DestinationBar(
             elevation = 0.dp
         ) {
             Text(
-                text = "Welcome to StoreApp",
+                text = title,
                 style = MaterialTheme.typography.subtitle1,
                 color = StoreAppTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
