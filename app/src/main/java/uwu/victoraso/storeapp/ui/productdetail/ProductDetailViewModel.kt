@@ -59,7 +59,7 @@ constructor(
                     is Result.Success -> RelatedProductsUiState.Success(
                         ProductCollection(
                             id = 1L,
-                            name = relatedProductsResult.data.first().categories.first(),
+                            name = relatedProductsResult.data.first().categories.first(), //TODO: mucho first por aqui
                             products = relatedProductsResult.data,
                             type = CollectionType.Highlight
                         )

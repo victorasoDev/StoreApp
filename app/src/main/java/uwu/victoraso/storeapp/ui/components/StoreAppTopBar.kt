@@ -69,6 +69,35 @@ fun StoreAppTopBar(
     }
 }
 
+@Composable
+fun StoreAppTopBar(
+    modifier: Modifier = Modifier,
+    screenTitle: String,
+) {
+    Column(modifier = modifier.statusBarsPadding()) {
+        TopAppBar(
+            backgroundColor = StoreAppTheme.colors.brand.copy(alpha = AlphaNearOpaque),
+            contentColor = StoreAppTheme.colors.textSecondary,
+            elevation = 0.dp,
+        ) {
+            Text(
+                text = screenTitle,
+                style = MaterialTheme.typography.subtitle1,
+                fontSize = 18.sp,
+                color = StoreAppTheme.colors.textInteractive,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 60.dp)
+                    .weight(1f)
+            )
+        }
+        StoreAppDivider()
+    }
+}
+
 @Preview("default")
 @Preview("dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview("large font", fontScale = 2f)

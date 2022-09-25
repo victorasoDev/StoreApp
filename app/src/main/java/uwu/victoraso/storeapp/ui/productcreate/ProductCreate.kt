@@ -125,13 +125,14 @@ fun StoreAppTextField(
     placeholder: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     name: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     OutlinedTextField(
         value = name,
         onValueChange = onValueChange,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp)
             .padding(horizontal = 16.dp),

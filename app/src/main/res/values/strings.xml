@@ -75,4 +75,12 @@
     <string name="product_type_mouse" translatable="false">Mouses</string>
     <string name="product_type_keyboard" translatable="false">Keyboards</string>
 
+    <!-- Login/Signup Screen-->
+    <string name="email_error">Please insert a valid email.</string>
+    <string name="empty_password_error">Password cannot be empty.</string>
+    <string name="password_match_error">Passwords do not match.</string>
+    <string name="generic_error">Something wrong happened. Please try again.</string>
+    <string name="create_account">Create account</string>
+
+
 </resources>

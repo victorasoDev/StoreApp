@@ -25,6 +25,9 @@ object MainDestinations {
     const val PRODUCT_CREATE_ROUTE = "productCreate"
     const val PRODUCT_LIST_ROUTE = "productList"
     const val CATEGORY_ID_KEY = "categoryId"
+    const val LOGIN_ROUTE = "login"
+    const val SIGNUP_ROUTE = "signup"
+    const val SETTINGS_ROUTE = "settings"
 }
 
 @Composable
@@ -112,6 +115,13 @@ class StoreAppState(
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {
             navController.navigate("${MainDestinations.PRODUCT_LIST_ROUTE}/$category")
+        }
+    }
+
+    fun navigateAndPopUp(route: String, popUp: String) {
+        navController.navigate(route) {
+            launchSingleTop = true
+            popUpTo(popUp) { inclusive = true }
         }
     }
 }

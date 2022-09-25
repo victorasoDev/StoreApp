@@ -20,10 +20,11 @@ import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.home.StoreAppBottomBar
 import uwu.victoraso.storeapp.ui.home.addHomeGraph
+import uwu.victoraso.storeapp.ui.log.login.LoginScreen
+import uwu.victoraso.storeapp.ui.log.signup.SignUpScreen
 import uwu.victoraso.storeapp.ui.productcollection.ProductListViewModel
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreate
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreateViewModel
-import uwu.victoraso.storeapp.ui.productdetail.ProductDetailViewModel
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
@@ -51,13 +52,14 @@ fun StoreApp() {
         ) { innerPaddingModifier ->
             NavHost(
                 navController = appState.navController,
-                startDestination = MainDestinations.HOME_ROUTE,
+                startDestination = MainDestinations.SIGNUP_ROUTE,
                 modifier = Modifier.padding(innerPaddingModifier)
             ) {
                 storeAppNavGraph(
                     onProductSelected = appState::navigateToProductDetail,
                     onProductCreate = appState::navigateToCreateProduct,
                     onProductList = appState::navigateToProductList,
+                    onPopUp = appState::navigateAndPopUp,
                     upPress = appState::upPress
                 )
             }
@@ -69,6 +71,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
     onProductCreate: (NavBackStackEntry) -> Unit,
     onProductList: (String, NavBackStackEntry) -> Unit,
+    onPopUp: (String, String) -> Unit,
     upPress: () -> Unit
 ) {
     navigation(
@@ -112,5 +115,8 @@ private fun NavGraphBuilder.storeAppNavGraph(
             category = category,
             upPress = upPress
         )
+    }
+    composable(route = MainDestinations.SIGNUP_ROUTE) {
+        SignUpScreen(openAndPopUp = { route, popUp -> onPopUp(route, popUp)})
     }
 }
