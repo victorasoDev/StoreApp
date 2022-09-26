@@ -5,16 +5,19 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.model.UserProfile
+import uwu.victoraso.storeapp.model.service.AccountService
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
 @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
+    private val accountService: AccountService,
 ) : ViewModel()
 {
     var profileUiState: StateFlow<ProfileUiState> = profileUiStateStream(
@@ -33,6 +36,13 @@ class ProfileViewModel
     fun setUserAdress(adress: String) { viewModelScope.launch { userPreferencesRepository.setUserAdress(adress) } }
 
     fun setUserPhone(phone: String) { viewModelScope.launch { userPreferencesRepository.setUserPhone(phone) } }
+
+    fun onSignOutClick(restartApp: (String) -> Unit) {
+        viewModelScope.launch {
+            accountService.signOut()
+            restartApp(MainDestinations.LOGIN_ROUTE)//TODO -> al splash
+        }
+    }
 }
 
 private fun profileUiStateStream(

@@ -25,10 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
-import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
-import uwu.victoraso.storeapp.ui.productcreate.StoreAppTextField
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.mirroringIcon
@@ -36,15 +34,21 @@ import uwu.victoraso.storeapp.ui.utils.mirroringIcon
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun Profile(
-    modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel()
+    restartApp: (String) -> Unit,
+    viewModel: ProfileViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
 ) {
     Log.d(DEBUG_TAG, "antes de profileUiState")
     val profileUiState: ProfileUiState by viewModel.profileUiState.collectAsStateWithLifecycle()
 
     when (profileUiState) {
         is ProfileUiState.Success -> {
-            Profile(modifier = modifier)
+            Profile(
+                profileUiState = profileUiState,
+                restartApp = restartApp,
+                onSignOutClick = viewModel::onSignOutClick,
+                modifier = modifier
+            )
         }
         ProfileUiState.Loading -> {
             //TODO()
@@ -58,12 +62,19 @@ fun Profile(
 
 @Composable
 private fun Profile(
+    profileUiState: ProfileUiState,
+    restartApp: (String) -> Unit,
+    onSignOutClick: ((String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
     //TODO cargar los datos del usuario
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
-            ProfileContent(Modifier.align(Alignment.TopCenter))
+            ProfileContent(
+                restartApp = restartApp,
+                onSignOutClick = onSignOutClick,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
             DestinationBar(
                 modifier = Modifier.align(Alignment.TopCenter),
                 title = "Hi Victoraso!",
@@ -75,6 +86,8 @@ private fun Profile(
 
 @Composable
 fun ProfileContent(
+    restartApp: (String) -> Unit,
+    onSignOutClick: ((String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -113,7 +126,10 @@ fun ProfileContent(
                         //TODO probar constraint layout sería foto, derecha nombre y debajo email
                         UserProfile(modifier)
                         ProfileOptions()
-                        LogoutButton()
+                        LogoutButton(
+                            restartApp = restartApp,
+                            onSignOutClick = onSignOutClick
+                        )
                     }
                 }
             }
@@ -123,10 +139,13 @@ fun ProfileContent(
 }
 
 @Composable
-private fun LogoutButton() {
+private fun LogoutButton(
+    restartApp: (String) -> Unit,
+    onSignOutClick: ((String) -> Unit) -> Unit,
+) {
     Spacer(modifier = Modifier.height(35.dp))
     StoreAppButton(
-        onClick = { /*TODO*/ },
+        onClick = { onSignOutClick(restartApp) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 60.dp),
@@ -258,36 +277,6 @@ private fun OptionItem(
 @Composable
 private fun ProfilePreview() {
     StoreAppTheme {
-        Profile()
-    }
-}
-
-
-@Composable
-private fun ProfileTest(
-    viewModel: ProfileViewModel,
-    userProfile: UserProfile
-) {
-    var text by remember { mutableStateOf("") }
-
-    Column {
-        Spacer(modifier = Modifier.padding(vertical = 10.dp))
-        StoreAppTextField(placeholder = "datastore", name = text, onValueChange = { text = it })
-
-        StoreAppButton(
-            onClick = {
-                viewModel.setUserAdress(text)
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(text = "Save Adress")
-        }
-
-        StoreAppButton(
-            onClick = { },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(text = "Adress is ${userProfile.adress}")
-        }
+//        Profile(ProfileUiState)
     }
 }

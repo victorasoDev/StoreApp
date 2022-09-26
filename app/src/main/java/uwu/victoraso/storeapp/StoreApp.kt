@@ -52,7 +52,7 @@ fun StoreApp() {
         ) { innerPaddingModifier ->
             NavHost(
                 navController = appState.navController,
-                startDestination = MainDestinations.SIGNUP_ROUTE,
+                startDestination = MainDestinations.LOGIN_ROUTE,
                 modifier = Modifier.padding(innerPaddingModifier)
             ) {
                 storeAppNavGraph(
@@ -60,6 +60,7 @@ fun StoreApp() {
                     onProductCreate = appState::navigateToCreateProduct,
                     onProductList = appState::navigateToProductList,
                     onPopUp = appState::navigateAndPopUp,
+                    restartApp = appState::clearAndNavigate,
                     upPress = appState::upPress
                 )
             }
@@ -72,13 +73,14 @@ private fun NavGraphBuilder.storeAppNavGraph(
     onProductCreate: (NavBackStackEntry) -> Unit,
     onProductList: (String, NavBackStackEntry) -> Unit,
     onPopUp: (String, String) -> Unit,
+    restartApp: (String) -> Unit,
     upPress: () -> Unit
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
-        addHomeGraph(onProductSelected, onProductCreate, onProductList)
+        addHomeGraph(onProductSelected, onProductCreate, onProductList, restartApp)
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.CATEGORY_ID_KEY}}/{${MainDestinations.PRODUCT_ID_KEY}}",
@@ -118,5 +120,8 @@ private fun NavGraphBuilder.storeAppNavGraph(
     }
     composable(route = MainDestinations.SIGNUP_ROUTE) {
         SignUpScreen(openAndPopUp = { route, popUp -> onPopUp(route, popUp)})
+    }
+    composable(route = MainDestinations.LOGIN_ROUTE) {
+        LoginScreen(openAndPopUp = { route, popUp -> onPopUp(route, popUp)})
     }
 }

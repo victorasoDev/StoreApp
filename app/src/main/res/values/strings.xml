@@ -81,6 +81,9 @@
     <string name="password_match_error">Passwords do not match.</string>
     <string name="generic_error">Something wrong happened. Please try again.</string>
     <string name="create_account">Create account</string>
+    <string name="recovery_email_sent">Check your inbox for the recovery email.</string>
+    <string name="forgot_password">Forgot password? Click to get recovery email</string>
+    <string name="sign_in">Sign in</string>
 
 
 </resources>

@@ -119,31 +119,3 @@ private fun Body(
         }
     }
 }
-
-@Composable
-fun StoreAppTextField(
-    placeholder: String,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    name: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    OutlinedTextField(
-        value = name,
-        onValueChange = onValueChange,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp)
-            .padding(horizontal = 16.dp),
-        placeholder = { Text(text = placeholder) },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = StoreAppTheme.colors.textHelp,
-            backgroundColor = StoreAppTheme.colors.uiFloated,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        )
-    )
-}

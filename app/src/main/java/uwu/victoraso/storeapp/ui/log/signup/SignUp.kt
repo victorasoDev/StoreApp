@@ -9,14 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import uwu.victoraso.storeapp.ui.components.StoreAppButton
-import uwu.victoraso.storeapp.ui.components.StoreAppCard
-import uwu.victoraso.storeapp.ui.components.StoreAppSurface
-import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
-import uwu.victoraso.storeapp.ui.productcreate.StoreAppTextField
+import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
@@ -68,18 +63,14 @@ fun SignUpScreenContent(
                 modifier = Modifier.padding(vertical = 16.dp)
             )
             /** Password TextField **/
-            StoreAppTextField(
-                placeholder = "Password",
-                name = uiState.password,
-                keyboardType = KeyboardType.Password,
+            StoreAppPasswordTextField(
+                value = uiState.password,
                 onValueChange = viewModel::onPasswordChange,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
             /** Repeat-Password TextField **/
-            StoreAppTextField(
-                placeholder = "Repeat-Password",
-                name = uiState.repeatPassword,
-                keyboardType = KeyboardType.Password,
+            StoreAppRepeatPasswordTextField(
+                value = uiState.repeatPassword,
                 onValueChange = viewModel::onRepeatPasswordChange,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
