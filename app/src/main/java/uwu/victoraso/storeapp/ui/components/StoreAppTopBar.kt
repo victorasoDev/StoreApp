@@ -90,7 +90,6 @@ fun StoreAppTopBar(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 60.dp)
                     .weight(1f)
             )
         }
@@ -105,5 +104,16 @@ fun StoreAppTopBar(
 private fun PreviewDestinationBar() {
     StoreAppTheme {
         StoreAppTopBar(upPress = { }, screenTitle = "<Untitled>")
+    }
+}
+
+
+@Preview("default")
+@Preview("dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview("large font", fontScale = 2f)
+@Composable
+private fun PreviewToolbarNoUpPressBar() {
+    StoreAppTheme {
+        StoreAppTopBar(screenTitle = "<Untitled>")
     }
 }

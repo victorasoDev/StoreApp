@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -44,6 +45,40 @@ fun StoreAppTextField( //TODO hacer lo mismo que con el textField de la pass
     )
 }
 
+/** Email TextField **/
+@Composable
+fun StoreAppEmailTextField(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
+    StoreAppEmailTextField(placeholder = "Email", name = value, onValueChange = onValueChange, modifier = modifier)
+}
+
+@Composable
+private fun StoreAppEmailTextField(
+    placeholder: String, //TODO
+    name: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = name,
+        onValueChange = { onValueChange(it) },
+        placeholder = { Text(text = placeholder) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        singleLine = true,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+            .padding(horizontal = 16.dp),
+        leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") },
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = StoreAppTheme.colors.textHelp,
+            backgroundColor = StoreAppTheme.colors.uiFloated,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+}
+
+/** Password TextField **/
 @Composable
 fun StoreAppRepeatPasswordTextField(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
     StoreAppPasswordTextField(placeholder = "Repeat-Password", name = value, onValueChange = onValueChange, modifier = modifier)
@@ -78,7 +113,6 @@ private fun StoreAppPasswordTextField(
         singleLine = true,
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
             .padding(horizontal = 16.dp),
         leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock") },
         trailingIcon = {

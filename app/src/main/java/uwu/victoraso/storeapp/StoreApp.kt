@@ -61,6 +61,7 @@ fun StoreApp() {
                     onProductList = appState::navigateToProductList,
                     onPopUp = appState::navigateAndPopUp,
                     restartApp = appState::clearAndNavigate,
+                    onNavigateTo = appState::navigateTo,
                     upPress = appState::upPress
                 )
             }
@@ -74,6 +75,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
     onProductList: (String, NavBackStackEntry) -> Unit,
     onPopUp: (String, String) -> Unit,
     restartApp: (String) -> Unit,
+    onNavigateTo: (String, NavBackStackEntry) -> Unit, //TODO: para abrir otras ventanas puede servir
     upPress: () -> Unit
 ) {
     navigation(
@@ -118,10 +120,16 @@ private fun NavGraphBuilder.storeAppNavGraph(
             upPress = upPress
         )
     }
-    composable(route = MainDestinations.SIGNUP_ROUTE) {
-        SignUpScreen(openAndPopUp = { route, popUp -> onPopUp(route, popUp)})
+    composable(route = MainDestinations.SIGNUP_ROUTE) { navBackStackEntry ->
+        SignUpScreen(
+            openAndPopUp = { route, popUp -> onPopUp(route, popUp)},
+            onNavigateTo = { route -> onNavigateTo(route, navBackStackEntry) }
+        )
     }
-    composable(route = MainDestinations.LOGIN_ROUTE) {
-        LoginScreen(openAndPopUp = { route, popUp -> onPopUp(route, popUp)})
+    composable(route = MainDestinations.LOGIN_ROUTE) { navBackStackEntry ->
+        LoginScreen(
+            openAndPopUp = { route, popUp -> onPopUp(route, popUp)},
+            onNavigateTo = { route -> onNavigateTo(route, navBackStackEntry) }
+        )
     }
 }

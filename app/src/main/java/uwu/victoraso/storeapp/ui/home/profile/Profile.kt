@@ -91,7 +91,7 @@ fun ProfileContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
-        Spacer(
+        Spacer( //TODO sustituir todos los del proyecto pasándolo a Utils
             Modifier.windowInsetsTopHeight(
                 WindowInsets.statusBars.add(WindowInsets(top = 56.dp))
             )

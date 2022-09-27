@@ -118,6 +118,15 @@ class StoreAppState(
         }
     }
 
+    fun navigateTo(route: String, from: NavBackStackEntry) {
+        // In order to discard duplicated navigation events, check the lifecycle
+        if (from.lifecycleIsResumed()) {
+            navController.navigate(route) {
+                launchSingleTop = route == MainDestinations.LOGIN_ROUTE
+            }
+        }
+    }
+
     fun navigateAndPopUp(route: String, popUp: String) {
         navController.navigate(route) {
             launchSingleTop = true

@@ -17,6 +17,7 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 @Composable
 fun SignUpScreen(
     openAndPopUp: (String, String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
@@ -29,7 +30,8 @@ fun SignUpScreen(
             SignUpScreenContent(
                 openAndPopUp = openAndPopUp,
                 uiState = uiState,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onNavigateTo = onNavigateTo
             )
         }
     }
@@ -38,10 +40,16 @@ fun SignUpScreen(
 @Composable
 fun SignUpScreenContent(
     openAndPopUp: (String, String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     uiState: SignUpUiState,
     viewModel: SignUpViewModel,
     modifier: Modifier = Modifier
 ) {
+    Spacer(
+        Modifier.windowInsetsTopHeight(
+            WindowInsets.statusBars.add(WindowInsets(top = 56.dp))
+        )
+    )
     StoreAppCard(
         modifier = Modifier
             .padding(16.dp)
@@ -56,9 +64,8 @@ fun SignUpScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             /** Email TextField **/
-            StoreAppTextField(
-                placeholder = "Email",
-                name = uiState.email,
+            StoreAppEmailTextField(
+                value = uiState.email,
                 onValueChange = viewModel::onEmailChange,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
