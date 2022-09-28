@@ -21,7 +21,7 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun LoginScreen(
-    openAndPopUp: (String, String) -> Unit,
+    onClearAndNavigate: (String) -> Unit,
     onNavigateTo: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel()
@@ -32,7 +32,7 @@ fun LoginScreen(
         Box {
             StoreAppTopBar(screenTitle = "Welcome!")
             LoginScreenContent(
-                openAndPopUp = openAndPopUp,
+                onClearAndNavigate = onClearAndNavigate,
                 onNavigateTo = onNavigateTo,
                 screenUiState = screenUiState,
                 viewModel = viewModel
@@ -43,7 +43,7 @@ fun LoginScreen(
 
 @Composable
 fun LoginScreenContent(
-    openAndPopUp: (String, String) -> Unit,
+    onClearAndNavigate: (String) -> Unit,
     onNavigateTo: (String) -> Unit,
     screenUiState: LoginScreenUiState,
     viewModel: LoginViewModel,
@@ -103,7 +103,7 @@ fun LoginScreenContent(
 
                 /** Login Button **/
                 StoreAppButton(
-                    onClick = { viewModel.onSignInClick(openAndPopUp, LoginUiFields(email, password)) },
+                    onClick = { viewModel.onSignInClick(onClearAndNavigate, LoginUiFields(email, password)) },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(bottom = 16.dp)

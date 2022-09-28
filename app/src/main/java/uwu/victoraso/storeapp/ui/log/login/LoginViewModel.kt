@@ -36,7 +36,7 @@ constructor(
             initialValue = LoginScreenUiState.Loading
         )
 
-    fun onSignInClick(openAndPopUp: (String, String) -> Unit, loginUiFields: LoginUiFields) {
+    fun onSignInClick(onClearAndNavigate: (String) -> Unit, loginUiFields: LoginUiFields) {
         if (!loginUiFields.email.isValidEmail()) {
             SnackbarManager.showMessage(R.string.email_error)
             return
@@ -52,7 +52,7 @@ constructor(
             accountService.authenticate(loginUiFields.email, loginUiFields.password) { error ->
                 if (error == null) {
                     linkWithEmail(loginUiFields)
-                    updateUserId(oldUserId, openAndPopUp)
+                    updateUserId(oldUserId, onClearAndNavigate)
                     setUserEmail(loginUiFields.email)
                 } else Log.d(DEBUG_TAG, error.toString())
             }
@@ -69,12 +69,12 @@ constructor(
 
     private fun setUserEmail(email: String) { viewModelScope.launch { userPreferencesRepository.setUserEmail(email) } }
 
-    private fun updateUserId(oldUserId: String, openAndPopUp: (String, String) -> Unit) {
+    private fun updateUserId(oldUserId: String, onClearAndNavigate: (String) -> Unit) {
         viewModelScope.launch {
             val newUserId = accountService.getUserId()
             storageService.updateUserId(oldUserId, newUserId) { error ->
                 if (error != null) Log.d(DEBUG_TAG, error.toString())
-                else openAndPopUp(MainDestinations.HOME_ROUTE, MainDestinations.LOGIN_ROUTE)
+                else onClearAndNavigate(MainDestinations.HOME_ROUTE)
             }
         }
     }

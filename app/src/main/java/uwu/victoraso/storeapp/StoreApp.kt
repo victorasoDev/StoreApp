@@ -60,7 +60,7 @@ fun StoreApp() {
                     onProductCreate = appState::navigateToCreateProduct,
                     onProductList = appState::navigateToProductList,
                     onPopUp = appState::navigateAndPopUp,
-                    restartApp = appState::clearAndNavigate,
+                    onClearAndNavigate = appState::clearAndNavigate,
                     onNavigateTo = appState::navigateTo,
                     upPress = appState::upPress
                 )
@@ -74,7 +74,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
     onProductCreate: (NavBackStackEntry) -> Unit,
     onProductList: (String, NavBackStackEntry) -> Unit,
     onPopUp: (String, String) -> Unit,
-    restartApp: (String) -> Unit,
+    onClearAndNavigate: (String) -> Unit,
     onNavigateTo: (String, NavBackStackEntry) -> Unit, //TODO: para abrir otras ventanas puede servir
     upPress: () -> Unit
 ) {
@@ -82,7 +82,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
-        addHomeGraph(onProductSelected, onProductCreate, onProductList, restartApp)
+        addHomeGraph(onProductSelected, onProductCreate, onProductList, onClearAndNavigate)
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.CATEGORY_ID_KEY}}/{${MainDestinations.PRODUCT_ID_KEY}}",
@@ -126,10 +126,10 @@ private fun NavGraphBuilder.storeAppNavGraph(
             onNavigateTo = { route -> onNavigateTo(route, navBackStackEntry) }
         )
     }
-    composable(route = MainDestinations.LOGIN_ROUTE) { navBackStackEntry ->
+    composable(route = MainDestinations.LOGIN_ROUTE) {
         LoginScreen(
-            openAndPopUp = { route, popUp -> onPopUp(route, popUp)},
-            onNavigateTo = { route -> onNavigateTo(route, navBackStackEntry) }
+            onClearAndNavigate = { route -> onClearAndNavigate(route)},
+            onNavigateTo = { route -> onClearAndNavigate(route) }
         )
     }
 }
