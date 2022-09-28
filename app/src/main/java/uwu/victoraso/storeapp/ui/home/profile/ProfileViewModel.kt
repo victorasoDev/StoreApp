@@ -11,6 +11,7 @@ import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.model.service.AccountService
+import uwu.victoraso.storeapp.ui.utils.CLEAR_USER_PREFERENCE
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,16 +34,18 @@ class ProfileViewModel
 
     fun setUserEmail(email: String) { viewModelScope.launch { userPreferencesRepository.setUserEmail(email) } }
 
-    fun setUserAdress(adress: String) { viewModelScope.launch { userPreferencesRepository.setUserAdress(adress) } }
-
-    fun setUserPhone(phone: String) { viewModelScope.launch { userPreferencesRepository.setUserPhone(phone) } }
-
     fun onSignOutClick(restartApp: (String) -> Unit) {
         viewModelScope.launch {
             accountService.signOut()
+            clearPasswordPreference()
+            cancelRememberMe()
             restartApp(MainDestinations.LOGIN_ROUTE)//TODO -> al splash
         }
     }
+
+    private fun clearPasswordPreference() { viewModelScope.launch { userPreferencesRepository.setUserPassword(CLEAR_USER_PREFERENCE) } }
+
+    private fun cancelRememberMe() { viewModelScope.launch { userPreferencesRepository.setRememberMe(false) } }
 }
 
 private fun profileUiStateStream(

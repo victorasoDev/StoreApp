@@ -27,6 +27,7 @@ object MainDestinations {
     const val CATEGORY_ID_KEY = "categoryId"
     const val LOGIN_ROUTE = "login"
     const val SIGNUP_ROUTE = "signup"
+    const val SPLASH_ROUTE = "splash"
     const val SETTINGS_ROUTE = "settings"
 }
 

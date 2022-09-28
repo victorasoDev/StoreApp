@@ -4,6 +4,8 @@ import StoreAppTextButton
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,12 +33,17 @@ fun LoginScreen(
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
             StoreAppTopBar(screenTitle = "Welcome!")
-            LoginScreenContent(
-                onClearAndNavigate = onClearAndNavigate,
-                onNavigateTo = onNavigateTo,
-                screenUiState = screenUiState,
-                viewModel = viewModel
-            )
+            when (screenUiState.loginUiState) {
+                is CredentialsUiState.Success -> {
+                    LoginScreenContent(
+                        onClearAndNavigate = onClearAndNavigate,
+                        onNavigateTo = onNavigateTo,
+                        screenUiState = screenUiState,
+                        viewModel = viewModel
+                    )
+                }
+                is CredentialsUiState.Loading -> CircularProgressIndicator()
+            }
         }
     }
 }
@@ -50,9 +57,14 @@ fun LoginScreenContent(
     modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
-    if (screenUiState is LoginScreenUiState.Success) email = screenUiState.email
     var password by remember { mutableStateOf("") }
+    var rememberMe by remember { mutableStateOf(false) }
 
+    if (screenUiState.loginUiState is CredentialsUiState.Success) {
+        email = screenUiState.loginUiState.email
+        password = screenUiState.loginUiState.password
+        rememberMe = screenUiState.loginUiState.rememberMe
+    }
 
     Column(verticalArrangement = Arrangement.Center, modifier = modifier.fillMaxSize()) {
         Spacer(
@@ -100,10 +112,11 @@ fun LoginScreenContent(
                         onClick = { viewModel.onForgotPasswordClick(LoginUiFields(email, password)) },
                     )
                 }
+                Checkbox(checked = rememberMe, onCheckedChange = { rememberMe = it })
 
                 /** Login Button **/
                 StoreAppButton(
-                    onClick = { viewModel.onSignInClick(onClearAndNavigate, LoginUiFields(email, password)) },
+                    onClick = { viewModel.onSignInClick(onClearAndNavigate, LoginUiFields(email, password), rememberMe) },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(bottom = 16.dp)

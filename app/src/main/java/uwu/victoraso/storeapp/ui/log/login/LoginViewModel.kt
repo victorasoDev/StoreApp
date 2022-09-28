@@ -14,6 +14,7 @@ import uwu.victoraso.storeapp.model.service.StorageService
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
+import uwu.victoraso.storeapp.ui.utils.CLEAR_USER_PREFERENCE
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.isValidEmail
 import javax.inject.Inject
@@ -25,18 +26,35 @@ constructor(
     private val accountService: AccountService,
     private val storageService: StorageService,
     private val userPreferencesRepository: UserPreferencesRepository
-): ViewModel() {
+) : ViewModel() {
 
-    var loginUiState: StateFlow<LoginScreenUiState> = loginUiStateStream(
-        userDataRepository = userPreferencesRepository
-    )
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = LoginScreenUiState.Loading
-        )
+    private val userEmailStream: Flow<Result<String>> = userPreferencesRepository.getUserEmail.asResult()
+    private val userPasswordStream: Flow<Result<String>> = userPreferencesRepository.getUserPassword.asResult()
+    private val rememberMeStream: Flow<Result<Boolean>> = userPreferencesRepository.getRememberMe.asResult()
 
-    fun onSignInClick(onClearAndNavigate: (String) -> Unit, loginUiFields: LoginUiFields) {
+    var loginUiState: StateFlow<LoginScreenUiState> =
+        combine(
+            userEmailStream,
+            userPasswordStream,
+            rememberMeStream
+        ) { userEmailResult, userPasswordResult, rememberMeResult ->
+            val credentials: CredentialsUiState =
+                when {
+                    userEmailResult is Result.Success && userPasswordResult is Result.Success && rememberMeResult is Result.Success -> {
+                        CredentialsUiState.Success(userEmailResult.data, userPasswordResult.data, rememberMeResult.data)
+                    }
+                    userEmailResult is Result.Loading -> { CredentialsUiState.Loading }
+                    else -> CredentialsUiState.Success("", "", false)
+                }
+            LoginScreenUiState(credentials)
+        }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = LoginScreenUiState(loginUiState = CredentialsUiState.Loading)
+            )
+
+    fun onSignInClick(onClearAndNavigate: (String) -> Unit, loginUiFields: LoginUiFields, rememberMe: Boolean) {
         if (!loginUiFields.email.isValidEmail()) {
             SnackbarManager.showMessage(R.string.email_error)
             return
@@ -54,6 +72,8 @@ constructor(
                     linkWithEmail(loginUiFields)
                     updateUserId(oldUserId, onClearAndNavigate)
                     setUserEmail(loginUiFields.email)
+                    setRememberMe(rememberMe)
+                    if (rememberMe) setUserPassword(loginUiFields.password) /**TODO: encryptar la pass**/
                 } else Log.d(DEBUG_TAG, error.toString())
             }
         }
@@ -67,7 +87,17 @@ constructor(
         }
     }
 
-    private fun setUserEmail(email: String) { viewModelScope.launch { userPreferencesRepository.setUserEmail(email) } }
+    private fun setUserEmail(email: String) {
+        viewModelScope.launch { userPreferencesRepository.setUserEmail(email) }
+    }
+
+    private fun setUserPassword(password: String) {
+        viewModelScope.launch { userPreferencesRepository.setUserPassword(password) }
+    }
+
+    private fun setRememberMe(rememberMe: Boolean) {
+        viewModelScope.launch { userPreferencesRepository.setRememberMe(rememberMe) }
+    }
 
     private fun updateUserId(oldUserId: String, onClearAndNavigate: (String) -> Unit) {
         viewModelScope.launch {
@@ -99,32 +129,11 @@ data class LoginUiFields(
     val password: String = ""
 )
 
-private fun loginUiStateStream(
-    userDataRepository: UserPreferencesRepository,
-): Flow<LoginScreenUiState> {
-    val userEmail: Flow<String> = userDataRepository.getUserEmail
-
-    return userEmail
-        .asResult()
-        .map { result ->
-            when (result) {
-                is Result.Success -> {
-                    LoginScreenUiState.Success(
-                        userEmail.firstOrNull() ?: "" //TODO
-                    )
-                }
-                is Result.Loading -> {
-                    LoginScreenUiState.Loading
-                }
-                is Result.Error -> {
-                    LoginScreenUiState.Error
-                }
-            }
-        }
+sealed interface CredentialsUiState {
+    data class Success(val email: String, val password: String, val rememberMe: Boolean) : CredentialsUiState
+    object Loading : CredentialsUiState
 }
 
-sealed interface LoginScreenUiState {
-    data class Success(val email: String) : LoginScreenUiState
-    object Error : LoginScreenUiState
-    object Loading : LoginScreenUiState
-}
+data class LoginScreenUiState(
+    val loginUiState: CredentialsUiState
+)

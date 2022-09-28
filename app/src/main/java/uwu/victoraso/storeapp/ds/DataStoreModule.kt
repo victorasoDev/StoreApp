@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.SharedPreferencesMigration
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
@@ -27,6 +24,8 @@ val USER_NAME_PREFERENCE = stringPreferencesKey("user_name")
 val USER_EMAIL_PREFERENCE = stringPreferencesKey("user_email")
 val USER_ADRESS_PREFERENCE = stringPreferencesKey("user_adress")
 val USER_PHONE_PREFERENCE = stringPreferencesKey("user_phone")
+val USER_PASSWORD_PREFERENCE = stringPreferencesKey("user_password")
+val REMEMBER_ME_PREFERENCE = booleanPreferencesKey("remember_me")
 
 @Module
 @InstallIn(SingletonComponent::class)
