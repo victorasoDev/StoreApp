@@ -34,7 +34,7 @@ class PreferencesDataSource @Inject constructor(
     suspend fun setName(name: String) = userPreferences.edit { preferences -> preferences[USER_NAME_PREFERENCE] = name }
 
     /** Setter & Getter of [USER_EMAIL_PREFERENCE] DataStore Preference **/
-    private val userEmail: Flow<String> = userPreferences.data.map { preferences -> preferences[USER_EMAIL_PREFERENCE] ?: "Not email provided" }
+    val userEmail: Flow<String> = userPreferences.data.map { preferences -> preferences[USER_EMAIL_PREFERENCE] ?: "Not email provided" }
 
     suspend fun setEmail(email: String) = userPreferences.edit { preferences -> preferences[USER_EMAIL_PREFERENCE] = email }
 

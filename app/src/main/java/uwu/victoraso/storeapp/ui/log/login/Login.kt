@@ -5,18 +5,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun LoginScreen(
     openAndPopUp: (String, String) -> Unit,
@@ -24,8 +26,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-
-    val uiState by viewModel.uiState
+    val screenUiState: LoginScreenUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
 
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
@@ -33,7 +34,7 @@ fun LoginScreen(
             LoginScreenContent(
                 openAndPopUp = openAndPopUp,
                 onNavigateTo = onNavigateTo,
-                uiState = uiState,
+                screenUiState = screenUiState,
                 viewModel = viewModel
             )
         }
@@ -44,10 +45,15 @@ fun LoginScreen(
 fun LoginScreenContent(
     openAndPopUp: (String, String) -> Unit,
     onNavigateTo: (String) -> Unit,
-    uiState: LoginUiState,
+    screenUiState: LoginScreenUiState,
     viewModel: LoginViewModel,
     modifier: Modifier = Modifier
 ) {
+    var email by remember { mutableStateOf("") }
+    if (screenUiState is LoginScreenUiState.Success) email = screenUiState.email
+    var password by remember { mutableStateOf("") }
+
+
     Column(verticalArrangement = Arrangement.Center, modifier = modifier.fillMaxSize()) {
         Spacer(
             Modifier.windowInsetsTopHeight(
@@ -70,14 +76,14 @@ fun LoginScreenContent(
             ) {
                 /** Email TextField **/
                 StoreAppEmailTextField(
-                    value = uiState.email,
-                    onValueChange = viewModel::onEmailChange,
+                    value = email,
+                    onValueChange = { email = it },
                     modifier = Modifier.padding(vertical = 24.dp)
                 )
                 /** Password TextField **/
                 StoreAppPasswordTextField(
-                    value = uiState.password,
-                    onValueChange = viewModel::onPasswordChange,
+                    value = password,
+                    onValueChange = { password = it },
                 )
                 Row(
                     modifier = Modifier
@@ -91,14 +97,16 @@ fun LoginScreenContent(
                     )
                     StoreAppTextButton(
                         text = stringResource(id = R.string.forgot_password),
-                        onClick = { viewModel.onForgotPasswordClick() },
+                        onClick = { viewModel.onForgotPasswordClick(LoginUiFields(email, password)) },
                     )
                 }
 
                 /** Login Button **/
                 StoreAppButton(
-                    onClick = { viewModel.onSignInClick(openAndPopUp) },
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 16.dp)
+                    onClick = { viewModel.onSignInClick(openAndPopUp, LoginUiFields(email, password)) },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 16.dp)
                 ) {
                     Text(text = stringResource(R.string.sign_in))
                 }

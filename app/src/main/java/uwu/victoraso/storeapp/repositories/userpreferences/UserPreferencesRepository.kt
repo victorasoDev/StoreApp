@@ -15,6 +15,8 @@ class UserPreferencesRepository @Inject constructor(
 
     override suspend fun setUserEmail(email: String) { preferencesDataSource.setEmail(email) }
 
+    override val getUserEmail: Flow<String> = preferencesDataSource.userEmail
+
     override suspend fun setUserAdress(adress: String) { preferencesDataSource.setAdress(adress) }
 
     override suspend fun setUserPhone(phone: String) { preferencesDataSource.setPhone(phone) }
@@ -22,6 +24,7 @@ class UserPreferencesRepository @Inject constructor(
 
 sealed interface UserPreferencesRepositoryInterface {
     val getUserProfile : Flow<UserProfile>
+    val getUserEmail: Flow<String>
     /** User DataStore Preferences Setters **/
     suspend fun setUserName(username: String)
     suspend fun setUserEmail(email: String)
