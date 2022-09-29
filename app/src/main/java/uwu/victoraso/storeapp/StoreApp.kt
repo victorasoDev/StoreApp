@@ -25,6 +25,7 @@ import uwu.victoraso.storeapp.ui.log.signup.SignUpScreen
 import uwu.victoraso.storeapp.ui.productcollection.ProductListViewModel
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreate
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreateViewModel
+import uwu.victoraso.storeapp.ui.splash.Splash
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
@@ -52,7 +53,7 @@ fun StoreApp() {
         ) { innerPaddingModifier ->
             NavHost(
                 navController = appState.navController,
-                startDestination = MainDestinations.LOGIN_ROUTE,
+                startDestination = MainDestinations.SPLASH_ROUTE,
                 modifier = Modifier.padding(innerPaddingModifier)
             ) {
                 storeAppNavGraph(
@@ -131,5 +132,8 @@ private fun NavGraphBuilder.storeAppNavGraph(
             onClearAndNavigate = { route -> onClearAndNavigate(route)},
             onNavigateTo = { route -> onClearAndNavigate(route) }
         )
+    }
+    composable(route = MainDestinations.SPLASH_ROUTE) {
+        Splash(openAndPopUp = { route, from -> onPopUp(route, from) })
     }
 }
