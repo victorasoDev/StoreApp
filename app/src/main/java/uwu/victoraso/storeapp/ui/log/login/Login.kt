@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.log.login
 
 import StoreAppTextButton
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,10 +16,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
+import kotlin.coroutines.CoroutineContext
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -29,6 +34,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val screenUiState: LoginScreenUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
+    Log.d(DEBUG_TAG, "Recomposition")
 
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
@@ -59,6 +65,7 @@ fun LoginScreenContent(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
+    val signInState by remember { viewModel.signInState }
 
     if (screenUiState.loginUiState is CredentialsUiState.Success) {
         email = screenUiState.loginUiState.email
@@ -122,6 +129,9 @@ fun LoginScreenContent(
                         .padding(bottom = 16.dp)
                 ) {
                     Text(text = stringResource(R.string.sign_in))
+                }
+                if (signInState) {
+                    CircularProgressIndicator()
                 }
             }
         }

@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.log.login
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,6 +33,9 @@ constructor(
     private val userPasswordStream: Flow<Result<String>> = userPreferencesRepository.getUserPassword.asResult()
     private val rememberMeStream: Flow<Result<Boolean>> = userPreferencesRepository.getRememberMe.asResult()
 
+    /** UiState when signInButton is clicked **/
+    var signInState = mutableStateOf(false)
+
     var loginUiState: StateFlow<LoginScreenUiState> =
         combine(
             userEmailStream,
@@ -55,6 +59,7 @@ constructor(
             )
 
     fun onSignInClick(onClearAndNavigate: (String) -> Unit, loginUiFields: LoginUiFields, rememberMe: Boolean) {
+        signInState.value = true
         if (!loginUiFields.email.isValidEmail()) {
             SnackbarManager.showMessage(R.string.email_error)
             return
@@ -74,6 +79,7 @@ constructor(
                     setUserEmail(loginUiFields.email)
                     setRememberMe(rememberMe)
                     if (rememberMe) setUserPassword(loginUiFields.password) /**TODO: encryptar la pass**/
+                    signInState.value = true
                 } else Log.d(DEBUG_TAG, error.toString())
             }
         }
