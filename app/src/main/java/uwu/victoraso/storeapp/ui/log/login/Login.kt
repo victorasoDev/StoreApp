@@ -11,19 +11,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
-import kotlin.coroutines.CoroutineContext
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -122,16 +120,17 @@ fun LoginScreenContent(
                 Checkbox(checked = rememberMe, onCheckedChange = { rememberMe = it })
 
                 /** Login Button **/
+
+
                 StoreAppButton(
                     onClick = { viewModel.onSignInClick(onClearAndNavigate, LoginUiFields(email, password), rememberMe) },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = 16.dp),
+                    color = if (signInState) loadingButtonState() else Color.Transparent,
+                    //TODO: deshabilitar el botón mientras se hace la petición
                 ) {
                     Text(text = stringResource(R.string.sign_in))
-                }
-                if (signInState) {
-                    CircularProgressIndicator()
                 }
             }
         }

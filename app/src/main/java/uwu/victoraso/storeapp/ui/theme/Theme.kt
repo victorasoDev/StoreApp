@@ -20,6 +20,8 @@ private val LightColorPalette = StoreAppColors(
     iconSecondary = Neutral7,
     iconInteractive = Neutral0,
     iconInteractiveInactive = Neutral1,
+    loadingButtonAnimStartColor = Ocean4,
+    loadingButtonAnimEndColor = Ocean8,
     error = FunctionalRed,
     gradient6_1 = listOf(Shadow4, Ocean3, Shadow2, Ocean3, Shadow4),
     gradient6_2 = listOf(Rose4, Lavender3, Rose2, Lavender3, Rose4),
@@ -47,6 +49,8 @@ private val DarkColorPalette = StoreAppColors(
     iconSecondary = Neutral0,
     iconInteractive = Neutral7,
     iconInteractiveInactive = Neutral6,
+    loadingButtonAnimStartColor = Ocean5,
+    loadingButtonAnimEndColor = Ocean10,
     error = FunctionalRedDark,
     gradient6_1 = listOf(Shadow5, Ocean7, Shadow9, Ocean7, Shadow5),
     gradient6_2 = listOf(Rose11, Lavender7, Rose8, Lavender7, Rose11),
@@ -96,6 +100,8 @@ class StoreAppColors(
     iconSecondary: Color,
     iconInteractive: Color,
     iconInteractiveInactive: Color,
+    loadingButtonAnimStartColor: Color,
+    loadingButtonAnimEndColor: Color,
     error: Color,
     notificationBadge: Color = error,
     isDark: Boolean
@@ -149,6 +155,10 @@ class StoreAppColors(
     var iconInteractive by mutableStateOf(iconInteractive)
         private set
     var iconInteractiveInactive by mutableStateOf(iconInteractiveInactive)
+        private set
+    var loadingButtonAnimStartColor by mutableStateOf(loadingButtonAnimStartColor)
+        private set
+    var loadingButtonAnimEndColor by mutableStateOf(loadingButtonAnimEndColor)
         private set
     var error by mutableStateOf(error)
         private set
@@ -214,6 +224,8 @@ class StoreAppColors(
         iconSecondary = iconSecondary,
         iconInteractive = iconInteractive,
         iconInteractiveInactive = iconInteractiveInactive,
+        loadingButtonAnimStartColor = loadingButtonAnimStartColor,
+        loadingButtonAnimEndColor = loadingButtonAnimEndColor,
         error = error,
         notificationBadge = notificationBadge,
         isDark = isDark,

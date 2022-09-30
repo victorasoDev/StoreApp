@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
@@ -32,14 +31,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.firestore.FirebaseFirestore
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.model.ProductCollection
-import uwu.victoraso.storeapp.model.ProductRepo
 import uwu.victoraso.storeapp.repositories.products.ProductDataSource
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 

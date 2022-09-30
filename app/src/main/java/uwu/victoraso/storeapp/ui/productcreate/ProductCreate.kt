@@ -1,34 +1,23 @@
 package uwu.victoraso.storeapp.ui.productcreate
 
 import android.util.Log
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import uwu.victoraso.storeapp.R
-import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.StoreAppFilters
-import uwu.victoraso.storeapp.ui.components.*
-import uwu.victoraso.storeapp.ui.theme.Neutral8
-import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.components.FilterBar
+import uwu.victoraso.storeapp.ui.components.StoreAppButton
+import uwu.victoraso.storeapp.ui.components.StoreAppTextField
+import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
-import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
 private val MinTitleOffset = 56.dp
 

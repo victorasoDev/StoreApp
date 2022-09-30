@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.log.login
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,7 +35,8 @@ constructor(
     private val rememberMeStream: Flow<Result<Boolean>> = userPreferencesRepository.getRememberMe.asResult()
 
     /** UiState when signInButton is clicked **/
-    var signInState = mutableStateOf(false)
+    private var _signInState = mutableStateOf(false)
+    val signInState get() = _signInState
 
     var loginUiState: StateFlow<LoginScreenUiState> =
         combine(
@@ -59,14 +61,16 @@ constructor(
             )
 
     fun onSignInClick(onClearAndNavigate: (String) -> Unit, loginUiFields: LoginUiFields, rememberMe: Boolean) {
-        signInState.value = true
+        _signInState.startLoading()
         if (!loginUiFields.email.isValidEmail()) {
             SnackbarManager.showMessage(R.string.email_error)
+            _signInState.stopLoading()
             return
         }
 
         if (loginUiFields.password.isBlank()) {
             SnackbarManager.showMessage(R.string.empty_password_error)
+            _signInState.stopLoading()
             return
         }
 
@@ -76,11 +80,9 @@ constructor(
                 if (error == null) {
                     linkWithEmail(loginUiFields)
                     updateUserId(oldUserId, onClearAndNavigate)
-                    setUserEmail(loginUiFields.email)
-                    setRememberMe(rememberMe)
-                    if (rememberMe) setUserPassword(loginUiFields.password) /**TODO: encryptar la pass**/
-                    signInState.value = true
+                    saveCredentials(loginUiFields.email, loginUiFields.password, rememberMe)
                 } else Log.d(DEBUG_TAG, error.toString())
+                _signInState.stopLoading()
             }
         }
     }
@@ -93,16 +95,10 @@ constructor(
         }
     }
 
-    private fun setUserEmail(email: String) {
+    private fun saveCredentials(email: String, password: String, rememberMe: Boolean) {
         viewModelScope.launch { userPreferencesRepository.setUserEmail(email) }
-    }
-
-    private fun setUserPassword(password: String) {
-        viewModelScope.launch { userPreferencesRepository.setUserPassword(password) }
-    }
-
-    private fun setRememberMe(rememberMe: Boolean) {
         viewModelScope.launch { userPreferencesRepository.setRememberMe(rememberMe) }
+        if (rememberMe) viewModelScope.launch { userPreferencesRepository.setUserPassword(password) }/**TODO: encryptar la pass**/
     }
 
     private fun updateUserId(oldUserId: String, onClearAndNavigate: (String) -> Unit) {
@@ -128,6 +124,10 @@ constructor(
             }
         }
     }
+
+    //TODO: pasar a un viewModel padre?
+    private fun MutableState<Boolean>.startLoading() { this.value = true }
+    private fun MutableState<Boolean>.stopLoading() { this.value = false }
 }
 
 data class LoginUiFields(

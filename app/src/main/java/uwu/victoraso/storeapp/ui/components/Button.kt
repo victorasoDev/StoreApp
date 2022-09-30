@@ -1,11 +1,12 @@
 package uwu.victoraso.storeapp.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,7 @@ import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +40,14 @@ fun StoreAppButton(
     backgroundGradient: List<Color> = StoreAppTheme.colors.interactiveSecondary,
     disabledBackgroundGradient: List<Color> = StoreAppTheme.colors.interactiveSecondary,
     contentColor: Color = StoreAppTheme.colors.textInteractive,
+    color: Color = Color.Transparent,
     disabledContentColor: Color = StoreAppTheme.colors.textHelp,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit
 ) {
     StoreAppSurface(
         shape = shape,
-        color = Color.Transparent,
+        color = color,
         contentColor = if (enabled) contentColor else disabledContentColor,
         border = border,
         modifier = modifier
@@ -77,6 +80,20 @@ fun StoreAppButton(
             )
         }
     }
+}
+
+@Composable
+fun loadingButtonState(): Color {
+    val infiniteTransition = rememberInfiniteTransition()
+    val colorAnimation by infiniteTransition.animateColor(
+        initialValue = StoreAppTheme.colors.loadingButtonAnimStartColor,
+        targetValue = StoreAppTheme.colors.loadingButtonAnimEndColor,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+    return colorAnimation
 }
 
 private val ButtonShape = RoundedCornerShape(percent = 50)
