@@ -42,53 +42,59 @@ data class SearchSuggestionGroup(
 private val searchCategoryCollections = listOf(
     SearchCategoryCollection(
         id = 0L,
-        name = "Categories",
+        name = "PC",
         categories = listOf(
             SearchCategory(
-                name = "Chips & crackers",
+                name = "Builds",
                 imageUrl = "https://source.unsplash.com/UsSdMZ78Q3E"
             ),
             SearchCategory(
-                name = "Fruit snacks",
+                name = "Laptops",
                 imageUrl = "https://source.unsplash.com/SfP1PtM9Qa8"
             ),
-            SearchCategory(
-                name = "Desserts",
-                imageUrl = "https://source.unsplash.com/_jk8KIyN_uA"
-            ),
-            SearchCategory(
-                name = "Nuts ",
-                imageUrl = "https://source.unsplash.com/UsSdMZ78Q3E"
-            )
         )
     ),
     SearchCategoryCollection(
         id = 1L,
-        name = "Lifestyles",
+        name = "Components",
         categories = listOf(
             SearchCategory(
-                name = "Organic",
+                name = "Processors",
                 imageUrl = "https://source.unsplash.com/7meCnGCJ5Ms"
             ),
             SearchCategory(
-                name = "Gluten Free",
+                name = "Graphics Cards",
                 imageUrl = "https://source.unsplash.com/m741tj4Cz7M"
             ),
             SearchCategory(
-                name = "Paleo",
+                name = "Motherboards",
                 imageUrl = "https://source.unsplash.com/dt5-8tThZKg"
             ),
             SearchCategory(
-                name = "Vegan",
+                name = "RAMs",
                 imageUrl = "https://source.unsplash.com/ReXxkS1m1H0"
             ),
             SearchCategory(
-                name = "Vegitarian",
+                name = "Cooling Systems",
                 imageUrl = "https://source.unsplash.com/IGfIGP5ONV0"
+            )
+        )
+    ),
+    SearchCategoryCollection(
+        id = 2L,
+        name = "Peripherals",
+        categories = listOf(
+            SearchCategory(
+                name = "Mouses",
+                imageUrl = "https://source.unsplash.com/UsSdMZ78Q3E"
             ),
             SearchCategory(
-                name = "Whole30",
-                imageUrl = "https://source.unsplash.com/9MzCd76xLGk"
+                name = "Monitors",
+                imageUrl = "https://source.unsplash.com/SfP1PtM9Qa8"
+            ),
+            SearchCategory(
+                name = "Keyboards",
+                imageUrl = "https://source.unsplash.com/SfP1PtM9Qa8"
             )
         )
     )

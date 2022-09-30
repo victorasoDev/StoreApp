@@ -17,6 +17,7 @@ import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_LOGIN
 import uwu.victoraso.storeapp.ui.utils.isValidEmail
 import javax.inject.Inject
 
@@ -80,8 +81,10 @@ constructor(
                     linkWithEmail(loginUiFields)
                     updateUserId(oldUserId, onClearAndNavigate)
                     saveCredentials(loginUiFields.email, loginUiFields.password, rememberMe)
-                } else Log.d(DEBUG_TAG, error.toString())
-                _isSignInLoading.stopLoading()
+                } else {
+                    Log.d(DEBUG_TAG_LOGIN, error.toString())
+                    _isSignInLoading.stopLoading()
+                }
             }
         }
     }
@@ -89,7 +92,7 @@ constructor(
     private fun linkWithEmail(loginUiFields: LoginUiFields) {
         viewModelScope.launch {
             accountService.linkAccount(loginUiFields.email, loginUiFields.password) { error ->
-                if (error != null) Log.d(DEBUG_TAG, error.toString())
+                if (error != null ) { Log.d(DEBUG_TAG_LOGIN, error.toString()) }
             }
         }
     }
@@ -104,8 +107,12 @@ constructor(
         viewModelScope.launch {
             val newUserId = accountService.getUserId()
             storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error != null) Log.d(DEBUG_TAG, error.toString())
-                else onClearAndNavigate(MainDestinations.HOME_ROUTE)
+                if (error != null) {
+                    Log.d(DEBUG_TAG_LOGIN, error.toString())
+                    _isSignInLoading.stopLoading()
+                } else {
+                    onClearAndNavigate(MainDestinations.HOME_ROUTE)
+                }
             }
         }
     }
@@ -118,7 +125,7 @@ constructor(
 
         viewModelScope.launch {
             accountService.sendRecoveryEmail(loginUiFields.email) { error ->
-                if (error != null) Log.d(DEBUG_TAG, error.toString())
+                if (error != null) Log.d(DEBUG_TAG_LOGIN, error.toString())
                 else SnackbarManager.showMessage(R.string.recovery_email_sent)
             }
         }
