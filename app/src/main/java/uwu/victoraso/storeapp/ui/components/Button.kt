@@ -1,8 +1,8 @@
 package uwu.victoraso.storeapp.ui.components
 
 import android.content.res.Configuration
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.*
+import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,13 +10,9 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,9 +21,39 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+
+@Composable
+fun StoreAppLoadingButton(
+    onClick: () -> Unit,
+    modifier: Modifier,
+    isLoading: Boolean = false,
+    @StringRes defaultText: Int,
+    @StringRes actionText: Int
+) {
+    StoreAppButton(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = !isLoading,
+    ) {
+        AnimatedVisibility(visible = isLoading) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp)
+                        .padding(top = 4.dp, bottom = 4.dp, end = 8.dp),
+                    strokeWidth = 2.dp
+                )
+            }
+        }
+        Text(text = if (isLoading) stringResource(actionText) else stringResource(defaultText))
+    }
+}
 
 @Composable
 fun StoreAppButton(
@@ -80,20 +106,6 @@ fun StoreAppButton(
             )
         }
     }
-}
-
-@Composable
-fun loadingButtonState(): Color {
-    val infiniteTransition = rememberInfiniteTransition()
-    val colorAnimation by infiniteTransition.animateColor(
-        initialValue = StoreAppTheme.colors.loadingButtonAnimStartColor,
-        targetValue = StoreAppTheme.colors.loadingButtonAnimEndColor,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        )
-    )
-    return colorAnimation
 }
 
 private val ButtonShape = RoundedCornerShape(percent = 50)

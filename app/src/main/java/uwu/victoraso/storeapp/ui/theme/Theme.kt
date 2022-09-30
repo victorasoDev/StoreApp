@@ -13,6 +13,7 @@ private val LightColorPalette = StoreAppColors(
     uiBackground = Neutral0,
     uiBorder = Neutral4,
     uiFloated = FunctionalGrey,
+    loadingBackgroundColor = LoadingBackgroundColor,
     textSecondary = Neutral7,
     textHelp = Neutral6,
     textInteractive = Neutral0,
@@ -51,6 +52,7 @@ private val DarkColorPalette = StoreAppColors(
     iconInteractiveInactive = Neutral6,
     loadingButtonAnimStartColor = Ocean5,
     loadingButtonAnimEndColor = Ocean10,
+    loadingBackgroundColor = LoadingBackgroundColor,
     error = FunctionalRedDark,
     gradient6_1 = listOf(Shadow5, Ocean7, Shadow9, Ocean7, Shadow5),
     gradient6_2 = listOf(Rose11, Lavender7, Rose8, Lavender7, Rose11),
@@ -102,6 +104,7 @@ class StoreAppColors(
     iconInteractiveInactive: Color,
     loadingButtonAnimStartColor: Color,
     loadingButtonAnimEndColor: Color,
+    loadingBackgroundColor: Color,
     error: Color,
     notificationBadge: Color = error,
     isDark: Boolean
@@ -160,6 +163,8 @@ class StoreAppColors(
         private set
     var loadingButtonAnimEndColor by mutableStateOf(loadingButtonAnimEndColor)
         private set
+    var loadingBackgroundColor by mutableStateOf(loadingBackgroundColor)
+        private set
     var error by mutableStateOf(error)
         private set
     var notificationBadge by mutableStateOf(notificationBadge)
@@ -193,6 +198,9 @@ class StoreAppColors(
         iconSecondary = other.iconSecondary
         iconInteractive = other.iconInteractive
         iconInteractiveInactive = other.iconInteractiveInactive
+        loadingButtonAnimStartColor = other.loadingButtonAnimEndColor
+        loadingButtonAnimEndColor = other.loadingButtonAnimEndColor
+        loadingBackgroundColor = other.loadingBackgroundColor
         error = other.error
         notificationBadge = other.notificationBadge
         isDark = other.isDark
@@ -226,6 +234,7 @@ class StoreAppColors(
         iconInteractiveInactive = iconInteractiveInactive,
         loadingButtonAnimStartColor = loadingButtonAnimStartColor,
         loadingButtonAnimEndColor = loadingButtonAnimEndColor,
+        loadingBackgroundColor = loadingBackgroundColor,
         error = error,
         notificationBadge = notificationBadge,
         isDark = isDark,

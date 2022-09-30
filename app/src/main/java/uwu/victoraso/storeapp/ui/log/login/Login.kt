@@ -2,6 +2,7 @@ package uwu.victoraso.storeapp.ui.log.login
 
 import StoreAppTextButton
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,8 +11,8 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,7 +64,7 @@ fun LoginScreenContent(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
-    val signInState by remember { viewModel.signInState }
+    val isSignInLoading by remember { viewModel.isSignInLoading }
 
     if (screenUiState.loginUiState is CredentialsUiState.Success) {
         email = screenUiState.loginUiState.email
@@ -120,18 +121,15 @@ fun LoginScreenContent(
                 Checkbox(checked = rememberMe, onCheckedChange = { rememberMe = it })
 
                 /** Login Button **/
-
-
-                StoreAppButton(
+                StoreAppLoadingButton(
                     onClick = { viewModel.onSignInClick(onClearAndNavigate, LoginUiFields(email, password), rememberMe) },
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
+                        .align(CenterHorizontally)
                         .padding(bottom = 16.dp),
-                    color = if (signInState) loadingButtonState() else Color.Transparent,
-                    //TODO: deshabilitar el botón mientras se hace la petición
-                ) {
-                    Text(text = stringResource(R.string.sign_in))
-                }
+                    isLoading = isSignInLoading,
+                    defaultText = R.string.sign_in,
+                    actionText = R.string.signing_in
+                )
             }
         }
     }

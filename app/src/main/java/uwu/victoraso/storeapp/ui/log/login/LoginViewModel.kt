@@ -16,7 +16,6 @@ import uwu.victoraso.storeapp.model.service.StorageService
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
-import uwu.victoraso.storeapp.ui.utils.CLEAR_USER_PREFERENCE
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.isValidEmail
 import javax.inject.Inject
@@ -35,8 +34,8 @@ constructor(
     private val rememberMeStream: Flow<Result<Boolean>> = userPreferencesRepository.getRememberMe.asResult()
 
     /** UiState when signInButton is clicked **/
-    private var _signInState = mutableStateOf(false)
-    val signInState get() = _signInState
+    private var _isSignInLoading = mutableStateOf(false)
+    val isSignInLoading get() = _isSignInLoading
 
     var loginUiState: StateFlow<LoginScreenUiState> =
         combine(
@@ -61,16 +60,16 @@ constructor(
             )
 
     fun onSignInClick(onClearAndNavigate: (String) -> Unit, loginUiFields: LoginUiFields, rememberMe: Boolean) {
-        _signInState.startLoading()
+        _isSignInLoading.startLoading()
         if (!loginUiFields.email.isValidEmail()) {
             SnackbarManager.showMessage(R.string.email_error)
-            _signInState.stopLoading()
+            _isSignInLoading.stopLoading()
             return
         }
 
         if (loginUiFields.password.isBlank()) {
             SnackbarManager.showMessage(R.string.empty_password_error)
-            _signInState.stopLoading()
+            _isSignInLoading.stopLoading()
             return
         }
 
@@ -82,7 +81,7 @@ constructor(
                     updateUserId(oldUserId, onClearAndNavigate)
                     saveCredentials(loginUiFields.email, loginUiFields.password, rememberMe)
                 } else Log.d(DEBUG_TAG, error.toString())
-                _signInState.stopLoading()
+                _isSignInLoading.stopLoading()
             }
         }
     }
