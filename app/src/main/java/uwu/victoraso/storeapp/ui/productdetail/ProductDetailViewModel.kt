@@ -5,13 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.model.CollectionType
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
+import uwu.victoraso.storeapp.model.service.AccountService
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
+import uwu.victoraso.storeapp.repositories.wishlist.WishlistRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,6 +22,8 @@ class ProductDetailViewModel
 @Inject
 constructor(
     productRepository: ProductRepository,
+    private val wishlistRepository: WishlistRepository,
+    private val accountService: AccountService,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -27,30 +32,38 @@ constructor(
 
     private val productDetailStream: Flow<Result<Product>> = productRepository.getProductDetailsById(productId = productId).asResult()
     private val relatedProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory(category = category).asResult()
+    private val isWishlistedStream: Flow<Result<Boolean>> =
+        wishlistRepository.isWishlisted(productId = productId, userId = accountService.getUserId()).asResult()
 
     val uiState: StateFlow<ProductDetailScreenUiState> =
         combine(
             productDetailStream,
-            relatedProductsStream
-        ) { productDetailResult, relatedProductsResult ->
+            relatedProductsStream,
+            isWishlistedStream,
+        ) { productDetailResult, relatedProductsResult, isWishlistedResult ->
             /**
              * Get product details
              * */
             val product: ProductDetailUiState =
                 when (productDetailResult) {
-                    is Result.Success -> ProductDetailUiState.Success(
-                        Product(
-                            id = productDetailResult.data.id,
-                            name = productDetailResult.data.name,
-                            imageUrl = productDetailResult.data.imageUrl,
-                            price = productDetailResult.data.price,
-                            tagline = productDetailResult.data.tagline,
-                            categories = productDetailResult.data.categories,
+                    is Result.Success -> {
+                        val isWishlisted = if (isWishlistedResult is Result.Success) isWishlistedResult.data else false
+                        ProductDetailUiState.Success(
+                            Product(
+                                id = productDetailResult.data.id,
+                                name = productDetailResult.data.name,
+                                imageUrl = productDetailResult.data.imageUrl,
+                                price = productDetailResult.data.price,
+                                tagline = productDetailResult.data.tagline,
+                                categories = productDetailResult.data.categories,
+                                isWishlist = isWishlisted
+                            )
                         )
-                    )
+                    }
                     is Result.Loading -> ProductDetailUiState.Loading
                     is Result.Error -> ProductDetailUiState.Error
                 }
+
             /**
              * Get related products of current selected
              * */
@@ -77,6 +90,14 @@ constructor(
                     relatedProducts = RelatedProductsUiState.Loading
                 )
             )
+
+    fun wishlistItemToggle(productId: Long, wishlist: Boolean) {
+        viewModelScope.launch {
+            if (accountService.hasUser()) {
+                wishlistRepository.wishlistToggle(productId, accountService.getUserId(), wishlist)
+            }
+        }
+    }
 }
 
 sealed interface ProductDetailUiState {

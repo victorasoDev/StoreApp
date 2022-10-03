@@ -13,6 +13,7 @@ data class Product(
     var price: Long = 0,
     var tagline: String = "",
     var categories: List<String> = emptyList(),
+    var isWishlist: Boolean = false
 ) : Parcelable
 
 /**

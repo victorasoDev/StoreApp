@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -8,12 +9,17 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.ReadMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -25,19 +31,15 @@ import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.firebase.firestore.FirebaseFirestore
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.repositories.products.ProductDataSource
-import uwu.victoraso.storeapp.repositories.products.ProductRepository
+import uwu.victoraso.storeapp.model.products
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.formatPrice
-import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
+import uwu.victoraso.storeapp.ui.utils.*
 
 private val BottomBarHeight = 56.dp
 private val TitleHeight = 128.dp
@@ -69,6 +71,7 @@ fun ProductDetail(
         relatedState = relatedState,
         onProductList = onProductList,
         onProductClick = onProductClick,
+        onWishlistClick = viewModel::wishlistItemToggle
     )
 }
 
@@ -79,11 +82,14 @@ private fun ProductDetail(
     relatedState: RelatedProductsUiState,
     onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
-    ) {
+    onWishlistClick: (Long, Boolean) -> Unit,
+) {
+    var isWishlist by remember { mutableStateOf(false) }
     when (productDetailState) {
         is ProductDetailUiState.Success -> {
             val product = productDetailState.product
-
+            isWishlist = product.isWishlist
+            Log.d(DEBUG_TAG_WISHLIST, "isWishlist juasjuas -> ${isWishlist}")
             Box(modifier = Modifier.fillMaxSize()) {
                 val scroll = rememberScrollState(0)
                 Header()
@@ -94,7 +100,7 @@ private fun ProductDetail(
                     onProductClick = onProductClick,
                     scroll = scroll
                 ) // TODO: el body espera un par de colecciones
-                Title(product) { scroll.value }
+                Title(product, onWishlistClick, isWishlist) { scroll.value }
                 Image(product.imageUrl) { scroll.value }
                 Up(upPress)
                 CartBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
@@ -226,7 +232,8 @@ private fun Body(
                     when (relatedState) {
                         is RelatedProductsUiState.Success -> {
                             // eliminar el producto de la ficha del listado de relacionados
-                            relatedState.productCollection.products = relatedState.productCollection.products.filter { product -> product.id != productId }
+                            relatedState.productCollection.products =
+                                relatedState.productCollection.products.filter { product -> product.id != productId }
                             ProductCollection(
                                 productCollection = relatedState.productCollection,
                                 onProductList = onProductList,
@@ -271,6 +278,8 @@ private fun Body(
 @Composable
 private fun Title(
     product: Product,
+    onWishlistClick: (Long, Boolean) -> Unit,
+    isWishlistItem: Boolean,
     scrollProvider: () -> Int
 ) {
     val maxOffset = with(LocalDensity.current) { MaxTitleOffset.toPx() }
@@ -302,15 +311,45 @@ private fun Title(
             modifier = HzPadding
         )
         Spacer(Modifier.height(4.dp))
-        Text(
-            text = formatPrice(product.price),
-            style = MaterialTheme.typography.h6,
-            color = StoreAppTheme.colors.textPrimary,
-            modifier = HzPadding
-        )
+        Row(modifier = HzPadding, verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = formatPrice(product.price),
+                style = MaterialTheme.typography.h6,
+                color = StoreAppTheme.colors.textPrimary,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            WishlistToggleButton(isWishlistItem = isWishlistItem, onClick = { onWishlistClick(product.id, isWishlistItem) })
+        }
         Spacer(modifier = Modifier.height(8.dp))
         StoreAppDivider()
     }
+}
+
+@Composable
+private fun WishlistToggleButton(
+    isWishlistItem: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    StoreAppToggleButton(
+        checked = isWishlistItem,
+        onCheckedChange = { onClick() },
+        modifier = modifier,
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.FavoriteBorder,
+                tint = StoreAppTheme.colors.brand,
+                contentDescription = null
+            )
+        },
+        checkedIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Favorite,
+                tint = StoreAppTheme.colors.brand,
+                contentDescription = null
+            )
+        }
+    )
 }
 
 @Composable
@@ -406,14 +445,22 @@ private fun CartBottomBar(modifier: Modifier = Modifier) {
 @Composable
 private fun SnackDetailPreview() {
     StoreAppTheme {
-        ProductDetail(
-            upPress = { },
-            viewModel = ProductDetailViewModel(
-                ProductRepository(FirebaseFirestore.getInstance(), ProductDataSource(FirebaseFirestore.getInstance())),
-                SavedStateHandle()
-                ),
-            onProductList = {},
-            onProductClick = {id, category -> }
-        )
+        StoreAppSurface {
+            Row(modifier = HzPadding, verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = formatPrice(434314),
+                    style = MaterialTheme.typography.h6,
+                    color = StoreAppTheme.colors.textPrimary,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Favorite,
+                        tint = StoreAppTheme.colors.brand,
+                        contentDescription = null
+                    )
+                }
+            }
+        }
     }
 }
