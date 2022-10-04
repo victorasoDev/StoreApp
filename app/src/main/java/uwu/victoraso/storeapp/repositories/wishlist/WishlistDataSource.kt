@@ -29,15 +29,13 @@ class WishlistDataSource @Inject constructor(
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         Log.d(DEBUG_TAG, "document != null")
-                        if (!wishlist) wishlistCollection.update("product_ids", FieldValue.arrayUnion(productId))
+                        if (wishlist) wishlistCollection.update("product_ids", FieldValue.arrayUnion(productId))
                         else wishlistCollection.update("product_ids", FieldValue.arrayRemove(productId))
                     } else {
                         Log.d(DEBUG_TAG, "document == null")
                     }
 
                 }
-//            if (!wishlist) doc.update("product_ids", FieldValue.arrayUnion(productId))
-//            else doc.update("product_ids", FieldValue.arrayRemove(productId))
         } catch (e: Exception) {
             e.printStackTrace()
         }
