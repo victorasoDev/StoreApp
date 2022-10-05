@@ -3,10 +3,7 @@ package uwu.victoraso.storeapp.repositories.products
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,11 +28,13 @@ constructor(
 
     override fun getMainList(): Flow<List<Product>> = productDataSource.getMainList()
 
-    override fun getProductsByCategory(category: String): Flow<List<Product>> = productDataSource.getProductsByCategory(category)
+    override fun getProductsByCategory(category: String): Flow<List<Product>> = productDataSource.getProductsByIds(category)
 
     override fun getProductDetailsById(productId: Long): Flow<Product> = productDataSource.getProductDetailsById(productId)
 
     override fun getProductsByInputText(inputText: String): Flow<List<Product>> = productDataSource.getProductsByInputText(inputText)
+
+    override fun getProductsByIds(productIds: List<Int>): Flow<List<Product>> = productDataSource.getProductsByIds(productIds)
 
     /**
      * DEBUG
@@ -62,4 +61,5 @@ sealed interface ProductRepositoryInterface {
     fun getProductsByCategory(category: String): Flow<List<Product>>
     fun getProductDetailsById(productId: Long): Flow<Product>
     fun getProductsByInputText(inputText: String): Flow<List<Product>>
+    fun getProductsByIds(productIds: List<Int>): Flow<List<Product>>
 }

@@ -29,6 +29,7 @@ object MainDestinations {
     const val SIGNUP_ROUTE = "signup"
     const val SPLASH_ROUTE = "splash"
     const val SETTINGS_ROUTE = "settings"
+    const val WISHLIST_ROUTE = "wishlist"
 }
 
 @Composable

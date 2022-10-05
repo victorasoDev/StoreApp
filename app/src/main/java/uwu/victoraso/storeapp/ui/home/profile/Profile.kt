@@ -24,6 +24,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
@@ -35,6 +37,7 @@ import uwu.victoraso.storeapp.ui.utils.mirroringIcon
 @Composable
 fun Profile(
     restartApp: (String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -46,6 +49,7 @@ fun Profile(
             Profile(
                 profileUiState = profileUiState,
                 restartApp = restartApp,
+                onNavigateTo = onNavigateTo,
                 onSignOutClick = viewModel::onSignOutClick,
                 modifier = modifier
             )
@@ -64,6 +68,7 @@ fun Profile(
 private fun Profile(
     profileUiState: ProfileUiState,
     restartApp: (String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     onSignOutClick: ((String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -72,6 +77,7 @@ private fun Profile(
         Box {
             ProfileContent(
                 restartApp = restartApp,
+                onNavigateTo = onNavigateTo,
                 onSignOutClick = onSignOutClick,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
@@ -87,6 +93,7 @@ private fun Profile(
 @Composable
 fun ProfileContent(
     restartApp: (String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     onSignOutClick: ((String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -125,7 +132,7 @@ fun ProfileContent(
                     Column {
                         //TODO probar constraint layout sería foto, derecha nombre y debajo email
                         UserProfile(modifier)
-                        ProfileOptions()
+                        ProfileOptions(onNavigateTo)
                         LogoutButton(
                             restartApp = restartApp,
                             onSignOutClick = onSignOutClick
@@ -231,20 +238,45 @@ private fun UserProfile(
 
 @Composable
 private fun ProfileOptions(
-
+    onNavigateTo: (String) -> Unit,
 ) {
-    OptionItem("Personal Info")
-    OptionItem("Wishlist")
-    OptionItem("Purchase History")
-    OptionItem("Recommended")
-    OptionItem("Settings")
+    //TODO crear una lista para obtener estas rutas
+    OptionItem(
+        text = "Personal Info",
+        route = MainDestinations.SPLASH_ROUTE,
+        onNavigateTo = onNavigateTo
+    )
+    OptionItem(
+        text = "Wishlist",
+        route = MainDestinations.WISHLIST_ROUTE,
+        onNavigateTo = onNavigateTo
+    )
+    OptionItem(
+        text = "Purchase History",
+        route = MainDestinations.WISHLIST_ROUTE,
+        onNavigateTo = onNavigateTo
+    )
+    OptionItem(
+        text = "Recommended",
+        route = MainDestinations.WISHLIST_ROUTE,
+        onNavigateTo = onNavigateTo
+    )
+    OptionItem(
+        text = "Settings",
+        route = MainDestinations.WISHLIST_ROUTE,
+        onNavigateTo = onNavigateTo
+    )
 }
 
 @Composable
 private fun OptionItem(
-    text: String
+    text: String,
+    route: String,
+    onNavigateTo: (String) -> Unit,
 ) {
-    Row {
+    Row(
+        modifier = Modifier.clickable { onNavigateTo(route) }
+    ) {
         Text(
             text = text,
             maxLines = 1,

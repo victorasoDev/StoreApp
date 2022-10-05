@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.repositories.wishlist
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.Wishlist
+import uwu.victoraso.storeapp.model.products
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import java.lang.Exception
@@ -24,6 +26,7 @@ class WishlistDataSource @Inject constructor(
      */
     fun wishlistToggle(productId: Long, userId: String, wishlist: Boolean) {
         try {
+            val productReference = db.collection("products").document(productId.toString()).path
             val wishlistCollection = db.collection("wishlists").document(userId)
             wishlistCollection.get()
                 .addOnSuccessListener { document ->
@@ -31,6 +34,8 @@ class WishlistDataSource @Inject constructor(
                         Log.d(DEBUG_TAG, "document != null")
                         if (wishlist) wishlistCollection.update("product_ids", FieldValue.arrayUnion(productId))
                         else wishlistCollection.update("product_ids", FieldValue.arrayRemove(productId))
+                        if (wishlist) wishlistCollection.update("products", FieldValue.arrayUnion(productReference))
+                        else wishlistCollection.update("products", FieldValue.arrayRemove(productReference))
                     } else {
                         Log.d(DEBUG_TAG, "document == null")
                     }
@@ -43,20 +48,53 @@ class WishlistDataSource @Inject constructor(
 
     fun isWishlisted(productId: Long, userId: String): Flow<Boolean> = flow {
         var exists = false
-            db.collection("wishlists").document(userId).get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        for (id in document.data!!["product_ids"] as ArrayList<*>) {
-                            if (productId == id) {
-                                exists = true
-                            }
+        db.collection("wishlists").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    for (id in document.data!!["product_ids"] as ArrayList<*>) {
+                        if (productId == id) {
+                            exists = true
                         }
                     }
                 }
-                .addOnFailureListener {
-                    //TODO
-                }
-                .await()
+            }
+            .addOnFailureListener {
+                //TODO
+            }
+            .await()
         emit(exists)
+    }
+
+    /**
+     * Get products in user wishlist by userId
+     */
+    fun getWishlistByUserId(userId: String): Flow<List<Product>> = flow {
+        Log.d(DEBUG_TAG, "getWishlistByUserId -> Hola")
+        val wishlist = ArrayList<Int>()
+        val productList = ArrayList<Product>()
+        db.collection("wishlists").document(userId).get()
+            .addOnSuccessListener { documentSnapshot ->
+                for (id in documentSnapshot.data!!["products"] as ArrayList<*>) {
+                    Log.d(DEBUG_TAG, "getWishlistByUserId -> ${id}")
+                    db.document(id.toString())
+                        .get()
+                        .addOnSuccessListener { doc ->
+                            val product = doc.toObject(Product::class.java)
+                            Log.d(DEBUG_TAG, "getWishlistByUserId -> ${product.toString()}")
+                            if (product != null) productList.add(product)
+                            Log.d(DEBUG_TAG, "getWishlistByUserId -> ${doc.data}")
+                        }
+                        .addOnFailureListener {
+                            Log.d(DEBUG_TAG, "getWishlistByUserId -> ${it}")
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Log.d(DEBUG_TAG, "WishlistDataSource -> ${it}")
+            }
+            .await()
+
+        Log.d(DEBUG_TAG, "Wishlisst SIZE Arraylist-> ${wishlist.size}")
+        emit(productList)
     }
 }

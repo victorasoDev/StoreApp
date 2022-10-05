@@ -20,6 +20,7 @@ import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.home.StoreAppBottomBar
 import uwu.victoraso.storeapp.ui.home.addHomeGraph
+import uwu.victoraso.storeapp.ui.home.profile.wishlist.Wishlist
 import uwu.victoraso.storeapp.ui.log.login.LoginScreen
 import uwu.victoraso.storeapp.ui.log.signup.SignUpScreen
 import uwu.victoraso.storeapp.ui.productcollection.ProductListViewModel
@@ -72,7 +73,7 @@ fun StoreApp() {
 
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
-    onProductCreate: (NavBackStackEntry) -> Unit,
+    onProductCreate: (NavBackStackEntry) -> Unit, //TODO: cambiar por el navigateTo
     onProductList: (String, NavBackStackEntry) -> Unit,
     onPopUp: (String, String) -> Unit,
     onClearAndNavigate: (String) -> Unit,
@@ -83,7 +84,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
-        addHomeGraph(onProductSelected, onProductCreate, onProductList, onClearAndNavigate)
+        addHomeGraph(onProductSelected, onProductCreate, onProductList, onClearAndNavigate, onNavigateTo)
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.CATEGORY_ID_KEY}}/{${MainDestinations.PRODUCT_ID_KEY}}",
@@ -135,5 +136,11 @@ private fun NavGraphBuilder.storeAppNavGraph(
     }
     composable(route = MainDestinations.SPLASH_ROUTE) {
         Splash(openAndPopUp = { route, from -> onPopUp(route, from) })
+    }
+
+    /** Profile destinations **/
+    composable(route = MainDestinations.WISHLIST_ROUTE) { navBackStackEntry ->
+        /** En este se deuelve también la categoría porque no hay otra forma de obtener la categoría de un producto de la wishlist **/
+        Wishlist(onProductSelected = { id, category -> onProductSelected(id, category, navBackStackEntry) })
     }
 }

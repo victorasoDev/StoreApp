@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.repositories.products
 
 import android.util.Log
-import androidx.compose.ui.text.toUpperCase
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -61,7 +60,7 @@ class ProductDataSource @Inject constructor(
     /**
      * Get products by category stored in StoreApp FireStore Database
      */
-    fun getProductsByCategory(category: String): Flow<List<Product>> = flow {
+    fun getProductsByIds(category: String): Flow<List<Product>> = flow {
         val productList = ArrayList<Product>()
         db.collection("products")
             .whereArrayContains("categories", category)
@@ -105,6 +104,31 @@ class ProductDataSource @Inject constructor(
             }
             .await()
 
+        Log.d(DEBUG_TAG, "ProductDataSource SIZE Arraylist-> ${productList.size}")
+        emit(productList)
+    }
+
+    /**
+     * Get products by id in StoreApp FireStore Database
+     */
+    fun getProductsByIds(productIds: List<Int>): Flow<List<Product>> = flow {
+        val productList = ArrayList<Product>()
+        for (id in productIds) {
+            db.collection("products")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener {
+                    for (doc in it) {
+                        productList.add(doc.toObject(Product::class.java))
+                        Log.d(DEBUG_TAG, "ProductDataSource -> ${doc.data}")
+                    }
+                }
+                .addOnFailureListener {
+                    Log.d(DEBUG_TAG, "ProductDataSource -> ${it}")
+                }
+                .await()
+
+        }
         Log.d(DEBUG_TAG, "ProductDataSource SIZE Arraylist-> ${productList.size}")
         emit(productList)
     }

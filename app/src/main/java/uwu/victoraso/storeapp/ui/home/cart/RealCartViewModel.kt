@@ -8,7 +8,6 @@ import uwu.victoraso.storeapp.model.*
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
-import uwu.victoraso.storeapp.ui.home.feed.FeedUiState
 import javax.inject.Inject
 
 @HiltViewModel

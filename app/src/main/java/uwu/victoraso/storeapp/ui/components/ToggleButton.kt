@@ -3,6 +3,7 @@ package uwu.victoraso.storeapp.ui.components
 import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -54,10 +56,11 @@ fun StoreAppToggleButton(
         onClick = { onCheckedChange(!checked) },
         modifier = modifier
             .size(size)
+            .scale(animateFloatAsState(if (checked) 1.2f else 1f).value)
             .toggleable(value = checked, enabled = enabled, role = Role.Button, onValueChange = {})
             .drawBehind {
                 drawCircle(
-                    color = if (checked) checkedBackgroundColor else backgroundColor,
+                    color = backgroundColor,
                     radius = radius
                 )
             },

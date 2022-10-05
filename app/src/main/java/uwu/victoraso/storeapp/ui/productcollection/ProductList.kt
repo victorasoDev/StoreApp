@@ -130,10 +130,48 @@ fun ListContent(
     }
 }
 
+
 @Composable
 fun ProductListItem(
     product: Product,
     onProductSelected: (Long) -> Unit,
+    addProduct: (Long) -> Unit,
+    removeProduct: (Long) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .clickable { onProductSelected(product.id) }
+    ) {
+        ProductListItemContent(
+            product = product,
+            addProduct = addProduct,
+            removeProduct = removeProduct
+        )
+    }
+}
+
+@Composable
+fun ProductListItem(
+    product: Product,
+    onProductSelected: (Long, String) -> Unit,
+    addProduct: (Long) -> Unit,
+    removeProduct: (Long) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .clickable { onProductSelected(product.id, product.categories.firstOrNull() ?: "") }
+    ) {
+        ProductListItemContent(
+            product = product,
+            addProduct = addProduct,
+            removeProduct = removeProduct
+        )
+    }
+}
+
+@Composable
+private fun ProductListItemContent(
+    product: Product,
     addProduct: (Long) -> Unit,
     removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -141,7 +179,6 @@ fun ProductListItem(
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onProductSelected(product.id) }
             .background(StoreAppTheme.colors.uiBackground)
             .padding(horizontal = 24.dp)
     ) {

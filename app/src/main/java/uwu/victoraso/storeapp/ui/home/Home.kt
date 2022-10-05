@@ -58,6 +58,7 @@ fun NavGraphBuilder.addHomeGraph(
     onProductCreate: (NavBackStackEntry) -> Unit,
     onProductList: (String, NavBackStackEntry) -> Unit,
     restartApp: (String) -> Unit,
+    onNavigateTo: (String, NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable(HomeSections.FEED.route) { from ->
@@ -81,9 +82,10 @@ fun NavGraphBuilder.addHomeGraph(
             onProductList = { category -> onProductList(category, from) },
         )
     }
-    composable(HomeSections.PROFILE.route) {
+    composable(HomeSections.PROFILE.route) { from ->
         Profile(
             restartApp = { route -> restartApp(route) },
+            onNavigateTo = { route -> onNavigateTo(route, from) },
             modifier = modifier,
         )
     }
