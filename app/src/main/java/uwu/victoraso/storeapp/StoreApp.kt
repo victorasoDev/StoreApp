@@ -96,7 +96,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
         ProductDetail(
             upPress = upPress,
             onProductList = { category -> onProductList(category, navBackStackEntry) },
-            onProductClick =  { id, category -> onProductSelected(id, category, navBackStackEntry) }
+            onProductClick = { id, category -> onProductSelected(id, category, navBackStackEntry) }
         )
     }
     composable(
@@ -124,13 +124,13 @@ private fun NavGraphBuilder.storeAppNavGraph(
     }
     composable(route = MainDestinations.SIGNUP_ROUTE) { navBackStackEntry ->
         SignUpScreen(
-            openAndPopUp = { route, popUp -> onPopUp(route, popUp)},
+            openAndPopUp = { route, popUp -> onPopUp(route, popUp) },
             onNavigateTo = { route -> onNavigateTo(route, navBackStackEntry) }
         )
     }
     composable(route = MainDestinations.LOGIN_ROUTE) {
         LoginScreen(
-            onClearAndNavigate = { route -> onClearAndNavigate(route)},
+            onClearAndNavigate = { route -> onClearAndNavigate(route) },
             onNavigateTo = { route -> onClearAndNavigate(route) }
         )
     }
@@ -141,6 +141,9 @@ private fun NavGraphBuilder.storeAppNavGraph(
     /** Profile destinations **/
     composable(route = MainDestinations.WISHLIST_ROUTE) { navBackStackEntry ->
         /** En este se deuelve también la categoría porque no hay otra forma de obtener la categoría de un producto de la wishlist **/
-        Wishlist(onProductSelected = { id, category -> onProductSelected(id, category, navBackStackEntry) })
+        Wishlist(
+            upPress = upPress,
+            onProductSelected = { id, category -> onProductSelected(id, category, navBackStackEntry) }
+        )
     }
 }

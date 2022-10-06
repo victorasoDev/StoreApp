@@ -21,10 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
-import uwu.victoraso.storeapp.ui.components.FilterBar
-import uwu.victoraso.storeapp.ui.components.ProductCollection
-import uwu.victoraso.storeapp.ui.components.StoreAppDivider
-import uwu.victoraso.storeapp.ui.components.StoreAppSurface
+import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.FilterScreen
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
@@ -62,14 +59,6 @@ private fun Feed(
     modifier: Modifier = Modifier
 ) {
     when (feedUiState.processors) {
-        FeedUiState.Loading -> {
-            Log.d(DEBUG_TAG, "Feed Loading")
-            StoreAppSurface(modifier = modifier.fillMaxSize()) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(text = "Loading")
-                }
-            }
-        }
         is FeedUiState.Success -> {
             Log.d(DEBUG_TAG, "Feed Success -> ${feedUiState.processors.productCollection.products.size}")
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
@@ -83,7 +72,11 @@ private fun Feed(
                 }
             }
         }
-        FeedUiState.Error -> {
+        is FeedUiState.Loading -> {
+            Log.d(DEBUG_TAG, "Feed Loading")
+            StoreAppCircularIndicator()
+        }
+        is FeedUiState.Error -> {
             Log.d(DEBUG_TAG, "Feed Error")
         }
     }

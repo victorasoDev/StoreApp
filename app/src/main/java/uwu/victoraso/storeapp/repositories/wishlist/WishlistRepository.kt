@@ -16,7 +16,7 @@ constructor(
 
     override fun isWishlisted(productId: Long, userId: String): Flow<Boolean> = wishlistDataSource.isWishlisted(productId, userId)
 
-    override fun getUserWishlist(userId: String): Flow<List<Product>> = wishlistDataSource.getWishlistByUserId(userId)
+    override fun getUserWishlist(userId: String): Flow<MutableList<Product>> = wishlistDataSource.getWishlistByUserId(userId)
 }
 
 sealed interface ProductRepositoryInterface {

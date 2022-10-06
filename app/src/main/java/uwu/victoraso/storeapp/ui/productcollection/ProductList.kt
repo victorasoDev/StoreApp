@@ -1,16 +1,13 @@
 package uwu.victoraso.storeapp.ui.productcollection
 
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -137,9 +134,10 @@ fun ProductListItem(
     onProductSelected: (Long) -> Unit,
     addProduct: (Long) -> Unit,
     removeProduct: (Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clickable { onProductSelected(product.id) }
     ) {
         ProductListItemContent(
@@ -156,9 +154,10 @@ fun ProductListItem(
     onProductSelected: (Long, String) -> Unit,
     addProduct: (Long) -> Unit,
     removeProduct: (Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clickable { onProductSelected(product.id, product.categories.firstOrNull() ?: "") }
     ) {
         ProductListItemContent(
@@ -200,15 +199,17 @@ private fun ProductListItemContent(
             text = product.name,
             style = MaterialTheme.typography.subtitle1,
             color = StoreAppTheme.colors.textSecondary,
-            modifier = Modifier.constrainAs(name) {
-                linkTo(
-                    start = image.end,
-                    startMargin = 16.dp,
-                    end = parent.end,
-                    endMargin = 16.dp,
-                    bias = 0f
-                )
-            }
+            modifier = Modifier
+                .constrainAs(name) {
+                    linkTo(
+                        start = image.end,
+                        startMargin = 16.dp,
+                        end = parent.end,
+                        endMargin = 16.dp,
+                        bias = 0f
+                    )
+                }
+                .horizontalScroll(rememberScrollState())
         )
         Text(
             text = product.tagline,

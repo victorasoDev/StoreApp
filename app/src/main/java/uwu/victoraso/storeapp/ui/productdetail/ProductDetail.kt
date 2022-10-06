@@ -102,9 +102,7 @@ private fun ProductDetail(
 
         }
         is ProductDetailUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Loading") //TODO: crear vista de carga personalizada
-            }
+            StoreAppCircularIndicator()
         }
         is ProductDetailUiState.Error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
