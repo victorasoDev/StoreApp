@@ -1,8 +1,11 @@
 package uwu.victoraso.storeapp.ui.home.profile
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -14,6 +17,7 @@ import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,7 +28,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
 import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
@@ -108,9 +111,10 @@ fun ProfileContent(
                 .padding(16.dp)
                 .fillMaxSize()
                 .weight(1f),
-            color = StoreAppTheme.colors.brand
         ) {
-            Column {
+            Column(
+                modifier = Modifier.background(Brush.horizontalGradient(colors = StoreAppTheme.colors.gradient2_2))
+            ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Profile",
@@ -124,10 +128,8 @@ fun ProfileContent(
                 )
                 StoreAppCard(
                     modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .padding(bottom = 20.dp, top = 10.dp)
                         .fillMaxSize(),
-                    color = StoreAppTheme.colors.notificationBadge
+                    color = StoreAppTheme.colors.uiBackground,
                 ) {
                     Column {
                         //TODO probar constraint layout sería foto, derecha nombre y debajo email
@@ -140,38 +142,7 @@ fun ProfileContent(
                     }
                 }
             }
-
         }
-    }
-}
-
-@Composable
-private fun LogoutButton(
-    restartApp: (String) -> Unit,
-    onSignOutClick: ((String) -> Unit) -> Unit,
-) {
-    Spacer(modifier = Modifier.height(35.dp))
-    StoreAppButton(
-        onClick = { onSignOutClick(restartApp) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 60.dp),
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Logout,
-            contentDescription = stringResource(R.string.label_add),
-            modifier = Modifier.weight(0.2f)
-        )
-        Text(
-            text = "Log-out",
-            modifier = Modifier
-                .wrapContentWidth()
-                .padding(end = 16.dp)
-                .weight(1f),
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-
-            )
     }
 }
 
@@ -239,37 +210,21 @@ private fun UserProfile(
 @Composable
 private fun ProfileOptions(
     onNavigateTo: (String) -> Unit,
+    profileDestinations: List<ProfileDestination> = profileDestinationsList
 ) {
-    //TODO crear una lista para obtener estas rutas
-    OptionItem(
-        text = "Personal Info",
-        route = MainDestinations.SPLASH_ROUTE,
-        onNavigateTo = onNavigateTo
-    )
-    OptionItem(
-        text = "Wishlist",
-        route = MainDestinations.WISHLIST_ROUTE,
-        onNavigateTo = onNavigateTo
-    )
-    OptionItem(
-        text = "Purchase History",
-        route = MainDestinations.WISHLIST_ROUTE,
-        onNavigateTo = onNavigateTo
-    )
-    OptionItem(
-        text = "Recommended",
-        route = MainDestinations.WISHLIST_ROUTE,
-        onNavigateTo = onNavigateTo
-    )
-    OptionItem(
-        text = "Settings",
-        route = MainDestinations.WISHLIST_ROUTE,
-        onNavigateTo = onNavigateTo
-    )
+    LazyColumn {
+        items(profileDestinations) { profileDestination ->
+            DesinationRow(
+                text = profileDestination.destinationName,
+                route = profileDestination.route,
+                onNavigateTo = onNavigateTo
+            )
+        }
+    }
 }
 
 @Composable
-private fun OptionItem(
+private fun DesinationRow(
     text: String,
     route: String,
     onNavigateTo: (String) -> Unit,
@@ -303,6 +258,36 @@ private fun OptionItem(
         }
     }
     StoreAppDivider(modifier = Modifier.padding(start = 20.dp))
+}
+
+@Composable
+private fun LogoutButton(
+    restartApp: (String) -> Unit,
+    onSignOutClick: ((String) -> Unit) -> Unit,
+) {
+    Spacer(modifier = Modifier.height(35.dp))
+    StoreAppButton(
+        onClick = { onSignOutClick(restartApp) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 60.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Logout,
+            contentDescription = stringResource(R.string.label_add),
+            modifier = Modifier.weight(0.2f)
+        )
+        Text(
+            text = stringResource(id = R.string.log_out),
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(end = 16.dp)
+                .weight(1f),
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+
+            )
+    }
 }
 
 @Preview

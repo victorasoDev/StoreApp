@@ -349,15 +349,6 @@ fun CartItem(
                 )
             }
         )
-        QuantitySelector(
-            count = orderLine.count,
-            decreaseItemCount = { decreaseItemCount(product.id) },
-            increaseItemCount = { increaseItemCount(product.id) },
-            modifier = Modifier.constrainAs(quantity) {
-                baseline.linkTo(price.baseline)
-                end.linkTo(parent.end)
-            }
-        )
         StoreAppDivider(
             Modifier.constrainAs(divider) {
                 linkTo(start = parent.start, end = parent.end)
