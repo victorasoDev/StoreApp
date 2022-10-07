@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +22,8 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 @Composable
 fun DestinationBar(
     modifier: Modifier = Modifier,
-    title: String = "Welcome to StoreApp",
+    title: String = "Welcome to StoreApp", //TODO
+    imageVector: ImageVector = Icons.Outlined.ExpandMore,
     onDestinationBarButtonClick: () -> Unit
 ) {
     Column(modifier = modifier.statusBarsPadding()) {
@@ -47,7 +49,7 @@ fun DestinationBar(
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.ExpandMore,
+                    imageVector = imageVector,
                     tint = StoreAppTheme.colors.brand,
                     contentDescription = null
                 )

@@ -11,8 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +41,7 @@ import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
+import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.theme.AlphaNearOpaque
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
@@ -96,8 +97,12 @@ fun Cart(
                 onProductList = onProductList,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
-            DestinationBar(modifier = Modifier.align(Alignment.TopCenter), onDestinationBarButtonClick = { })
-            CheckoutBar(modifier = Modifier.align(Alignment.BottomCenter))
+            DestinationBar(
+                modifier = Modifier.align(Alignment.TopCenter),
+                title = "Your shopping cart",
+                imageVector = Icons.Default.ShoppingCartCheckout,
+                onDestinationBarButtonClick = { }
+            )
         }
     }
 }
@@ -412,52 +417,30 @@ fun SummaryItem(
         }
         Spacer(modifier = Modifier.height(8.dp))
         StoreAppDivider()
-        Row(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
-            Text(
-                text = stringResource(id = R.string.cart_total_label),
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 16.dp)
-                    .wrapContentWidth(Alignment.End)
-                    .alignBy(LastBaseline)
-            )
-            Text(
-                text = formatPrice(subtotal + shippingCosts),
-                style = MaterialTheme.typography.subtitle1,
-                modifier = Modifier.alignBy(LastBaseline)
-            )
-        }
-        StoreAppDivider()
-    }
-}
-
-@Composable
-private fun CheckoutBar(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.background(
-            StoreAppTheme.colors.uiBackground.copy(alpha = AlphaNearOpaque)
-        )
-    ) {
-
-        StoreAppDivider()
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+            contentAlignment = Alignment.CenterEnd
+        ) {
             StoreAppButton(
                 onClick = { /*TODO*/ },
-                shape = RectangleShape,
-                modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .weight(1f)
             ) {
-                Text(
-                    text = stringResource(id = R.string.cart_checkout),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Left,
-                    maxLines = 1
+                Icon(
+                    imageVector = Icons.Default.ShoppingCartCheckout,
+                    tint = StoreAppTheme.colors.brand,
+                    contentDescription = null
                 )
+                Text(
+                    text = formatPrice(subtotal + shippingCosts),
+                    style = MaterialTheme.typography.subtitle1,
+                    modifier = Modifier.alignBy(LastBaseline).padding(start = 8.dp)
+                )
+
             }
         }
+
+        StoreAppDivider()
     }
 }
 
@@ -473,8 +456,8 @@ private fun CartPreview() {
             increaseItemCount = {},
             decreaseItemCount = {},
             inspiredByCart = InspiredByCartProductsUiState.Success(ProductCollection(2L, "Untitled")),
-            onProductClick = {id, category -> },
-            onProductList = {category -> }
+            onProductClick = { id, category -> },
+            onProductList = { category -> }
         )
     }
 }

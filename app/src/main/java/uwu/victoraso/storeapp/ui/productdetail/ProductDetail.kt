@@ -1,6 +1,10 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
+import androidx.compose.animation.*
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -9,6 +13,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.*
@@ -30,9 +36,11 @@ import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.ui.components.*
+import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
@@ -56,6 +64,7 @@ fun ProductDetail(
     viewModel: ProductDetailViewModel = hiltViewModel(),
     onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
+    onNavigateTo: (String) -> Unit
 ) {
     val productDetailScreenUiState: ProductDetailScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -68,7 +77,8 @@ fun ProductDetail(
         relatedState = relatedState,
         onProductList = onProductList,
         onProductClick = onProductClick,
-        onWishlistClick = viewModel::wishlistItemToggle
+        onWishlistClick = viewModel::wishlistItemToggle,
+        onNavigateTo = onNavigateTo
     )
 }
 
@@ -80,6 +90,7 @@ private fun ProductDetail(
     onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
     onWishlistClick: (Long, Boolean) -> Unit,
+    onNavigateTo: (String) -> Unit
 ) {
     when (productDetailState) {
         is ProductDetailUiState.Success -> {
@@ -97,7 +108,10 @@ private fun ProductDetail(
                 Title(product, onWishlistClick, product.isWishlist) { scroll.value }
                 Image(product.imageUrl) { scroll.value }
                 Up(upPress)
-                CartBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
+                CartBottomBar(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    onNavigateTo = onNavigateTo
+                )
             }
 
         }
@@ -404,8 +418,10 @@ private fun CollapsingImageLayout(
 }
 
 @Composable
-private fun CartBottomBar(modifier: Modifier = Modifier) {
-    val (count, updateCount) = remember { mutableStateOf(1) }
+private fun CartBottomBar(
+    modifier: Modifier = Modifier,
+    onNavigateTo: (String) -> Unit
+) {
     StoreAppSurface(modifier = modifier) {
         Column {
             StoreAppDivider()
@@ -416,20 +432,32 @@ private fun CartBottomBar(modifier: Modifier = Modifier) {
                     .then(HzPadding)
                     .heightIn(min = BottomBarHeight)
             ) {
-                QuantitySelector(
-                    count = count,
-                    decreaseItemCount = { if (count > 0) updateCount(count - 1) },
-                    increaseItemCount = { updateCount(count + 1) }
-                )
-                Spacer(modifier = Modifier.width(16.dp))
                 StoreAppButton(
                     onClick = { /*TODO*/ },
                     modifier = Modifier.weight(1f)
                 ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add_to_cart))
                     Text(
                         text = stringResource(R.string.add_to_cart),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 12.sp,
+                        maxLines = 1
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                StoreAppButton(
+                    onClick = { onNavigateTo(HomeSections.CART.route) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = stringResource(id = R.string.go_to_cart))
+                    Text(
+                        text = stringResource(R.string.go_to_cart),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 12.sp,
                         maxLines = 1
                     )
                 }

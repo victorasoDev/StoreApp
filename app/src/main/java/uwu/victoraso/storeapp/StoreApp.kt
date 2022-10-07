@@ -74,7 +74,7 @@ fun StoreApp() {
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
     onProductCreate: (NavBackStackEntry) -> Unit, //TODO: cambiar por el navigateTo
-    onProductList: (String, NavBackStackEntry) -> Unit,
+    onProductList: (String, NavBackStackEntry) -> Unit, //TODO: cambiar por el navigateTo
     onPopUp: (String, String) -> Unit,
     onClearAndNavigate: (String) -> Unit,
     onNavigateTo: (String, NavBackStackEntry) -> Unit, //TODO: para abrir otras ventanas puede servir
@@ -96,7 +96,8 @@ private fun NavGraphBuilder.storeAppNavGraph(
         ProductDetail(
             upPress = upPress,
             onProductList = { category -> onProductList(category, navBackStackEntry) },
-            onProductClick = { id, category -> onProductSelected(id, category, navBackStackEntry) }
+            onProductClick = { id, category -> onProductSelected(id, category, navBackStackEntry) },
+            onNavigateTo = { route -> onNavigateTo(route, navBackStackEntry) }
         )
     }
     composable(

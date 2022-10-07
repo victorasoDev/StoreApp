@@ -1,13 +1,12 @@
 package uwu.victoraso.storeapp.ui.splash
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
+import uwu.victoraso.storeapp.ui.components.StoreAppCircularIndicator
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 
 private const val SPLASH_TIMEOUT = 1000L
@@ -20,9 +19,8 @@ fun Splash(
 ) {
     StoreAppSurface(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        StoreAppCircularIndicator()
     }
 
     /** Launch in a Coroutine if StoreApp has an user logged. Only recomposes if key1 changes (this -> Never because hardcoded) **/
