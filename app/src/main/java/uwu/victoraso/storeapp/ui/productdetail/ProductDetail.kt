@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +39,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.HomeSections
@@ -78,6 +80,7 @@ fun ProductDetail(
         onProductList = onProductList,
         onProductClick = onProductClick,
         onWishlistClick = viewModel::wishlistItemToggle,
+        onAddToCartClick = viewModel::addToCart,
         onNavigateTo = onNavigateTo
     )
 }
@@ -90,6 +93,7 @@ private fun ProductDetail(
     onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
     onWishlistClick: (Long, Boolean) -> Unit,
+    onAddToCartClick: (CartProduct) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
     when (productDetailState) {
@@ -109,8 +113,10 @@ private fun ProductDetail(
                 Image(product.imageUrl) { scroll.value }
                 Up(upPress)
                 CartBottomBar(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    onNavigateTo = onNavigateTo
+                    product = product,
+                    onAddToCartClick = onAddToCartClick,
+                    onNavigateTo = onNavigateTo,
+                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
 
@@ -259,12 +265,12 @@ private fun Body(
                         }
                         is RelatedProductsUiState.Loading -> {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(text = "Loading") //TODO: crear vista de carga personalizada
+                                StoreAppCircularIndicator()
                             }
                         }
                         is RelatedProductsUiState.Error -> {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(text = "Error") //TODO: crear vista de carga personalizada
+                                //TODO:
                             }
                         }
                     }
@@ -419,7 +425,9 @@ private fun CollapsingImageLayout(
 
 @Composable
 private fun CartBottomBar(
+    product: Product,
     modifier: Modifier = Modifier,
+    onAddToCartClick: (CartProduct) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
     StoreAppSurface(modifier = modifier) {
@@ -433,7 +441,19 @@ private fun CartBottomBar(
                     .heightIn(min = BottomBarHeight)
             ) {
                 StoreAppButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        onAddToCartClick(
+                            CartProduct(
+                                productId = product.id,
+                                name = product.name,
+                                imageUrl = product.imageUrl,
+                                price = product.price,
+                                category = product.categories.first(),
+                                cartId = 1, //TODO: cambiar
+                                addDate = System.currentTimeMillis() / 1000
+                            )
+                        )
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add_to_cart))

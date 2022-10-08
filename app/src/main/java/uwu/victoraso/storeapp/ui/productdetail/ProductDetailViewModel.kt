@@ -7,14 +7,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.MainDestinations
-import uwu.victoraso.storeapp.model.CollectionType
-import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.model.ProductCollection
+import uwu.victoraso.storeapp.model.*
 import uwu.victoraso.storeapp.model.service.AccountService
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
+import uwu.victoraso.storeapp.repositories.cart.CartRepository
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.repositories.wishlist.WishlistRepository
+import uwu.victoraso.storeapp.room.model.CartEntity
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +23,7 @@ class ProductDetailViewModel
 constructor(
     productRepository: ProductRepository,
     private val wishlistRepository: WishlistRepository,
+    private val cartRepository: CartRepository,
     private val accountService: AccountService,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -96,6 +97,13 @@ constructor(
             if (accountService.hasUser()) {
                 wishlistRepository.wishlistToggle(productId, accountService.getUserId(), wishlist)
             }
+        }
+    }
+
+    fun addToCart(cartProduct: CartProduct) {
+        viewModelScope.launch {
+            cartRepository.insertCart(listOf(CartEntity(name = "Your shopping cart", itemCount = 0)))
+            cartRepository.insertCartProduct(cartProduct.asEntity())
         }
     }
 }

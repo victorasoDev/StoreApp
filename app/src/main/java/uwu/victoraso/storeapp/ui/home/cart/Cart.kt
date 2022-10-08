@@ -190,7 +190,7 @@ fun CartItem(
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onProductClick(cartProduct.id, cartProduct.category) }
+            .clickable { onProductClick(cartProduct.productId, cartProduct.category) }
             .background(StoreAppTheme.colors.uiBackground)
             .padding(horizontal = 24.dp)
     ) {
@@ -222,7 +222,7 @@ fun CartItem(
             }
         )
         IconButton(
-            onClick = { removeProduct(cartProduct.id, cartProduct.cartId) },
+            onClick = { removeProduct(cartProduct.productId, cartProduct.cartId) },
             modifier = Modifier
                 .constrainAs(remove) {
                     top.linkTo(parent.top)

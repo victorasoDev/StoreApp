@@ -22,9 +22,7 @@ import uwu.victoraso.storeapp.model.CartProduct
 /**
  * External data layer representation of a fully populated [CartProduct]
  */
-@Entity(
-    tableName = "cartProducts",
-)
+
 data class PopulatedCartProduct(
     @Embedded
     val entity: CartProductEntity,
@@ -36,7 +34,7 @@ data class PopulatedCartProduct(
 )
 
 fun PopulatedCartProduct.asExternalModel() = CartProduct(
-    id = entity.productId,
+    productId = entity.productId,
     name = entity.name,
     imageUrl = entity.imageUrl,
     price = entity.price,

@@ -38,8 +38,8 @@ import uwu.victoraso.storeapp.model.CartProduct
     ]
 )
 data class CartProductEntity(
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0,
     @ColumnInfo(name = "product_id")
     val productId: Long,
     @ColumnInfo(name = "name")
@@ -56,7 +56,7 @@ data class CartProductEntity(
 )
 
 fun CartProductEntity.asExternalModel() = CartProduct(
-    id = productId,
+    productId = productId,
     name = name,
     imageUrl = imageUrl,
     price = price,

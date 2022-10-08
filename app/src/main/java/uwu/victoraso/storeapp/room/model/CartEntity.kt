@@ -28,8 +28,8 @@ import androidx.room.PrimaryKey
     tableName = "cart",
 )
 data class CartEntity(
-    @PrimaryKey
-    val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0,
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "itemCount")

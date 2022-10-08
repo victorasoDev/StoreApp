@@ -22,9 +22,7 @@ import uwu.victoraso.storeapp.model.Cart
 /**
  * External data layer representation of an [Cart]
  */
-@Entity(
-    tableName = "cartProducts",
-)
+
 data class PopulatedCart(
     @Embedded
     val entity: CartEntity,

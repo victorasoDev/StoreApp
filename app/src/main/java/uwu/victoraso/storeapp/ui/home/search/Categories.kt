@@ -137,7 +137,7 @@ fun CategoryImage(
                 .crossfade(true)
                 .build(),
             contentDescription = contentDescription,
-            placeholder = painterResource(id = R.drawable.ic_launcher_background),
+//            placeholder = painterResource(id = R.color.black),
             modifier = Modifier
                 .fillMaxSize()
                 .blur(radius = 5.dp),

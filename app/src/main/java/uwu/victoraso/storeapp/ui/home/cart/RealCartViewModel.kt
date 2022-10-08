@@ -1,5 +1,6 @@
 package uwu.victoraso.storeapp.ui.home.cart
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +11,8 @@ import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.cart.CartRepository
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_CART
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,13 +24,15 @@ constructor(
 ) : ViewModel() {
 
     private val inspiredByCartProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory("Graphic Cards").asResult()
-    private val cartStream: Flow<Result<Cart>> = cartRepository.getCartByIdStream("0").asResult()
+    private val cartStream: Flow<Result<Cart>> = cartRepository.getCartByIdStream("1").asResult()
+    private val cartsStream: Flow<Result<List<Cart>>> = cartRepository.getCartsStream().asResult()
 
     val uiState: StateFlow<CartScreenUiState> =
         combine(
             inspiredByCartProductsStream,
-            cartStream
-        ) { inspiredByCartProductsResult, cartResult ->
+            cartStream,
+            cartsStream
+        ) { inspiredByCartProductsResult, cartResult, cartsResult ->
             val inspiredByCart: InspiredByCartProductsUiState =
                 when (inspiredByCartProductsResult) {
                     is Result.Success -> InspiredByCartProductsUiState.Success(
@@ -52,6 +57,16 @@ constructor(
                             cartItems = cartResult.data.cartItems,
                         )
                     )
+                    is Result.Loading -> CartProductsUiState.Loading
+                    is Result.Error -> CartProductsUiState.Error
+                }
+            val carts: CartProductsUiState =
+                when (cartsResult) {
+                    is Result.Success -> {
+                        Log.d(DEBUG_TAG_CART, cartsResult.data.toString())
+                        CartProductsUiState.Loading
+                    }
+
                     is Result.Loading -> CartProductsUiState.Loading
                     is Result.Error -> CartProductsUiState.Error
                 }
