@@ -17,27 +17,29 @@
 package uwu.victoraso.storeapp.room.model
 
 import androidx.room.*
-import uwu.victoraso.storeapp.model.Wishlist
+import uwu.victoraso.storeapp.model.CartProduct
 
 /**
- * External data layer representation of an [Wishlist]
+ * External data layer representation of a fully populated [CartProduct]
  */
 @Entity(
-    tableName = "wishlistProducts",
+    tableName = "cartProducts",
 )
-data class PopulatedWishlist(
+data class PopulatedCartProduct(
     @Embedded
-    val entity: CartEntity,
+    val entity: CartProductEntity,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "wishlist_id"
+        parentColumn = "cart_id",
+        entityColumn = "id"
     )
-    val productItems: List<CartProductEntity>
+    val wishlist: CartEntity
 )
 
-fun PopulatedWishlist.asExternalModel() = Wishlist(
-    id = entity.id,
+fun PopulatedCartProduct.asExternalModel() = CartProduct(
+    id = entity.productId,
     name = entity.name,
-    itemCount = entity.itemCount,
-    wishlistedItems = productItems.map(CartProductEntity::asExternalModel)
+    imageUrl = entity.imageUrl,
+    price = entity.price,
+    category = entity.category,
+    cartId = wishlist.id,
 )

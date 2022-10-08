@@ -2,7 +2,7 @@ package uwu.victoraso.storeapp.room.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import uwu.victoraso.storeapp.room.model.PopulatedWishlist
+import uwu.victoraso.storeapp.room.model.PopulatedCart
 import uwu.victoraso.storeapp.room.model.CartEntity
 
 /**
@@ -17,7 +17,7 @@ interface CartDao {
             ORDER BY id DESC
     """
     )
-    fun getCartsStream(): Flow<List<PopulatedWishlist>>
+    fun getCartsStream(): Flow<List<PopulatedCart>>
 
     @Transaction
     @Query(
@@ -26,6 +26,7 @@ interface CartDao {
             WHERE id == :id
     """
     )
+    fun getCartByIdStream(id: String): Flow<PopulatedCart>
 
     /**
      * Inserts [entities] into the db if they don't exist, and ignores those that do
@@ -43,7 +44,7 @@ interface CartDao {
      * Inserts or updates [cartEntities] in the db under the specified primary keys
      */
     @Transaction
-    suspend fun upsertCartProducts(cartEntities: List<CartEntity>) = upsert(
+    suspend fun upsertCart(cartEntities: List<CartEntity>) = upsert(
         items = cartEntities,
         insertMany = ::insertOrIgnoreCart,
         updateMany = ::updateCart

@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Immutable
 @Parcelize
-data class Wishlist(
+data class Cart(
     var id: Long = 0,
     var name: String = "",
     var itemCount: Int = 0,
-    var wishlistedItems: List<CartProduct> = emptyList(),
+    var cartItems: List<CartProduct> = emptyList(),
 ) : Parcelable

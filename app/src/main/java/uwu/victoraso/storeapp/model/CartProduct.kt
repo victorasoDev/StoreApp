@@ -12,6 +12,6 @@ data class CartProduct(//TODO hacer val?
     var imageUrl: String = "",
     var price: Long = 0,
     var category: String = "",
-    var wishlistId: Long = 0,
+    var cartId: Long = 0,
     var addDate: Long = 0
 ) : Parcelable

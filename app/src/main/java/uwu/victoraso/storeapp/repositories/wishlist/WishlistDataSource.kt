@@ -1,8 +1,6 @@
 package uwu.victoraso.storeapp.repositories.wishlist
 
 import android.util.Log
-import androidx.compose.runtime.snapshotFlow
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -13,9 +11,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.model.Wishlist
-import uwu.victoraso.storeapp.model.products
-import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import java.lang.Exception
 import javax.inject.Inject

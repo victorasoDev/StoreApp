@@ -12,10 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -35,7 +32,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.material.behavior.SwipeDismissBehavior
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.model.OrderLine
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.model.ProductRepo
@@ -52,22 +51,18 @@ fun Cart(
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CartViewModel = viewModel(factory = CartViewModel.provideFactory()),
     realViewModel: RealCartViewModel = hiltViewModel()
 ) {
 
     val cartUiState: CartScreenUiState by realViewModel.uiState.collectAsStateWithLifecycle()
 
     val inspiredByCart: InspiredByCartProductsUiState = cartUiState.inspiredByCartProductsUiState
-
-    val orderLines by viewModel.orderLines.collectAsState()
+    val cart: CartProductsUiState = cartUiState.cartProductsUiState
 
     Cart(
-        orderLines = orderLines,
-        removeProduct = viewModel::removeProduct,
-        increaseItemCount = viewModel::increaseProductCount,
-        decreaseItemCount = viewModel::decreaseProductCount,
+        removeProduct = realViewModel::removeProduct,
         inspiredByCart = inspiredByCart,
+        cart = cart,
         onProductClick = onProductClick,
         onProductList = onProductList,
         modifier = modifier
@@ -76,11 +71,9 @@ fun Cart(
 
 @Composable
 fun Cart(
-    orderLines: List<OrderLine>,
-    removeProduct: (Long) -> Unit,
-    increaseItemCount: (Long) -> Unit,
-    decreaseItemCount: (Long) -> Unit,
+    removeProduct: (Long, Long) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
+    cart: CartProductsUiState,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -88,11 +81,9 @@ fun Cart(
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
             CartContent(
-                orderLines = orderLines,
                 removeProduct = removeProduct,
-                increaseItemCount = increaseItemCount,
-                decreaseItemCount = decreaseItemCount,
                 inspiredByCart = inspiredByCart,
+                cart = cart,
                 onProductClick = onProductClick,
                 onProductList = onProductList,
                 modifier = Modifier.align(Alignment.TopCenter)
@@ -109,22 +100,23 @@ fun Cart(
 
 @Composable
 fun CartContent(
-    orderLines: List<OrderLine>,
-    removeProduct: (Long) -> Unit,
-    increaseItemCount: (Long) -> Unit,
-    decreaseItemCount: (Long) -> Unit,
+    removeProduct: (Long, Long) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
+    cart: CartProductsUiState,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
-    val productCountFormattedString = remember(orderLines.size, resources) {
+    var productCount by remember { mutableStateOf(0) }
+    var totalCost by remember { mutableStateOf(0L) }
+    val productCountFormattedString = remember(0, resources) {
         resources.getQuantityString(
             R.plurals.cart_order_count,
-            orderLines.size, orderLines.size
+            productCount, productCount
         )
     }
+
     LazyColumn(modifier) {
         item {
             Spacer(
@@ -144,98 +136,31 @@ fun CartContent(
                     .wrapContentHeight()
             )
         }
-        items(orderLines) { orderLine ->
-            SwipeDismissItem(
-                background = { offsetX ->
-                    /*Background color changes from light gray to red when the
-                    swipe to delete with exceeds 160.dp*/
-                    val backgroundColor = if (offsetX < -160.dp) {
-                        StoreAppTheme.colors.error
-                    } else {
-                        StoreAppTheme.colors.uiFloated
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .background(backgroundColor),
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        // Set 4.dp padding only if offset is bigger than 160.dp
-                        val padding: Dp by animateDpAsState(
-                            if (offsetX > -160.dp) 4.dp else 0.dp
+        when (cart) {
+            is CartProductsUiState.Success -> {
+                productCount = cart.cart.itemCount
+                totalCost = cart.cart.cartItems.sumOf { it.price }
+                items(cart.cart.cartItems) { cartProduct ->
+                    SwipeDismissBehavior {
+                        CartItem(
+                            cartProduct = cartProduct,
+                            removeProduct = removeProduct,
+                            onProductClick = onProductClick
                         )
-                        Box(
-                            Modifier
-                                .width(offsetX * -1)
-                                .padding(padding)
-                        ) {
-                            // Height equals to width removing padding
-                            val height = (offsetX + 8.dp) * -1
-                            Surface(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(height)
-                                    .align(Alignment.Center),
-                                shape = CircleShape,
-                                color = StoreAppTheme.colors.error
-                            ) {
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    // Icon must be visible while in this width range
-                                    if (offsetX < -40.dp && offsetX > -152.dp) {
-                                        // Icon alpha decreases as it is about to disappear
-                                        val iconAlpha: Float by animateFloatAsState(
-                                            if (offsetX < -120.dp) 0.5f else 1f
-                                        )
-
-                                        Icon(
-                                            imageVector = Icons.Filled.DeleteForever,
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(16.dp)
-                                                .graphicsLayer(alpha = iconAlpha),
-                                            tint = StoreAppTheme.colors.uiBackground
-                                        )
-                                    }
-                                    /*Text opacity increases as the text is supposed to appear in
-                                    the screen*/
-                                    val textAlpha by animateFloatAsState(
-                                        if (offsetX > -144.dp) 0.5f else 1f
-                                    )
-                                    if (offsetX < -120.dp) {
-                                        Text(
-                                            text = stringResource(id = R.string.remove_item),
-                                            style = MaterialTheme.typography.subtitle1,
-                                            color = StoreAppTheme.colors.uiBackground,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier
-                                                .graphicsLayer(
-                                                    alpha = textAlpha
-                                                )
-                                        )
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
-            ) {
-                CartItem(
-                    orderLine = orderLine,
-                    removeProduct = removeProduct,
-                    increaseItemCount = increaseItemCount,
-                    decreaseItemCount = decreaseItemCount,
-                    onProductClick = onProductClick
-                )
+            }
+            is CartProductsUiState.Loading -> {
+                //TODO
+            }
+            is CartProductsUiState.Error -> {
+                //TODO
             }
         }
+
         item {
             SummaryItem(
-                subtotal = orderLines.sumOf { it.product.price * it.count },
+                subtotal = totalCost,
                 shippingCosts = 369
             )
         }
@@ -257,25 +182,22 @@ fun CartContent(
 
 @Composable
 fun CartItem(
-    orderLine: OrderLine,
-    removeProduct: (Long) -> Unit,
-    increaseItemCount: (Long) -> Unit,
-    decreaseItemCount: (Long) -> Unit,
+    cartProduct: CartProduct,
+    removeProduct: (Long, Long) -> Unit,
     onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val product = orderLine.product
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onProductClick(product.id, product.categories.first()) }
+            .clickable { onProductClick(cartProduct.id, cartProduct.category) }
             .background(StoreAppTheme.colors.uiBackground)
             .padding(horizontal = 24.dp)
     ) {
         val (divider, image, name, tag, priceSpacer, price, remove, quantity) = createRefs()
         createVerticalChain(name, tag, priceSpacer, price, chainStyle = ChainStyle.Packed)
         ProductImage(
-            imageUrl = product.imageUrl,
+            imageUrl = cartProduct.imageUrl,
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)
@@ -286,7 +208,7 @@ fun CartItem(
                 }
         )
         Text(
-            text = product.name,
+            text = cartProduct.name,
             style = MaterialTheme.typography.subtitle1,
             color = StoreAppTheme.colors.textSecondary,
             modifier = Modifier.constrainAs(name) {
@@ -300,7 +222,7 @@ fun CartItem(
             }
         )
         IconButton(
-            onClick = { removeProduct(product.id) },
+            onClick = { removeProduct(cartProduct.id, cartProduct.cartId) },
             modifier = Modifier
                 .constrainAs(remove) {
                     top.linkTo(parent.top)
@@ -315,7 +237,7 @@ fun CartItem(
             )
         }
         Text(
-            text = product.tagline,
+            text = "A tagline",
             style = MaterialTheme.typography.body1,
             color = StoreAppTheme.colors.textHelp,
             modifier = Modifier.constrainAs(tag) {
@@ -336,7 +258,7 @@ fun CartItem(
                 }
         )
         Text(
-            text = formatPrice(product.price),
+            text = formatPrice(cartProduct.price),
             style = MaterialTheme.typography.subtitle1,
             color = StoreAppTheme.colors.textPrimary,
             modifier = Modifier.constrainAs(price) {
@@ -425,7 +347,9 @@ fun SummaryItem(
                 Text(
                     text = formatPrice(subtotal + shippingCosts),
                     style = MaterialTheme.typography.subtitle1,
-                    modifier = Modifier.alignBy(LastBaseline).padding(start = 8.dp)
+                    modifier = Modifier
+                        .alignBy(LastBaseline)
+                        .padding(start = 8.dp)
                 )
 
             }
@@ -441,14 +365,6 @@ fun SummaryItem(
 @Composable
 private fun CartPreview() {
     StoreAppTheme {
-        Cart(
-            orderLines = ProductRepo.getCart(),
-            removeProduct = {},
-            increaseItemCount = {},
-            decreaseItemCount = {},
-            inspiredByCart = InspiredByCartProductsUiState.Success(ProductCollection(2L, "Untitled")),
-            onProductClick = { id, category -> },
-            onProductList = { category -> }
-        )
+        //TODO:
     }
 }

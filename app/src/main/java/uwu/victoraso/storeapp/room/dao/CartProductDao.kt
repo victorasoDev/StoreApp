@@ -2,7 +2,7 @@ package uwu.victoraso.storeapp.room.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import uwu.victoraso.storeapp.room.model.PopulatedWishlistProduct
+import uwu.victoraso.storeapp.room.model.PopulatedCartProduct
 import uwu.victoraso.storeapp.room.model.CartProductEntity
 
 /**
@@ -17,13 +17,13 @@ interface CartProductDao {
             ORDER BY addDate DESC
     """
     )
-    fun getCartProductsStream(): Flow<List<PopulatedWishlistProduct>>
+    fun getCartProductsStream(): Flow<List<PopulatedCartProduct>>
 
     /**
      * Inserts [entities] into the db if they don't exist, and ignores those that do
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertOrIgnoreCartProduct(entities: List<CartProductEntity>): List<Long>
+    suspend fun insertOrIgnoreCartProduct(entity: CartProductEntity)
 
     /**
      * Updates [entities] in the db that match the primary key, and no-ops if they don't
@@ -31,23 +31,23 @@ interface CartProductDao {
     @Update
     suspend fun updateCartProducts(entities: List<CartProductEntity>)
 
-    /**
-     * Inserts or updates [wishlistProductEntities] in the db under the specified primary keys
-     */
-    @Transaction
-    suspend fun upsertCartProducts(wishlistProductEntities: List<CartProductEntity>) = upsert(
-        items = wishlistProductEntities,
-        insertMany = ::insertOrIgnoreCartProduct,
-        updateMany = ::updateCartProducts
-    )
+//    /**
+//     * Inserts or updates [wishlistProductEntities] in the db under the specified primary keys
+//     */
+//    @Transaction
+//    suspend fun upsertCartProducts(wishlistProductEntities: List<CartProductEntity>) = upsert(
+//        items = wishlistProductEntities,
+//        insertMany = ::insertOrIgnoreCartProduct,
+//        updateMany = ::updateCartProducts
+//    )
     /**
      * Deletes rows in the db matching the specified [ids]
      */
     @Query(
         value = """
             DELETE FROM cart_products
-            WHERE productId in (:ids)
+            WHERE product_id in (:productId) AND cart_id in (:cartId)
         """
     )
-    suspend fun deleteCartProducts(ids: List<String>)
+    suspend fun deleteCartProduct(productId: String, cartId: String)
 }
