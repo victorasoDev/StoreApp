@@ -20,10 +20,10 @@ class CartRepository @Inject constructor(
     override fun getCartByIdStream(id: String): Flow<Cart> =
         cartDao.getCartByIdStream(id).map(PopulatedCart::asExternalModel)
 
-    override suspend fun isCartStored(cartId: String): Boolean = cartDao.isCartStored(cartId)
+    override suspend fun isCartStored(cartId: String, cartName: String): Boolean = cartDao.isCartStored(cartId, cartName)
 
     override suspend fun insertCart(entity: CartEntity) {
-        if (!isCartStored(entity.id.toString())) cartDao.insertOrIgnoreCart(entity)
+        if (!isCartStored(entity.id.toString(), entity.name)) cartDao.insertOrIgnoreCart(entity)
     }
 
     override suspend fun updateCart(entities: List<CartEntity>) { cartDao.updateCart(entities) }
@@ -46,7 +46,7 @@ sealed interface CartRepositoryInterface {
      */
     fun getCartsStream(): Flow<List<Cart>>
     fun getCartByIdStream(id: String): Flow<Cart>
-    suspend fun isCartStored(cartId: String): Boolean
+    suspend fun isCartStored(cartId: String, cartName: String): Boolean
     suspend fun insertCart(entity: CartEntity)
     suspend fun updateCart(entities: List<CartEntity>)
     suspend fun deleteCart(ids: List<String>)

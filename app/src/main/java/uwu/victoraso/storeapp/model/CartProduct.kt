@@ -26,3 +26,14 @@ fun CartProduct.asEntity() = CartProductEntity(
     cartId = cartId,
     addDate = addDate
 )
+
+fun CartProduct.fill(product: Product, cart: Cart): CartProduct { //TODO posible guarrada?
+    productId = product.id
+    name = product.name
+    imageUrl = product.imageUrl
+    price = product.price
+    category = product.categories.first()
+    cartId = cart.id
+    addDate = System.currentTimeMillis() / 1000
+    return this
+}

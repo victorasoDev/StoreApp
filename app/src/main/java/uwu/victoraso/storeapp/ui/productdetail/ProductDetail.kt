@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -42,10 +43,12 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.model.Product
+import uwu.victoraso.storeapp.model.fill
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_CART
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
@@ -441,6 +444,7 @@ private fun CartBottomBar(
     onNavigateTo: (String) -> Unit
 ) {
     var dropdownMenuExpanded by remember { mutableStateOf(false) }
+    Log.d(DEBUG_TAG_CART, "dropdownMenu -> $dropdownMenuExpanded")
     when (cartsState) {
         is CartsUiState.Success -> {
             StoreAppSurface(modifier = modifier) {
@@ -448,19 +452,11 @@ private fun CartBottomBar(
                     StoreAppDivider()
                     StoreAppDropdownMenu(
                         expanded = dropdownMenuExpanded,
-                        onDismissRequest = { dropdownMenuExpanded = !dropdownMenuExpanded },
+                        onDismissRequest = { dropdownMenuExpanded = false },
                         items = cartsState.carts,
                         onItemClick = { cart ->
                             onAddToCartClick(
-                                CartProduct(
-                                    productId = product.id,
-                                    name = product.name,
-                                    imageUrl = product.imageUrl,
-                                    price = product.price,
-                                    category = product.categories.first(),
-                                    cartId = cart.id,
-                                    addDate = System.currentTimeMillis() / 1000
-                                )
+                                CartProduct().fill(product, cart)
                             )
                         },
                         onAddCartClick = { cartName ->

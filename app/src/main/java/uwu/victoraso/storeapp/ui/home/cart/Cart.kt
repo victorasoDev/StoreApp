@@ -101,7 +101,7 @@ fun Cart(
                         ) {
                             StoreAppDropdownMenu(
                                 expanded = dropdownMenuExpanded,
-                                onDismissRequest = { dropdownMenuExpanded = !dropdownMenuExpanded },
+                                onDismissRequest = { dropdownMenuExpanded = false },
                                 items = cartUiState.carts,
                                 onItemClick = { cart ->
                                     selectedCart = cartUiState.carts.indexOf(cart)

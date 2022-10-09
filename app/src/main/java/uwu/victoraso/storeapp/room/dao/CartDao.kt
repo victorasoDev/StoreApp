@@ -31,8 +31,8 @@ interface CartDao {
     /**
      * Check if has a row stored with same [cartId]
      */
-    @Query("SELECT EXISTS(SELECT * FROM cart_products WHERE cart_id = :cartId)")
-    fun isCartStored(cartId: String): Boolean
+    @Query("SELECT EXISTS(SELECT * FROM cart_products WHERE cart_id = :cartId OR name = :cartName)")
+    fun isCartStored(cartId: String, cartName: String): Boolean
 
     /**
      * Inserts [entities] into the db if they don't exist, and ignores those that do
