@@ -83,6 +83,8 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.4.3'
     kapt "androidx.room:room-compiler:2.4.3"
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation "androidx.compose.material3:material3:1.0.0-alpha13"
+
 
     implementation "com.google.accompanist:accompanist-appcompat-theme:0.24.13-rc"
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.24.13-rc")

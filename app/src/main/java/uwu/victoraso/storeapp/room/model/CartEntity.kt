@@ -33,5 +33,5 @@ data class CartEntity(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "itemCount")
-    val itemCount: Int,
+    val itemCount: Int = 0,
 )

@@ -4,9 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.MainDestinations
+import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.*
 import uwu.victoraso.storeapp.model.service.AccountService
 import uwu.victoraso.storeapp.repositories.Result
@@ -25,7 +28,7 @@ constructor(
     private val wishlistRepository: WishlistRepository,
     private val cartRepository: CartRepository,
     private val accountService: AccountService,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val productId: Long = checkNotNull(savedStateHandle[MainDestinations.PRODUCT_ID_KEY])
@@ -35,13 +38,15 @@ constructor(
     private val relatedProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory(category = category).asResult()
     private val isWishlistedStream: Flow<Result<Boolean>> =
         wishlistRepository.isWishlisted(productId = productId, userId = accountService.getUserId()).asResult()
+    private val cartsStream: Flow<Result<List<Cart>>> = cartRepository.getCartsStream().asResult()
 
     val uiState: StateFlow<ProductDetailScreenUiState> =
         combine(
             productDetailStream,
             relatedProductsStream,
             isWishlistedStream,
-        ) { productDetailResult, relatedProductsResult, isWishlistedResult ->
+            cartsStream
+        ) { productDetailResult, relatedProductsResult, isWishlistedResult, cartsResult ->
             /**
              * Get product details
              * */
@@ -81,19 +86,30 @@ constructor(
                     is Result.Loading -> RelatedProductsUiState.Loading
                     is Result.Error -> RelatedProductsUiState.Error
                 }
-            ProductDetailScreenUiState(product, relatedProducts)
+
+            /**
+             * Get user carts
+             * */
+            val userCarts: CartsUiState =
+                when (cartsResult) {
+                    is Result.Success -> CartsUiState.Success(cartsResult.data)
+                    is Result.Loading -> CartsUiState.Loading
+                    is Result.Error -> CartsUiState.Error
+                }
+            ProductDetailScreenUiState(product, relatedProducts, userCarts)
         }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = ProductDetailScreenUiState(
                     product = ProductDetailUiState.Loading,
-                    relatedProducts = RelatedProductsUiState.Loading
+                    relatedProducts = RelatedProductsUiState.Loading,
+                    carts = CartsUiState.Loading
                 )
             )
 
     fun wishlistItemToggle(productId: Long, wishlist: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (accountService.hasUser()) {
                 wishlistRepository.wishlistToggle(productId, accountService.getUserId(), wishlist)
             }
@@ -101,9 +117,14 @@ constructor(
     }
 
     fun addToCart(cartProduct: CartProduct) {
-        viewModelScope.launch {
-            cartRepository.insertCart(listOf(CartEntity(name = "Your shopping cart", itemCount = 0)))
+        viewModelScope.launch(Dispatchers.IO) {
             cartRepository.insertCartProduct(cartProduct.asEntity())
+        }
+    }
+
+    fun addCart(cart: Cart) {
+        viewModelScope.launch(Dispatchers.IO) {
+            cartRepository.insertCart(CartEntity(name = cart.name)) //TODO ?
         }
     }
 }
@@ -120,7 +141,14 @@ sealed interface RelatedProductsUiState {
     object Loading : RelatedProductsUiState
 }
 
+sealed interface CartsUiState {
+    data class Success(val carts: List<Cart>) : CartsUiState
+    object Error : CartsUiState
+    object Loading : CartsUiState
+}
+
 data class ProductDetailScreenUiState(
     val product: ProductDetailUiState,
-    val relatedProducts: RelatedProductsUiState
+    val relatedProducts: RelatedProductsUiState,
+    val carts: CartsUiState
 )

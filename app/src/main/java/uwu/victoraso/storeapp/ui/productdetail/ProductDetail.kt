@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.ui.components.*
@@ -72,15 +73,18 @@ fun ProductDetail(
 
     val productDetailState = productDetailScreenUiState.product
     val relatedState = productDetailScreenUiState.relatedProducts
+    val cartsState = productDetailScreenUiState.carts
 
     ProductDetail(
         upPress = upPress,
         productDetailState = productDetailState,
         relatedState = relatedState,
+        cartsState = cartsState,
         onProductList = onProductList,
         onProductClick = onProductClick,
         onWishlistClick = viewModel::wishlistItemToggle,
         onAddToCartClick = viewModel::addToCart,
+        onAddCartClick = viewModel::addCart,
         onNavigateTo = onNavigateTo
     )
 }
@@ -90,10 +94,12 @@ private fun ProductDetail(
     upPress: () -> Unit,
     productDetailState: ProductDetailUiState,
     relatedState: RelatedProductsUiState,
+    cartsState: CartsUiState,
     onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
     onWishlistClick: (Long, Boolean) -> Unit,
     onAddToCartClick: (CartProduct) -> Unit,
+    onAddCartClick: (Cart) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
     when (productDetailState) {
@@ -114,7 +120,9 @@ private fun ProductDetail(
                 Up(upPress)
                 CartBottomBar(
                     product = product,
+                    cartsState = cartsState,
                     onAddToCartClick = onAddToCartClick,
+                    onAddCartClick = onAddCartClick,
                     onNavigateTo = onNavigateTo,
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
@@ -426,64 +434,87 @@ private fun CollapsingImageLayout(
 @Composable
 private fun CartBottomBar(
     product: Product,
+    cartsState: CartsUiState,
     modifier: Modifier = Modifier,
     onAddToCartClick: (CartProduct) -> Unit,
+    onAddCartClick: (Cart) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
-    StoreAppSurface(modifier = modifier) {
-        Column {
-            StoreAppDivider()
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .navigationBarsPadding()
-                    .then(HzPadding)
-                    .heightIn(min = BottomBarHeight)
-            ) {
-                StoreAppButton(
-                    onClick = {
-                        onAddToCartClick(
-                            CartProduct(
-                                productId = product.id,
-                                name = product.name,
-                                imageUrl = product.imageUrl,
-                                price = product.price,
-                                category = product.categories.first(),
-                                cartId = 1, //TODO: cambiar
-                                addDate = System.currentTimeMillis() / 1000
+    var dropdownMenuExpanded by remember { mutableStateOf(false) }
+    when (cartsState) {
+        is CartsUiState.Success -> {
+            StoreAppSurface(modifier = modifier) {
+                Column {
+                    StoreAppDivider()
+                    StoreAppDropdownMenu(
+                        expanded = dropdownMenuExpanded,
+                        onDismissRequest = { dropdownMenuExpanded = !dropdownMenuExpanded },
+                        items = cartsState.carts,
+                        onItemClick = { cart ->
+                            onAddToCartClick(
+                                CartProduct(
+                                    productId = product.id,
+                                    name = product.name,
+                                    imageUrl = product.imageUrl,
+                                    price = product.price,
+                                    category = product.categories.first(),
+                                    cartId = cart.id,
+                                    addDate = System.currentTimeMillis() / 1000
+                                )
                             )
-                        )
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add_to_cart))
-                    Text(
-                        text = stringResource(R.string.add_to_cart),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 12.sp,
-                        maxLines = 1
+                        },
+                        onAddCartClick = { cartName ->
+                             onAddCartClick(Cart(name = cartName))
+                        },
+                        itemText = { item ->
+                            Text(item.name, color = StoreAppTheme.colors.textLink)
+                        },
                     )
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                StoreAppButton(
-                    onClick = { onNavigateTo(HomeSections.CART.route) },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = stringResource(id = R.string.go_to_cart))
-                    Text(
-                        text = stringResource(R.string.go_to_cart),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 12.sp,
-                        maxLines = 1
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .navigationBarsPadding()
+                            .then(HzPadding)
+                            .heightIn(min = BottomBarHeight)
+                    ) {
+                        StoreAppButton(
+                            onClick = { dropdownMenuExpanded = !dropdownMenuExpanded },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add_to_cart))
+                            Text(
+                                text = stringResource(R.string.add_to_cart),
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                overflow = TextOverflow.Ellipsis,
+                                fontSize = 12.sp,
+                                maxLines = 1
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        StoreAppButton(
+                            onClick = { onNavigateTo(HomeSections.CART.route) },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = stringResource(id = R.string.go_to_cart))
+                            Text(
+                                text = stringResource(R.string.go_to_cart),
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                overflow = TextOverflow.Ellipsis,
+                                fontSize = 12.sp,
+                                maxLines = 1
+                            )
+                        }
+                    }
+
                 }
             }
-
         }
+        is CartsUiState.Error -> {
+            //TODO
+        }
+        is CartsUiState.Loading -> {} //TODO eliminar
     }
 }
 

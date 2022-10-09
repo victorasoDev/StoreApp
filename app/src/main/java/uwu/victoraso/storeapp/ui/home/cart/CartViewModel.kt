@@ -1,76 +1,85 @@
 package uwu.victoraso.storeapp.ui.home.cart
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import uwu.victoraso.storeapp.R
-import uwu.victoraso.storeapp.model.OrderLine
-import uwu.victoraso.storeapp.model.ProductRepo
-import uwu.victoraso.storeapp.model.SnackbarManager
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import uwu.victoraso.storeapp.model.*
+import uwu.victoraso.storeapp.repositories.Result
+import uwu.victoraso.storeapp.repositories.asResult
+import uwu.victoraso.storeapp.repositories.cart.CartRepository
+import uwu.victoraso.storeapp.repositories.products.ProductRepository
+import javax.inject.Inject
 
-class CartViewModel(
-    private val snackbarManager: SnackbarManager,
-    productRepository: ProductRepo
+@HiltViewModel
+class CartViewModel
+@Inject
+constructor(
+    productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
 
-    private val _orderLines: MutableStateFlow<List<OrderLine>> =
-        MutableStateFlow(productRepository.getCart())
-    val orderLines: StateFlow<List<OrderLine>> get() = _orderLines //TODO: informarse sobre los flows { https://developer.android.com/kotlin/flow/stateflow-and-sharedflow?hl=es-419 }
+    private val inspiredByCartProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory("Graphic Cards").asResult()
+//    private val cartStream: Flow<Result<Cart>> = cartRepository.getCartByIdStream("1").asResult()
+    private val cartsStream: Flow<Result<List<Cart>>> = cartRepository.getCartsStream().asResult()
 
-    // Logic to show errors every few requests
-    private var requestCount = 0
-    private fun shouldRandomlyFail(): Boolean = ++requestCount % 5 == 0 //TODO
+    val uiState: StateFlow<CartScreenUiState> =
+        combine(
+            inspiredByCartProductsStream,
+            cartsStream
+        ) { inspiredByCartProductsResult, cartsResult ->
+            val inspiredByCart: InspiredByCartProductsUiState =
+                when (inspiredByCartProductsResult) {
+                    is Result.Success -> InspiredByCartProductsUiState.Success(
+                        ProductCollection(
+                            id = 1L,
+                            name = "Inspired By Cart",
+                            products = inspiredByCartProductsResult.data,
+                            type = CollectionType.Highlight
+                        )
+                    )
+                    is Result.Loading -> InspiredByCartProductsUiState.Loading
+                    is Result.Error -> InspiredByCartProductsUiState.Error
+                }
 
-    fun increaseProductCount(productId: Long) {
-        if (!shouldRandomlyFail()) {
-            val currentCount = _orderLines.value.first { it.product.id == productId }.count
-            updateProductCount(productId, currentCount + 1)
-        } else {
-            snackbarManager.showMessage(R.string.cart_increase_error)
+            val cart: CartsProductsUiState =
+                when (cartsResult) {
+                    is Result.Success -> CartsProductsUiState.Success(cartsResult.data)
+                    is Result.Loading -> CartsProductsUiState.Loading
+                    is Result.Error -> CartsProductsUiState.Error
+                }
+            CartScreenUiState(inspiredByCart, cart)
         }
-    }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = CartScreenUiState(
+                    InspiredByCartProductsUiState.Loading,
+                    CartsProductsUiState.Loading
+                )
+            )
 
-    fun decreaseProductCount(productId: Long) {
-        if (!shouldRandomlyFail()) {
-            val currentCount = _orderLines.value.first { it.product.id == productId }.count
-            if (currentCount == 1) {
-                removeProduct(productId)
-            } else {
-                updateProductCount(productId, currentCount - 1)
-            }
-        } else {
-            snackbarManager.showMessage(R.string.cart_decrease_error)
-        }
-    }
-
-    fun removeProduct(productId: Long) {
-        //super molón -> arrayList de aquellos items que no tengan el $productId dado
-        _orderLines.value = _orderLines.value.filter { it.product.id != productId }
-    }
-
-    private fun updateProductCount(productId: Long, count: Int) {
-        _orderLines.value = orderLines.value.map {
-            if (it.product.id == productId) {
-                it.copy(count = count)
-            } else {
-                it
-            }
-        }
-    }
-
-    /**
-     * Factory for CartViewModel that takes SnackbarManager as a dependency
-     */
-    companion object {
-        fun provideFactory(
-            snackbarManager: SnackbarManager = SnackbarManager,
-            productRepository: ProductRepo = ProductRepo
-        ) : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return CartViewModel(snackbarManager, productRepository) as T
-            }
+    fun removeProduct(productId: Long, cartId: Long) {
+        viewModelScope.launch {
+            cartRepository.deleteCartProduct(productId.toString(), cartId.toString())
         }
     }
 }
+
+sealed interface InspiredByCartProductsUiState {
+    data class Success(val productCollection: ProductCollection) : InspiredByCartProductsUiState
+    object Error : InspiredByCartProductsUiState
+    object Loading : InspiredByCartProductsUiState
+}
+
+sealed interface CartsProductsUiState {
+    data class Success(val carts: List<Cart>) : CartsProductsUiState
+    object Error : CartsProductsUiState
+    object Loading : CartsProductsUiState
+}
+
+data class CartScreenUiState(
+    val inspiredByCartProductsUiState: InspiredByCartProductsUiState,
+    val cartProductsUiState: CartsProductsUiState,
+)

@@ -20,13 +20,21 @@ class CartRepository @Inject constructor(
     override fun getCartByIdStream(id: String): Flow<Cart> =
         cartDao.getCartByIdStream(id).map(PopulatedCart::asExternalModel)
 
-    override suspend fun insertCart(entities: List<CartEntity>) { cartDao.insertOrIgnoreCart(entities) }
+    override suspend fun isCartStored(cartId: String): Boolean = cartDao.isCartStored(cartId)
+
+    override suspend fun insertCart(entity: CartEntity) {
+        if (!isCartStored(entity.id.toString())) cartDao.insertOrIgnoreCart(entity)
+    }
 
     override suspend fun updateCart(entities: List<CartEntity>) { cartDao.updateCart(entities) }
 
     override suspend fun deleteCart(ids: List<String>) { cartDao.deleteCarts(ids) }
 
-    override suspend fun insertCartProduct(entity: CartProductEntity) { cartProductDao.insertOrIgnoreCartProduct(entity) }
+    override suspend fun isCartProductStored(productId: String, cartId: String): Boolean = cartProductDao.isCartProductStored(productId, cartId)
+
+    override suspend fun insertCartProduct(entity: CartProductEntity) {
+        if (!isCartProductStored(entity.productId.toString(), entity.cartId.toString())) cartProductDao.insertOrIgnoreCartProduct(entity)
+    } //TODO: Devolver un boolean para mostrar un mensaje en viewHolder
 
     override suspend fun deleteCartProduct(productId: String, cartId: String) { cartProductDao.deleteCartProduct(productId, cartId) }
 }
@@ -38,13 +46,15 @@ sealed interface CartRepositoryInterface {
      */
     fun getCartsStream(): Flow<List<Cart>>
     fun getCartByIdStream(id: String): Flow<Cart>
-    suspend fun insertCart(entities: List<CartEntity>)
+    suspend fun isCartStored(cartId: String): Boolean
+    suspend fun insertCart(entity: CartEntity)
     suspend fun updateCart(entities: List<CartEntity>)
     suspend fun deleteCart(ids: List<String>)
 
     /**
      * [CartProduct] CRUD
      */
+    suspend fun isCartProductStored(productId: String, cartId: String): Boolean
     suspend fun insertCartProduct(entity: CartProductEntity)
     suspend fun deleteCartProduct(productId: String, cartId: String)
 }

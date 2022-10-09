@@ -20,6 +20,12 @@ interface CartProductDao {
     fun getCartProductsStream(): Flow<List<PopulatedCartProduct>>
 
     /**
+     * Check if has a row stored with same [productId] && [cartId] exists
+     */
+    @Query("SELECT EXISTS(SELECT * FROM cart_products WHERE product_id = :productId AND cart_id = :cartId)")
+    fun isCartProductStored(productId: String, cartId: String): Boolean
+
+    /**
      * Inserts [entities] into the db if they don't exist, and ignores those that do
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)

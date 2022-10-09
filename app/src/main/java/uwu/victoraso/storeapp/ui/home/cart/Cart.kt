@@ -12,16 +12,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.More
 import androidx.compose.material.icons.filled.ShoppingCartCheckout
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
-import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterEnd
-import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.Start
-import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.LastBaseline
@@ -34,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
@@ -46,18 +44,18 @@ fun Cart(
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
-    realViewModel: RealCartViewModel = hiltViewModel()
+    realViewModel: CartViewModel = hiltViewModel()
 ) {
 
     val cartUiState: CartScreenUiState by realViewModel.uiState.collectAsStateWithLifecycle()
 
     val inspiredByCart: InspiredByCartProductsUiState = cartUiState.inspiredByCartProductsUiState
-    val cart: CartProductsUiState = cartUiState.cartProductsUiState
+    val cart: CartsProductsUiState = cartUiState.cartProductsUiState
 
     Cart(
         removeProduct = realViewModel::removeProduct,
         inspiredByCart = inspiredByCart,
-        cart = cart,
+        cartUiState = cart,
         onProductClick = onProductClick,
         onProductList = onProductList,
         modifier = modifier
@@ -68,27 +66,61 @@ fun Cart(
 fun Cart(
     removeProduct: (Long, Long) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
-    cart: CartProductsUiState,
+    cartUiState: CartsProductsUiState,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    StoreAppSurface(modifier = modifier.fillMaxSize()) {
-        Box {
-            CartContent(
-                removeProduct = removeProduct,
-                inspiredByCart = inspiredByCart,
-                cart = cart,
-                onProductClick = onProductClick,
-                onProductList = onProductList,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-            DestinationBar(
-                modifier = Modifier.align(Alignment.TopCenter),
-                title = "Your shopping cart",
-                imageVector = Icons.Default.ShoppingCartCheckout,
-                onDestinationBarButtonClick = { }
-            )
+    var selectedCart by remember { mutableStateOf(0) }
+    var dropdownMenuExpanded by remember { mutableStateOf(false) }
+
+    when (cartUiState) {
+        is CartsProductsUiState.Success -> {
+            val mainCart = cartUiState.carts[selectedCart]
+            StoreAppSurface(modifier = modifier.fillMaxSize()) {
+                Box {
+                    CartContent(
+                        removeProduct = removeProduct,
+                        inspiredByCart = inspiredByCart,
+                        cart = mainCart,
+                        onProductClick = onProductClick,
+                        onProductList = onProductList,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    )
+                    Column(modifier = Modifier.align(Alignment.TopCenter)) {
+                        DestinationBar(
+                            title = mainCart.name,
+                            imageVector = Icons.Outlined.ExpandMore,
+                            onDestinationBarButtonClick = { dropdownMenuExpanded = !dropdownMenuExpanded }
+                        )
+                        Box(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(end = 16.dp, top = 8.dp),
+                            contentAlignment = TopEnd
+                        ) {
+                            StoreAppDropdownMenu(
+                                expanded = dropdownMenuExpanded,
+                                onDismissRequest = { dropdownMenuExpanded = !dropdownMenuExpanded },
+                                items = cartUiState.carts,
+                                onItemClick = { cart ->
+                                    selectedCart = cartUiState.carts.indexOf(cart)
+                                },
+                                onAddCartClick = { },
+                                itemText = { item ->
+                                    Text(item.name, color = StoreAppTheme.colors.textLink)
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        is CartsProductsUiState.Loading -> {
+            //TODO
+        }
+        is CartsProductsUiState.Error -> {
+            //TODO
         }
     }
 }
@@ -97,13 +129,13 @@ fun Cart(
 fun CartContent(
     removeProduct: (Long, Long) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
-    cart: CartProductsUiState,
+    cart: Cart,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
-    var productCount by remember { mutableStateOf(0) }
+    val productCount by remember { mutableStateOf(cart.cartItems.size) }
     var totalCost by remember { mutableStateOf(0L) }
     val productCountFormattedString = remember(0, resources) {
         resources.getQuantityString(
@@ -131,25 +163,14 @@ fun CartContent(
                     .wrapContentHeight()
             )
         }
-        when (cart) {
-            is CartProductsUiState.Success -> {
-                productCount = cart.cart.itemCount
-                totalCost = cart.cart.cartItems.sumOf { it.price }
-                items(cart.cart.cartItems) { cartProduct ->
-                    SwipeDismissBehavior {
-                        CartItem(
-                            cartProduct = cartProduct,
-                            removeProduct = removeProduct,
-                            onProductClick = onProductClick
-                        )
-                    }
-                }
-            }
-            is CartProductsUiState.Loading -> {
-                //TODO
-            }
-            is CartProductsUiState.Error -> {
-                //TODO
+        totalCost = cart.cartItems.sumOf { it.price }
+        items(cart.cartItems) { cartProduct ->
+            SwipeDismissBehavior {
+                CartItem(
+                    cartProduct = cartProduct,
+                    removeProduct = removeProduct,
+                    onProductClick = onProductClick
+                )
             }
         }
 

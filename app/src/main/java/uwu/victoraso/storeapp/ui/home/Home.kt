@@ -38,18 +38,13 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import androidx.compose.ui.util.lerp
 import androidx.core.os.ConfigurationCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import uwu.victoraso.storeapp.ui.home.cart.Cart
-import uwu.victoraso.storeapp.ui.home.cart.RealCartViewModel
 import uwu.victoraso.storeapp.ui.home.feed.Feed
-import uwu.victoraso.storeapp.ui.home.feed.FeedViewModel
 import uwu.victoraso.storeapp.ui.home.profile.Profile
-import uwu.victoraso.storeapp.ui.home.profile.ProfileViewModel
 import uwu.victoraso.storeapp.ui.home.search.Search
-import uwu.victoraso.storeapp.ui.home.search.SearchViewModel
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import java.util.*
 
