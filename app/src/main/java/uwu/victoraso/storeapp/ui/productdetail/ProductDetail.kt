@@ -22,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
@@ -127,7 +128,7 @@ private fun ProductDetail(
                     onAddToCartClick = onAddToCartClick,
                     onAddCartClick = onAddCartClick,
                     onNavigateTo = onNavigateTo,
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier.align(Alignment.BottomCenter).imePadding()
                 )
             }
 
@@ -465,6 +466,7 @@ private fun CartBottomBar(
                         itemText = { item ->
                             Text(item.name, color = StoreAppTheme.colors.textLink)
                         },
+                        modifier = Modifier.navigationBarsPadding()
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,

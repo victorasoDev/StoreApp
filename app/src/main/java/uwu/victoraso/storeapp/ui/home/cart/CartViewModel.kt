@@ -65,6 +65,12 @@ constructor(
             cartRepository.deleteCartProduct(productId.toString(), cartId.toString())
         }
     }
+
+    fun changeCartName(cart: Cart) {
+        viewModelScope.launch {
+            cartRepository.updateCart(cart.asEntity())
+        }
+    }
 }
 
 sealed interface InspiredByCartProductsUiState {

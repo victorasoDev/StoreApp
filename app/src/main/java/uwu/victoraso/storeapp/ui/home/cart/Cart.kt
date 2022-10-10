@@ -12,7 +12,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.More
 import androidx.compose.material.icons.filled.ShoppingCartCheckout
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.runtime.*
@@ -44,16 +43,17 @@ fun Cart(
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier,
-    realViewModel: CartViewModel = hiltViewModel()
+    viewModel: CartViewModel = hiltViewModel()
 ) {
 
-    val cartUiState: CartScreenUiState by realViewModel.uiState.collectAsStateWithLifecycle()
+    val cartUiState: CartScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val inspiredByCart: InspiredByCartProductsUiState = cartUiState.inspiredByCartProductsUiState
     val cart: CartsProductsUiState = cartUiState.cartProductsUiState
 
     Cart(
-        removeProduct = realViewModel::removeProduct,
+        removeProduct = viewModel::removeProduct,
+        changeCartName = viewModel::changeCartName,
         inspiredByCart = inspiredByCart,
         cartUiState = cart,
         onProductClick = onProductClick,
@@ -65,6 +65,7 @@ fun Cart(
 @Composable
 fun Cart(
     removeProduct: (Long, Long) -> Unit,
+    changeCartName: (Cart) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
     cartUiState: CartsProductsUiState,
     onProductClick: (Long, String) -> Unit,
@@ -91,7 +92,8 @@ fun Cart(
                         DestinationBar(
                             title = mainCart.name,
                             imageVector = Icons.Outlined.ExpandMore,
-                            onDestinationBarButtonClick = { dropdownMenuExpanded = !dropdownMenuExpanded }
+                            onDestinationBarButtonClick = { dropdownMenuExpanded = !dropdownMenuExpanded },
+                            onChangeCartNameClick = { changeCartName(mainCart.copy(name = it)) }
                         )
                         Box(
                             modifier = modifier

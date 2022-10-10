@@ -3,6 +3,8 @@ package uwu.victoraso.storeapp.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -16,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -36,7 +40,9 @@ fun <T> StoreAppDropdownMenu(
     var addNewCartSelected by remember { mutableStateOf(false) }
     var newCartName by remember { mutableStateOf("") }
 
-    Box(modifier = Modifier.padding(start = 32.dp)) {
+    Box(
+        modifier = modifier.padding(start = 32.dp)
+    ) {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = {
@@ -44,7 +50,7 @@ fun <T> StoreAppDropdownMenu(
                 addNewCartSelected = false
                 newCartName = ""
             },
-            modifier = modifier.background(StoreAppTheme.colors.uiBackground)
+            modifier = Modifier.background(StoreAppTheme.colors.uiBackground)
         ) {
             DropdownMenuItem(
                 text = {
@@ -111,6 +117,7 @@ private fun DropdownMenuItemTextField(
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         BasicTextField(
@@ -120,6 +127,8 @@ private fun DropdownMenuItemTextField(
                 .padding(end = 8.dp)
                 .weight(0.8f)
                 .focusRequester(focusRequester),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             maxLines = 1,
             textStyle = Typography.body1,
         )

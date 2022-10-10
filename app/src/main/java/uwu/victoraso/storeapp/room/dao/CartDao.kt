@@ -44,7 +44,7 @@ interface CartDao {
      * Updates [entities] in the db that match the primary key, and no-ops if they don't
      */
     @Update
-    suspend fun updateCart(entities: List<CartEntity>)
+    suspend fun updateCart(entity: CartEntity)
 
     /**
      * Inserts or updates [cartEntities] in the db under the specified primary keys
