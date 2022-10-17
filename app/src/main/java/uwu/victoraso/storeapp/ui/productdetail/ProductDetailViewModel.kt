@@ -4,12 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.MainDestinations
-import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.*
 import uwu.victoraso.storeapp.model.service.AccountService
 import uwu.victoraso.storeapp.repositories.Result

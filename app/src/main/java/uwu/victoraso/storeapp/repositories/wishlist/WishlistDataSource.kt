@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,16 +48,15 @@ class WishlistDataSource @Inject constructor(
         db.collection("wishlists").document(userId).get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    for (id in document.data!!["product_ids"] as ArrayList<*>) {
-                        if (productId == id) {
+                    for (id in document.data!!["products"] as ArrayList<*>) {
+                        val idFormatted = (id as String).split("/")[1].toLong() //TODO
+                        if (productId == idFormatted) {
                             exists = true
                         }
                     }
                 }
             }
-            .addOnFailureListener {
-                //TODO
-            }
+            .addOnFailureListener {  }
             .await()
         emit(exists)
     }

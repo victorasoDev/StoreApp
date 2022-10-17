@@ -74,10 +74,12 @@ fun Cart(
 ) {
     var selectedCart by remember { mutableStateOf(0) }
     var dropdownMenuExpanded by remember { mutableStateOf(false) }
+    var nameTextFieldValue by remember { mutableStateOf("") }
 
     when (cartUiState) {
         is CartsProductsUiState.Success -> {
             val mainCart = cartUiState.carts[selectedCart]
+            nameTextFieldValue = mainCart.name
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
                 Box {
                     CartContent(
@@ -90,7 +92,8 @@ fun Cart(
                     )
                     Column(modifier = Modifier.align(Alignment.TopCenter)) {
                         DestinationBar(
-                            title = mainCart.name,
+                            title = nameTextFieldValue,
+                            onTitleValueChange = { nameTextFieldValue = it },
                             imageVector = Icons.Outlined.ExpandMore,
                             onDestinationBarButtonClick = { dropdownMenuExpanded = !dropdownMenuExpanded },
                             onChangeCartNameClick = { changeCartName(mainCart.copy(name = it)) }
@@ -188,7 +191,7 @@ fun CartContent(
                 ProductCollection(
                     productCollection = inspiredByCart.productCollection,
                     onProductClick = onProductClick,
-                    onProductList = onProductList,
+                    onNavigateTo = onProductList,
                     highlight = true,
                     showMore = false
                 )

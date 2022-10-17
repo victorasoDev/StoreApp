@@ -116,13 +116,6 @@ class StoreAppState(
         }
     }
 
-    fun navigateToProductList(category: String, from: NavBackStackEntry) {
-        // In order to discard duplicated navigation events, check the lifecycle
-        if (from.lifecycleIsResumed()) {
-            navController.navigate("${MainDestinations.PRODUCT_LIST_ROUTE}/$category")
-        }
-    }
-
     fun navigateTo(route: String, from: NavBackStackEntry) {
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {

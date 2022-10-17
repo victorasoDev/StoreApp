@@ -2,26 +2,26 @@ package uwu.victoraso.storeapp.ui.home.feed
 
 import android.util.Log
 import androidx.compose.animation.*
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.ProductCollection
-import uwu.victoraso.storeapp.model.ProductRepo
-import uwu.victoraso.storeapp.ui.components.*
+import uwu.victoraso.storeapp.ui.components.ProductCollection
+import uwu.victoraso.storeapp.ui.components.StoreAppCircularIndicator
+import uwu.victoraso.storeapp.ui.components.StoreAppDivider
+import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.FilterScreen
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
@@ -30,7 +30,7 @@ import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 @Composable
 fun Feed(
     onProductClick: (Long, String) -> Unit,
-    onProductList: (String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FeedViewModel = hiltViewModel()
@@ -43,7 +43,7 @@ fun Feed(
         feedUiState = feedUiState,
         productCollections = productsCollections,
         onProductClick = onProductClick,
-        onProductList = onProductList,
+        onNavigateTo = onNavigateTo,
         onProductCreate = onProductCreate,
         modifier = modifier,
     )
@@ -54,7 +54,7 @@ private fun Feed(
     feedUiState: FeedScreenUiState,
     productCollections: List<ProductCollection>,
     onProductClick: (Long, String) -> Unit,
-    onProductList: (String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     onProductCreate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -66,7 +66,7 @@ private fun Feed(
                     ProductCollectionList(
                         productCollections = productCollections,
                         onProductClick = onProductClick,
-                        onProductList = onProductList,
+                        onNavigateTo = onNavigateTo,
                     )
                     DestinationBar(onDestinationBarButtonClick = onProductCreate)
                 }
@@ -104,7 +104,7 @@ fun getProductsCollections(feedUiState: FeedScreenUiState): List<ProductCollecti
 private fun ProductCollectionList(
     productCollections: List<ProductCollection>,
     onProductClick: (Long, String) -> Unit,
-    onProductList: (String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var filtersVisible by rememberSaveable { mutableStateOf(false) }
@@ -127,7 +127,7 @@ private fun ProductCollectionList(
                 ProductCollection(
                     productCollection = productCollection,
                     onProductClick = onProductClick,
-                    onProductList = onProductList,
+                    onNavigateTo = onNavigateTo,
                     index = index
                 )
             }

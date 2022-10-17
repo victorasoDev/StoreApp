@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.ui.home
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.theme.AlphaNearOpaque
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_CART
 
 @Composable
 fun DestinationBar(
@@ -66,17 +64,14 @@ fun DestinationBar(
 fun DestinationBar(
     modifier: Modifier = Modifier,
     title: String,
+    onTitleValueChange: (String) -> Unit,
     imageVector: ImageVector = Icons.Outlined.ExpandMore,
     onDestinationBarButtonClick: () -> Unit,
     onChangeCartNameClick: (String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-
-    Log.d(DEBUG_TAG_CART, "name -> $title")
     var nameTextFieldVisible by remember { mutableStateOf(false) }
-    var nameTextFieldValue by remember { mutableStateOf(title) }
-    Log.d(DEBUG_TAG_CART, "name -> $nameTextFieldValue")
 
     Column(modifier = modifier.statusBarsPadding()) {
         TopAppBar(
@@ -103,8 +98,8 @@ fun DestinationBar(
                 DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
             } else {
                 BasicTextField(
-                    value = nameTextFieldValue,
-                    onValueChange = { nameTextFieldValue = it },
+                    value = title,
+                    onValueChange = onTitleValueChange,
                     textStyle = MaterialTheme.typography.subtitle1.copy(textAlign = TextAlign.Center),
                     maxLines = 1,
                     modifier = Modifier
@@ -114,7 +109,7 @@ fun DestinationBar(
                         .focusRequester(focusRequester)
                         .onFocusEvent {
                             if (!it.isFocused) {
-                                onChangeCartNameClick(nameTextFieldValue)
+                                onChangeCartNameClick(title)
                                 focusManager.clearFocus()
                             }
                         },
@@ -126,7 +121,7 @@ fun DestinationBar(
                 )
                 LaunchedEffect(key1 = Unit) { focusRequester.requestFocus() }
                 DestinationBarIconButton(
-                    newCartName = nameTextFieldValue,
+                    newCartName = title,
                     onDestinationBarButtonClick = {
                         onChangeCartNameClick(it)
                         focusManager.clearFocus()

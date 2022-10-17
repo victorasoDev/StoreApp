@@ -6,15 +6,9 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
-import uwu.victoraso.storeapp.ui.productcollection.ProductList
-import uwu.victoraso.storeapp.ui.productdetail.ProductDetail
 import uwu.victoraso.storeapp.ui.components.StoreAppScaffold
 import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.HomeSections
@@ -23,9 +17,11 @@ import uwu.victoraso.storeapp.ui.home.addHomeGraph
 import uwu.victoraso.storeapp.ui.home.profile.wishlist.Wishlist
 import uwu.victoraso.storeapp.ui.log.login.LoginScreen
 import uwu.victoraso.storeapp.ui.log.signup.SignUpScreen
+import uwu.victoraso.storeapp.ui.productcollection.ProductList
 import uwu.victoraso.storeapp.ui.productcollection.ProductListViewModel
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreate
 import uwu.victoraso.storeapp.ui.productcreate.ProductCreateViewModel
+import uwu.victoraso.storeapp.ui.productdetail.ProductDetail
 import uwu.victoraso.storeapp.ui.splash.Splash
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
@@ -60,7 +56,6 @@ fun StoreApp() {
                 storeAppNavGraph(
                     onProductSelected = appState::navigateToProductDetail,
                     onProductCreate = appState::navigateToCreateProduct,
-                    onProductList = appState::navigateToProductList,
                     onPopUp = appState::navigateAndPopUp,
                     onClearAndNavigate = appState::clearAndNavigate,
                     onNavigateTo = appState::navigateTo,
@@ -74,7 +69,6 @@ fun StoreApp() {
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
     onProductCreate: (NavBackStackEntry) -> Unit, //TODO: cambiar por el navigateTo
-    onProductList: (String, NavBackStackEntry) -> Unit, //TODO: cambiar por el navigateTo
     onPopUp: (String, String) -> Unit,
     onClearAndNavigate: (String) -> Unit,
     onNavigateTo: (String, NavBackStackEntry) -> Unit, //TODO: para abrir otras ventanas puede servir
@@ -84,7 +78,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
         route = MainDestinations.HOME_ROUTE,
         startDestination = HomeSections.FEED.route
     ) {
-        addHomeGraph(onProductSelected, onProductCreate, onProductList, onClearAndNavigate, onNavigateTo)
+        addHomeGraph(onProductSelected, onProductCreate, onNavigateTo, onClearAndNavigate, onNavigateTo)
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.CATEGORY_ID_KEY}}/{${MainDestinations.PRODUCT_ID_KEY}}",
@@ -95,7 +89,6 @@ private fun NavGraphBuilder.storeAppNavGraph(
     ) { navBackStackEntry ->
         ProductDetail(
             upPress = upPress,
-            onProductList = { category -> onProductList(category, navBackStackEntry) },
             onProductClick = { id, category -> onProductSelected(id, category, navBackStackEntry) },
             onNavigateTo = { route -> onNavigateTo(route, navBackStackEntry) }
         )

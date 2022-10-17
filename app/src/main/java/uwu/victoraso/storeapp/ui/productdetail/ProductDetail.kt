@@ -1,11 +1,6 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
-import android.util.Log
-import androidx.compose.animation.*
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -22,10 +17,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -39,7 +32,6 @@ import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
@@ -49,7 +41,6 @@ import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_CART
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
@@ -69,7 +60,6 @@ private val HzPadding = Modifier.padding(horizontal = 24.dp)
 fun ProductDetail(
     upPress: () -> Unit,
     viewModel: ProductDetailViewModel = hiltViewModel(),
-    onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
@@ -84,7 +74,6 @@ fun ProductDetail(
         productDetailState = productDetailState,
         relatedState = relatedState,
         cartsState = cartsState,
-        onProductList = onProductList,
         onProductClick = onProductClick,
         onWishlistClick = viewModel::wishlistItemToggle,
         onAddToCartClick = viewModel::addToCart,
@@ -99,7 +88,6 @@ private fun ProductDetail(
     productDetailState: ProductDetailUiState,
     relatedState: RelatedProductsUiState,
     cartsState: CartsUiState,
-    onProductList: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
     onWishlistClick: (Long, Boolean) -> Unit,
     onAddToCartClick: (CartProduct) -> Unit,
@@ -115,7 +103,7 @@ private fun ProductDetail(
                 Body(
                     relatedState = relatedState,
                     productId = product.id,
-                    onProductList = onProductList,
+                    onNavigateTo = onNavigateTo,
                     onProductClick = onProductClick,
                     scroll = scroll
                 ) // TODO: el body espera un par de colecciones
@@ -180,7 +168,7 @@ private fun Body(
 //    related: List<ProductCollection>,
     relatedState: RelatedProductsUiState,
     productId: Long,
-    onProductList: (String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
     scroll: ScrollState
 ) {
@@ -260,20 +248,10 @@ private fun Body(
                                 relatedState.productCollection.products.filter { product -> product.id != productId }
                             ProductCollection(
                                 productCollection = relatedState.productCollection,
-                                onProductList = onProductList,
+                                onNavigateTo = onNavigateTo,
                                 onProductClick = onProductClick,
                                 highlight = false
                             )
-                            /*related.forEach { productCollection ->
-                                key(productCollection.id) {
-                                    ProductCollection(
-                                        productCollection = productCollection,
-                                        onProductList = { },
-                                        onProductClick = {id, category -> },
-                                        highlight = false
-                                    )
-                                }
-                            }*/
                         }
                         is RelatedProductsUiState.Loading -> {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -445,7 +423,6 @@ private fun CartBottomBar(
     onNavigateTo: (String) -> Unit
 ) {
     var dropdownMenuExpanded by remember { mutableStateOf(false) }
-    Log.d(DEBUG_TAG_CART, "dropdownMenu -> $dropdownMenuExpanded")
     when (cartsState) {
         is CartsUiState.Success -> {
             StoreAppSurface(modifier = modifier) {
