@@ -6,12 +6,7 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import uwu.victoraso.storeapp.ds.USER_ADRESS_PREFERENCE
-import uwu.victoraso.storeapp.ds.USER_EMAIL_PREFERENCE
-import uwu.victoraso.storeapp.ds.USER_NAME_PREFERENCE
-import uwu.victoraso.storeapp.ds.USER_PHONE_PREFERENCE
-import uwu.victoraso.storeapp.ds.USER_PASSWORD_PREFERENCE
-import uwu.victoraso.storeapp.ds.REMEMBER_ME_PREFERENCE
+import uwu.victoraso.storeapp.ds.*
 import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.ui.utils.CLEAR_USER_PREFERENCE
 import javax.inject.Inject
@@ -24,10 +19,10 @@ class PreferencesDataSource @Inject constructor(
     val userDataStream = userPreferences.data
         .map {
             UserProfile(
-                name = userName.firstOrNull() ?: "No username",
-                email = userEmail.firstOrNull() ?: "No Email",
-                adress = userAdress.firstOrNull() ?: "No adress",
-                phone = userPhone.firstOrNull() ?: "No phone"
+                name = userName.firstOrNull() ?: "",
+                email = userEmail.firstOrNull() ?: "",
+                adress = userAdress.firstOrNull() ?: "",
+                phone = userPhone.firstOrNull() ?: ""
             )
         }
 

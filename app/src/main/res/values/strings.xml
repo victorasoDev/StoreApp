@@ -90,5 +90,13 @@
     <string name="signing_in">Signing in…</string>
     <string name="sign_up">Sign up</string>
 
+    <!-- Profile -->
+    <string name="user_profile_personal_info">Personal Info</string>
+    <string name="user_name_label">Name</string>
+    <string name="user_email_label">Email</string>
+    <string name="user_adress_label">Address</string>
+    <string name="user_phone_label">Phone</string>
+    <string name="user_data_not_provided">No %s provided</string>
+
 
 </resources>

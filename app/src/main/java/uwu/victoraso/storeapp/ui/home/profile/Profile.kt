@@ -28,10 +28,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
+import uwu.victoraso.storeapp.ui.home.profile.personalinfo.PersonalInfoDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.mirroringIcon
@@ -212,12 +212,16 @@ private fun ProfileOptions(
     onNavigateTo: (String) -> Unit,
     profileDestinations: List<ProfileDestination> = profileDestinationsList
 ) {
+    var isDialogShowing by remember { mutableStateOf(false) }
+    PersonalInfoDialog(show = isDialogShowing, onDismiss = { isDialogShowing = !isDialogShowing })
+
     LazyColumn {
         items(profileDestinations) { profileDestination ->
             DesinationRow(
                 text = profileDestination.destinationName,
                 route = profileDestination.route,
-                onNavigateTo = onNavigateTo
+                onNavigateTo = onNavigateTo,
+                changeDialogVisibility = { isDialogShowing = !isDialogShowing }
             )
         }
     }
@@ -228,9 +232,16 @@ private fun DesinationRow(
     text: String,
     route: String,
     onNavigateTo: (String) -> Unit,
+    changeDialogVisibility: () -> Unit
 ) {
     Row(
-        modifier = Modifier.clickable { onNavigateTo(route) }
+        modifier = Modifier.clickable { //TODO: buscar otra manera
+            if (text != "Personal Info") {
+                onNavigateTo(route)
+            } else {
+                changeDialogVisibility()
+            }
+        }
     ) {
         Text(
             text = text,
@@ -285,8 +296,7 @@ private fun LogoutButton(
                 .weight(1f),
             textAlign = TextAlign.Center,
             maxLines = 1,
-
-            )
+        )
     }
 }
 
