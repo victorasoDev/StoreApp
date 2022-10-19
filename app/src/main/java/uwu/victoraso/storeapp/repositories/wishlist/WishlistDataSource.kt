@@ -6,8 +6,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
@@ -87,5 +87,5 @@ class WishlistDataSource @Inject constructor(
             }
             .await()
         emit(productList)
-    }.distinctUntilChanged()
+    }.flowOn(Dispatchers.IO)
 }

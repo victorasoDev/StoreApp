@@ -195,7 +195,6 @@ fun CartContent(
                     highlight = true,
                     showMore = false
                 )
-                Spacer(modifier = Modifier.height(56.dp))
             }
         }
     }

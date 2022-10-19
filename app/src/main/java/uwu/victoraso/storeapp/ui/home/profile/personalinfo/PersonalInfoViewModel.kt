@@ -58,8 +58,8 @@ class PersonalInfoViewModel @Inject constructor(
         viewModelScope.launch { userPreferencesRepository.setUserEmail(email) }
     }
 
-    fun updateAdress(adress: String) {
-        viewModelScope.launch { userPreferencesRepository.setUserAdress(adress) }
+    fun updateAdress(address: String) {
+        viewModelScope.launch { userPreferencesRepository.setUserAdress(address) }
     }
 
     fun updatePhone(phone: String) {

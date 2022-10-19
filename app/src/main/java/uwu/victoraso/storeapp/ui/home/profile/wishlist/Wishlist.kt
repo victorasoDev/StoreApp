@@ -27,7 +27,6 @@ fun Wishlist(
     viewModel: WishlistViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-
     val wishlistUiState: WishlistUiState by viewModel.wishlistUiState.collectAsStateWithLifecycle()
 
     StoreAppSurface(modifier = modifier.fillMaxSize()) {

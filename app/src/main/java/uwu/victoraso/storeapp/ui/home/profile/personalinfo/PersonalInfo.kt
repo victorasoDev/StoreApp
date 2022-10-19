@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -71,7 +72,7 @@ fun PersonalInfoDialog(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.subtitle1,
-                            color = StoreAppTheme.colors.textPrimary
+                            color = Color.White
                         )
                     }
                 }
@@ -106,7 +107,7 @@ fun PersonalInfoItem(item: PersonalInfoItem) {
             .padding(top = 8.dp),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        style = MaterialTheme.typography.subtitle2
+        style = MaterialTheme.typography.subtitle1
     )
     if (item.onValueEdit) {
         PersonalInfoTextField(item = item)
@@ -128,7 +129,7 @@ fun PersonalInfoText(item: PersonalInfoItem) {
                 .weight(0.8f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.subtitle2,
+            style = MaterialTheme.typography.subtitle1,
             color = StoreAppTheme.colors.textSecondary
         )
         IconButton(
@@ -167,13 +168,12 @@ fun PersonalInfoTextField(item: PersonalInfoItem) {
                 focusManager.clearFocus()
             }),
             maxLines = 1,
-            textStyle = MaterialTheme.typography.subtitle2,
+            textStyle = MaterialTheme.typography.subtitle1,
         )
         IconButton(
             onClick = {
                 item.saveData(item.value)
                 item.onValueEditChange(false)
-                focusManager.clearFocus()
             },
             modifier = Modifier.weight(0.2f),
         ) {
@@ -205,7 +205,7 @@ private fun GetPersonalInfoItems(
     var onPhoneChange by remember { mutableStateOf(false) }
     val list = listOf(
         PersonalInfoItem(
-            title = stringResource(id = uwu.victoraso.storeapp.R.string.user_name_label),
+            title = stringResource(id = R.string.user_name_label),
             value = name,
             valueChange = { newName -> name = newName },
             onValueEdit = onNameChange,
@@ -218,7 +218,7 @@ private fun GetPersonalInfoItems(
             saveData = viewModel::updateName
         ),
         PersonalInfoItem(
-            title = stringResource(id = uwu.victoraso.storeapp.R.string.user_email_label),
+            title = stringResource(id = R.string.user_email_label),
             value = email,
             valueChange = { newEmail -> email = newEmail },
             onValueEdit = onEmailChange,
@@ -231,7 +231,7 @@ private fun GetPersonalInfoItems(
             saveData = viewModel::updateEmail
         ),
         PersonalInfoItem(
-            title = stringResource(id = uwu.victoraso.storeapp.R.string.user_adress_label),
+            title = stringResource(id = R.string.user_adress_label),
             value = adress,
             valueChange = { newAdress -> adress = newAdress },
             onValueEdit = onAdressChange,
@@ -244,7 +244,7 @@ private fun GetPersonalInfoItems(
             saveData = viewModel::updateAdress
         ),
         PersonalInfoItem(
-            title = stringResource(id = uwu.victoraso.storeapp.R.string.user_phone_label),
+            title = stringResource(id = R.string.user_phone_label),
             value = phone,
             valueChange = { newPhone -> phone = newPhone },
             onValueEdit = onPhoneChange,

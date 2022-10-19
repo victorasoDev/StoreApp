@@ -46,13 +46,13 @@ import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
 private val BottomBarHeight = 56.dp
 private val TitleHeight = 128.dp
-private val GradientScroll = 180.dp
-private val ImageOverlap = 115.dp
+private val GradientScroll = 120.dp
+private val ImageOverlap = 70.dp
 private val MinTitleOffset = 56.dp
-private val MinImageOffset = 12.dp
+private val MinImageOffset = 60.dp
 private val MaxTitleOffset = ImageOverlap + MinTitleOffset + GradientScroll
-private val ExpandedImageSize = 300.dp
-private val CollapsedImageSize = 150.dp
+private val ExpandedImageSize = 200.dp
+private val CollapsedImageSize = 75.dp
 private val HzPadding = Modifier.padding(horizontal = 24.dp)
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -94,6 +94,7 @@ private fun ProductDetail(
     onAddCartClick: (Cart) -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
+    var titleLines by remember { mutableStateOf(1) }
     when (productDetailState) {
         is ProductDetailUiState.Success -> {
             val product = productDetailState.product
@@ -102,13 +103,21 @@ private fun ProductDetail(
                 Header()
                 Body(
                     relatedState = relatedState,
-                    productId = product.id,
+                    product = product,
                     onNavigateTo = onNavigateTo,
                     onProductClick = onProductClick,
+                    titleLines = titleLines,
                     scroll = scroll
                 ) // TODO: el body espera un par de colecciones
-                Title(product, onWishlistClick, product.isWishlist) { scroll.value }
-                Image(product.imageUrl) { scroll.value }
+                Title(
+                    product = product,
+                    onWishlistClick = onWishlistClick,
+                    isWishlistItem = product.isWishlist,
+                    countTitleLines = { lines -> titleLines = lines }
+                ) { scroll.value }
+                Image(
+                    imageUrl = product.imageUrl
+                ) { scroll.value }
                 Up(upPress)
                 CartBottomBar(
                     product = product,
@@ -116,7 +125,9 @@ private fun ProductDetail(
                     onAddToCartClick = onAddToCartClick,
                     onAddCartClick = onAddCartClick,
                     onNavigateTo = onNavigateTo,
-                    modifier = Modifier.align(Alignment.BottomCenter).imePadding()
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .imePadding()
                 )
             }
 
@@ -167,9 +178,10 @@ private fun Up(upPress: () -> Unit) {
 private fun Body(
 //    related: List<ProductCollection>,
     relatedState: RelatedProductsUiState,
-    productId: Long,
+    product: Product,
     onNavigateTo: (String) -> Unit,
     onProductClick: (Long, String) -> Unit,
+    titleLines: Int,
     scroll: ScrollState
 ) {
     Column {
@@ -190,10 +202,10 @@ private fun Body(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = stringResource(R.string.detail_header),
-                        style = MaterialTheme.typography.overline,
+                        text = stringResource(R.string.detail_header, product.name),
+                        style = MaterialTheme.typography.subtitle1,
                         color = StoreAppTheme.colors.textHelp,
-                        modifier = HzPadding.padding(top = 20.dp) //TODO: cambiar? cuando el nombre tiene dos lineas, este texto desaparece sin el padding 20
+                        modifier = if (titleLines > 1) HzPadding.padding(top = 20.dp) else HzPadding
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     var seeMore by remember { mutableStateOf(true) }
@@ -245,7 +257,7 @@ private fun Body(
                         is RelatedProductsUiState.Success -> {
                             // eliminar el producto de la ficha del listado de relacionados
                             relatedState.productCollection.products =
-                                relatedState.productCollection.products.filter { product -> product.id != productId }
+                                relatedState.productCollection.products.filter { p -> p.id != product.id }
                             ProductCollection(
                                 productCollection = relatedState.productCollection,
                                 onNavigateTo = onNavigateTo,
@@ -282,6 +294,7 @@ private fun Title(
     product: Product,
     onWishlistClick: (Long, Boolean) -> Unit,
     isWishlistItem: Boolean,
+    countTitleLines: (Int) -> Unit,
     scrollProvider: () -> Int
 ) {
     val maxOffset = with(LocalDensity.current) { MaxTitleOffset.toPx() }
@@ -303,9 +316,10 @@ private fun Title(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = product.name,
-            style = MaterialTheme.typography.h4,
+            style = MaterialTheme.typography.h5,
             color = StoreAppTheme.colors.textSecondary,
-            modifier = HzPadding
+            modifier = HzPadding.then(Modifier.padding(end = CollapsedImageSize)),
+            onTextLayout = { textLayoutResult -> countTitleLines(textLayoutResult.lineCount) }
         )
         Text(
             text = product.tagline,
@@ -438,7 +452,7 @@ private fun CartBottomBar(
                             )
                         },
                         onAddCartClick = { cartName ->
-                             onAddCartClick(Cart(name = cartName))
+                            onAddCartClick(Cart(name = cartName))
                         },
                         itemText = { item ->
                             Text(item.name, color = StoreAppTheme.colors.textLink)
