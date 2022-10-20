@@ -1,6 +1,5 @@
 package uwu.victoraso.storeapp.ui.home.profile.personalinfo
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,12 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -33,8 +29,9 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.UserProfile
-import uwu.victoraso.storeapp.ui.components.StoreAppButton
 import uwu.victoraso.storeapp.ui.components.StoreAppDialog
+import uwu.victoraso.storeapp.ui.components.StoreAppDialogButton
+import uwu.victoraso.storeapp.ui.components.StoreAppDialogTitle
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -59,38 +56,14 @@ fun PersonalInfoDialog(
                     .fillMaxWidth()
             ) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Brush.horizontalGradient(colors = StoreAppTheme.colors.gradient2_2)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.user_profile_personal_info),
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 16.dp),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.subtitle1,
-                            color = Color.White
-                        )
-                    }
+                    StoreAppDialogTitle(stringID = R.string.user_profile_personal_info)
                 }
                 items(list) { item ->
                     PersonalInfoItem(item = item)
                 }
                 item {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        StoreAppButton(
-                            onClick = { onDismiss() },
-                            modifier = Modifier.padding(16.dp),
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.close),
-                                textAlign = TextAlign.Center,
-                                maxLines = 1,
-                            )
-                        }
+                        StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
                     }
                 }
             }

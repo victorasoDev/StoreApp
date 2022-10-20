@@ -34,6 +34,7 @@ import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
+import uwu.victoraso.storeapp.ui.home.cart.payment.PaymentDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
@@ -149,6 +150,9 @@ fun CartContent(
         )
     }
 
+    var isDialogShowing by remember { mutableStateOf(false) }
+    PaymentDialog(show = isDialogShowing, cart = cart, onDismiss = { isDialogShowing = !isDialogShowing })
+
     LazyColumn(modifier) {
         item {
             Spacer(
@@ -182,6 +186,7 @@ fun CartContent(
         item {
             SummaryItem(
                 subtotal = totalCost,
+                showPaymentDialog = { isDialogShowing = true },
                 shippingCosts = 369
             )
         }
@@ -212,7 +217,6 @@ fun CartItem(
             .clickable { onProductClick(cartProduct.productId, cartProduct.category) }
             .fillMaxWidth()
             .background(StoreAppTheme.colors.uiBackground)
-            .fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.padding(all = 16.dp),
@@ -266,9 +270,12 @@ fun CartItem(
 @Composable
 fun SummaryItem(
     subtotal: Long,
+    showPaymentDialog: () -> Unit,
     shippingCosts: Long,
     modifier: Modifier = Modifier
 ) {
+
+
     Column(modifier) {
         Text(
             text = stringResource(id = R.string.cart_summary_header),
@@ -320,7 +327,7 @@ fun SummaryItem(
             contentAlignment = Alignment.CenterEnd
         ) {
             StoreAppButton(
-                onClick = { /*TODO*/ },
+                onClick = { showPaymentDialog() },
             ) {
                 Icon(
                     imageVector = Icons.Default.ShoppingCartCheckout,
