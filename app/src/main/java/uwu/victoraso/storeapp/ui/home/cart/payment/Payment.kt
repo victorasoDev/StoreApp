@@ -1,7 +1,7 @@
 package uwu.victoraso.storeapp.ui.home.cart.payment
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,13 +11,13 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,10 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
-import uwu.victoraso.storeapp.ui.components.ProductImage
-import uwu.victoraso.storeapp.ui.components.StoreAppDialog
-import uwu.victoraso.storeapp.ui.components.StoreAppDialogButton
-import uwu.victoraso.storeapp.ui.components.StoreAppDialogTitle
+import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
@@ -45,28 +42,31 @@ fun PaymentDialog(
     val paymentUiState: PaymentDataUiState by viewModel.paymentUiState.collectAsStateWithLifecycle()
 
     if (show && paymentUiState is PaymentDataUiState.Success) {
+        val userData = viewModel.getUserDataAsList(userProfile = (paymentUiState as PaymentDataUiState.Success).userProfile)
+        val paymentDataItems = GetPaymentDataItems()
+
         StoreAppDialog(onDismiss = onDismiss, properties = DialogProperties(dismissOnClickOutside = true)) {
-            LazyColumn(
+            Column(
                 Modifier
                     .fillMaxWidth()
             ) {
-                item {
-                    StoreAppDialogTitle(stringID = R.string.cart_payment_title)
-                }
-                item {
-                    LazyRow {
-                        items(cart.cartItems) { item ->
-                            PaymentProductItem(cartProduct = item)
-                        }
+                StoreAppDialogTitle(stringID = R.string.cart_payment_title)
+                LazyRow {
+                    items(cart.cartItems) { item ->
+                        PaymentProductItem(cartProduct = item)
                     }
                 }
-//            items(list) { item ->
-//                PersonalInfoItem(item = item)
-//            }
-                item {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
-                    }
+                CustomerData(userData = userData)
+                PaymentData(paymentDataItems = paymentDataItems)
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
+                    StoreAppLoadingButton(
+                        onClick = {  },
+                        modifier = Modifier.padding(top = 16.dp),
+                        isLoading = false,
+                        defaultText = R.string.payment_action_pay,
+                        actionText = R.string.payment_action_verifying
+                    )
                 }
             }
         }
@@ -74,16 +74,16 @@ fun PaymentDialog(
 }
 
 @Composable
-fun PaymentProductItem(
+private fun PaymentProductItem(
     cartProduct: CartProduct,
-    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = Modifier
-            .padding(all = 16.dp)
-            .width(120.dp)
+            .padding(vertical = 16.dp)
+            .padding(start = 16.dp)
+            .wrapContentWidth()
             .background(StoreAppTheme.colors.uiBackground),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         ProductImage(
             imageUrl = cartProduct.imageUrl,
@@ -100,36 +100,168 @@ fun PaymentProductItem(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .width(120.dp)
+                    .padding(start = 8.dp)
+                    .width(100.dp)
             )
             Text(
                 text = formatPrice(cartProduct.price),
                 style = MaterialTheme.typography.subtitle1,
                 color = StoreAppTheme.colors.textPrimary,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
-        IconButton(
-            onClick = { /*removeProduct(cartProduct.productId, cartProduct.cartId)*/ },
-            modifier = Modifier.padding(end = 8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = null,
-                tint = StoreAppTheme.colors.iconSecondary
+        Icon(
+            imageVector = Icons.Filled.Close,
+            contentDescription = null,
+            tint = StoreAppTheme.colors.iconSecondary,
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
+                .clickable { }
+        )
+    }
+}
+
+@Composable
+private fun CustomerData(
+    userData: List<String>
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.cart_customer_data),
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 8.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.subtitle1
+                )
+                IconButton(
+                    onClick = { }
+                ) {
+                    Icon(
+                        modifier = Modifier.size(14.dp),
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit ${stringResource(R.string.cart_customer_data)}",
+                    )
+                }
+            }
+        }
+        items(userData) { data ->
+            Text(
+                text = data,
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                maxLines = 1,
+                color = StoreAppTheme.colors.textSecondary,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.subtitle2
             )
         }
     }
 }
 
-@Preview("default", showSystemUi = true)
-@Preview("dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun CartPreview() {
-    StoreAppTheme {
-        PaymentProductItem(
-            cartProduct = CartProduct(name = "Gygabyte GeForce RTX 3080", price = 1234323)
+private fun PaymentData(
+    paymentDataItems: List<PaymentDataItem>
+) {
+    Column {
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = R.string.cart_payment_data),
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 8.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.subtitle1
+            )
+        }
+        StoreAppTextField(
+            value = paymentDataItems[0].value,
+            onValueChange = paymentDataItems[0].valueChange,
+            placeholder = paymentDataItems[0].placeholder,
+            leadingIcon = Icons.Default.CreditCard
         )
+        StoreAppTextField(
+            value = paymentDataItems[1].value,
+            onValueChange = paymentDataItems[1].valueChange,
+            keyboardType = KeyboardType.Number,
+            placeholder = paymentDataItems[1].placeholder,
+            leadingIcon = Icons.Default.CreditCard
+        )
+        Row {
+            StoreAppTextField(
+                value = paymentDataItems[2].value,
+                onValueChange = paymentDataItems[2].valueChange,
+                placeholder = paymentDataItems[2].placeholder,
+                leadingIcon = Icons.Default.DateRange,
+                modifier = Modifier.weight(0.5f)
+            )
+            StoreAppTextField(
+                value = paymentDataItems[3].value,
+                onValueChange = paymentDataItems[3].valueChange,
+                placeholder = paymentDataItems[3].placeholder,
+                keyboardType = KeyboardType.Number,
+                leadingIcon = Icons.Default.Password,
+                modifier = Modifier.weight(0.5f)
+            )
+        }
     }
 }
+
+@Composable
+fun GetPaymentDataItems(): List<PaymentDataItem> {
+    var cardName by remember { mutableStateOf("") }
+    var cardNumber by remember { mutableStateOf("") }
+    var cardExpireDate by remember { mutableStateOf("") }
+    var cardCVC by remember { mutableStateOf("") }
+
+    return listOf(
+        PaymentDataItem(
+            value = cardName,
+            valueChange = { newValue -> cardName = newValue },
+            placeholder = stringResource(id = R.string.payment_data_card_name)
+        ),
+        PaymentDataItem(
+            value = cardNumber,
+            valueChange = { newValue -> if (newValue.length < 13) cardNumber = newValue },
+            placeholder = stringResource(id = R.string.payment_data_card_number)
+        ),
+        PaymentDataItem(
+            value = cardExpireDate,
+            valueChange = { newValue -> cardExpireDate = newValue },
+            placeholder = stringResource(id = R.string.payment_data_card_expire_date)
+        ),
+        PaymentDataItem(
+            value = cardCVC,
+            valueChange = { newValue -> if (newValue.length < 4) cardCVC = newValue },
+            placeholder = stringResource(id = R.string.payment_data_card_cvc)
+        ),
+    )
+}
+
+data class PaymentDataItem(
+    val value: String,
+    val valueChange: (String) -> Unit,
+    var placeholder: String,
+)
+
+//@Preview("default", showSystemUi = true)
+//@Preview("dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun CartPreview() {
+//    StoreAppTheme {
+//        PaymentProductItem(
+//            cartProduct = CartProduct(name = "Gygabyte GeForce RTX 3080", price = 1234323)
+//        )
+//    }
+//}

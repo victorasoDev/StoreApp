@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -64,21 +66,24 @@ private fun Body(
         Spacer(modifier = Modifier.padding(4.dp))
         StoreAppTextField(
             placeholder = "Name",
-            name = name,
-            onValueChange = { name = it }
+            value = name,
+            onValueChange = { name = it },
+            leadingIcon = Icons.Default.TextFields
         )
         Spacer(modifier = Modifier.padding(4.dp))
         StoreAppTextField(
             placeholder = "Price",
             keyboardType = KeyboardType.Number,
-            name = price,
-            onValueChange = { price = it }
+            value = price,
+            onValueChange = { price = it },
+            leadingIcon = Icons.Default.TextFields
         )
         Spacer(modifier = Modifier.padding(4.dp))
         StoreAppTextField(
             placeholder = "Tagline",
-            name = tagline,
-            onValueChange = { tagline = it }
+            value = tagline,
+            onValueChange = { tagline = it },
+            leadingIcon = Icons.Default.TextFields
         )
         Spacer(modifier = Modifier.padding(4.dp))
         FilterBar(

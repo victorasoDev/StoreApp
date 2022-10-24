@@ -20,6 +20,14 @@ private val Karla = FontFamily(
     Font(R.font.karla_bold, FontWeight.Bold)
 )
 
+val HintTypography = TextStyle(
+    fontFamily = Montserrat,
+    fontSize = 16.sp,
+    fontWeight = FontWeight.SemiBold,
+    lineHeight = 24.sp,
+    letterSpacing = 0.15.sp,
+)
+
 val Typography = Typography(
     h1 = TextStyle(
         fontFamily = Montserrat,

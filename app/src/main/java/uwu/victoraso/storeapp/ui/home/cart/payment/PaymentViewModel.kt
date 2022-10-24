@@ -47,6 +47,10 @@ class PaymentViewModel @Inject constructor(
                 }
             }
     }
+
+    fun getUserDataAsList(userProfile: UserProfile) = listOf(
+        userProfile.name, userProfile.email, userProfile.adress, userProfile.phone
+    )
 }
 
 sealed interface PaymentDataUiState {
