@@ -4,15 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
+import uwu.victoraso.storeapp.repositories.cart.CartRepository
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
-    userPreferencesRepository: UserPreferencesRepository
+    userPreferencesRepository: UserPreferencesRepository,
+    private val cartRepository: CartRepository
 ) : ViewModel() {
 
     val paymentUiState: StateFlow<PaymentDataUiState> = paymentUserDataUiStateStream(
@@ -51,6 +54,12 @@ class PaymentViewModel @Inject constructor(
     fun getUserDataAsList(userProfile: UserProfile) = listOf(
         userProfile.name, userProfile.email, userProfile.adress, userProfile.phone
     )
+
+    fun removeProduct(productId: Long, cartId: Long) {
+        viewModelScope.launch {
+            cartRepository.deleteCartProduct(productId.toString(), cartId.toString())
+        }
+    }
 }
 
 sealed interface PaymentDataUiState {

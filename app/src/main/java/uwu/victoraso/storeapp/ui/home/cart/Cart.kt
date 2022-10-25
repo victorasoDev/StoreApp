@@ -139,7 +139,7 @@ fun CartContent(
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
-) {
+) { //TODO: el Order (2 items) no cambia al eliminar un producto
     val resources = LocalContext.current.resources
     val productCount by remember { mutableStateOf(cart.cartItems.size) }
     var totalCost by remember { mutableStateOf(0L) }
@@ -200,6 +200,10 @@ fun CartContent(
                     highlight = true,
                     showMore = false
                 )
+            }
+        } else {
+            item {
+                StoreAppCircularIndicator(modifier = Modifier.padding(top = 32.dp))
             }
         }
     }

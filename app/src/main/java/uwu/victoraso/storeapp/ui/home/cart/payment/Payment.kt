@@ -2,12 +2,12 @@ package uwu.victoraso.storeapp.ui.home.cart.payment
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -27,6 +27,7 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.ui.components.*
+import uwu.victoraso.storeapp.ui.home.profile.personalinfo.PersonalInfoDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
@@ -44,38 +45,55 @@ fun PaymentDialog(
     if (show && paymentUiState is PaymentDataUiState.Success) {
         val userData = viewModel.getUserDataAsList(userProfile = (paymentUiState as PaymentDataUiState.Success).userProfile)
         val paymentDataItems = GetPaymentDataItems()
+        var isPersonalInfoDialogShowing by remember { mutableStateOf(false) }
+
+        PersonalInfoDialog(show = isPersonalInfoDialogShowing, onDismiss = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
 
         StoreAppDialog(onDismiss = onDismiss, properties = DialogProperties(dismissOnClickOutside = true)) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-            ) {
+            Column(Modifier.fillMaxWidth()) {
                 StoreAppDialogTitle(stringID = R.string.cart_payment_title)
-                LazyRow {
-                    items(cart.cartItems) { item ->
-                        PaymentProductItem(cartProduct = item)
-                    }
-                }
-                CustomerData(userData = userData)
+                PaymentProductsRow(cart, viewModel::removeProduct)
+                CustomerData(userData = userData, changePIDialogVisibility = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
                 PaymentData(paymentDataItems = paymentDataItems)
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
-                    StoreAppLoadingButton(
-                        onClick = {  },
-                        modifier = Modifier.padding(top = 16.dp),
-                        isLoading = false,
-                        defaultText = R.string.payment_action_pay,
-                        actionText = R.string.payment_action_verifying
-                    )
-                }
+                PaymentDialogButtons(onDismiss)
             }
         }
     }
 }
 
 @Composable
+private fun PaymentProductsRow(
+    cart: Cart,
+    removeProduct: (Long, Long) -> Unit
+) {
+    LazyRow {
+        items(cart.cartItems) { item ->
+            PaymentProductItem(cartProduct = item, cartId = cart.id, removeProduct = removeProduct)
+        }
+    }
+}
+
+@Composable
+private fun PaymentDialogButtons(
+    onDismiss: () -> Unit
+) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
+        StoreAppLoadingButton(
+            onClick = { },
+            modifier = Modifier.padding(top = 16.dp),
+            isLoading = false,
+            defaultText = R.string.payment_action_pay,
+            actionText = R.string.payment_action_verifying
+        )
+    }
+}
+
+@Composable
 private fun PaymentProductItem(
     cartProduct: CartProduct,
+    cartId: Long,
+    removeProduct: (Long, Long) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -118,21 +136,26 @@ private fun PaymentProductItem(
             tint = StoreAppTheme.colors.iconSecondary,
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .clickable { }
+                .clickable(
+                    indication = null,
+                    enabled = true,
+                    interactionSource = MutableInteractionSource(),
+                    onClick = { removeProduct(cartProduct.productId, cartId) }
+                )
         )
     }
 }
 
 @Composable
 private fun CustomerData(
-    userData: List<String>
+    userData: List<String>,
+    changePIDialogVisibility: () -> Unit
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    LazyColumn {
         item {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.cart_customer_data),
@@ -142,22 +165,26 @@ private fun CustomerData(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.subtitle1
                 )
-                IconButton(
-                    onClick = { }
-                ) {
-                    Icon(
-                        modifier = Modifier.size(14.dp),
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit ${stringResource(R.string.cart_customer_data)}",
-                    )
-                }
+                Icon(
+                    modifier = Modifier
+                        .size(14.dp)
+                        .clickable(
+                            indication = null,
+                            enabled = true,
+                            interactionSource = MutableInteractionSource(),
+                            onClick = { changePIDialogVisibility() }
+                        ),
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit ${stringResource(R.string.cart_customer_data)}",
+                )
+
             }
         }
         items(userData) { data ->
             Text(
                 text = data,
                 modifier = Modifier
-                    .padding(horizontal = 24.dp),
+                    .padding(horizontal = 24.dp, vertical = 2.dp),
                 maxLines = 1,
                 color = StoreAppTheme.colors.textSecondary,
                 overflow = TextOverflow.Ellipsis,

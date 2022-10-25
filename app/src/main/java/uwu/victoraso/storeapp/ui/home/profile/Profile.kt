@@ -100,6 +100,9 @@ fun ProfileContent(
     onSignOutClick: ((String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var isDialogShowing by remember { mutableStateOf(false) }
+    PersonalInfoDialog(show = isDialogShowing, onDismiss = { isDialogShowing = !isDialogShowing })
+
     Column(modifier) {
         Spacer( //TODO sustituir todos los del proyecto pasándolo a Utils
             Modifier.windowInsetsTopHeight(
@@ -134,7 +137,7 @@ fun ProfileContent(
                     Column {
                         //TODO probar constraint layout sería foto, derecha nombre y debajo email
                         UserProfile(modifier)
-                        ProfileOptions(onNavigateTo)
+                        ProfileOptions(onNavigateTo = onNavigateTo, changePIDialogVisibility = { isDialogShowing = !isDialogShowing })
                         LogoutButton(
                             restartApp = restartApp,
                             onSignOutClick = onSignOutClick
@@ -210,18 +213,16 @@ private fun UserProfile(
 @Composable
 private fun ProfileOptions(
     onNavigateTo: (String) -> Unit,
+    changePIDialogVisibility: () -> Unit,
     profileDestinations: List<ProfileDestination> = profileDestinationsList
 ) {
-    var isDialogShowing by remember { mutableStateOf(false) }
-    PersonalInfoDialog(show = isDialogShowing, onDismiss = { isDialogShowing = !isDialogShowing })
-
     LazyColumn {
         items(profileDestinations) { profileDestination ->
             DesinationRow(
                 text = profileDestination.destinationName,
                 route = profileDestination.route,
                 onNavigateTo = onNavigateTo,
-                changeDialogVisibility = { isDialogShowing = !isDialogShowing }
+                changeDialogVisibility = { changePIDialogVisibility() }
             )
         }
     }
