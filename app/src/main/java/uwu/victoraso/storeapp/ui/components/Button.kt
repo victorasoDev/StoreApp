@@ -31,6 +31,7 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 fun StoreAppLoadingButton(
     onClick: () -> Unit,
     modifier: Modifier,
+    enabled: Boolean = true,
     isLoading: Boolean = false,
     @StringRes defaultText: Int,
     @StringRes actionText: Int
@@ -38,7 +39,7 @@ fun StoreAppLoadingButton(
     StoreAppButton(
         onClick = onClick,
         modifier = modifier,
-        enabled = !isLoading,
+        enabled = enabled && !isLoading,
     ) {
         AnimatedVisibility(visible = isLoading) {
             if (isLoading) {

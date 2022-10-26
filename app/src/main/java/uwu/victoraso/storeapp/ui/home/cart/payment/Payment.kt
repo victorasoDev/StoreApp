@@ -24,8 +24,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.CardDetails
 import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.model.CartProduct
+import uwu.victoraso.storeapp.model.checkCardDetails
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.profile.personalinfo.PersonalInfoDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -46,6 +48,7 @@ fun PaymentDialog(
         val userData = viewModel.getUserDataAsList(userProfile = (paymentUiState as PaymentDataUiState.Success).userProfile)
         val paymentDataItems = GetPaymentDataItems()
         var isPersonalInfoDialogShowing by remember { mutableStateOf(false) }
+        val isPaymentLoading by remember { viewModel.isPaymentLoading }
 
         PersonalInfoDialog(show = isPersonalInfoDialogShowing, onDismiss = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
 
@@ -55,7 +58,19 @@ fun PaymentDialog(
                 PaymentProductsRow(cart, viewModel::removeProduct)
                 CustomerData(userData = userData, changePIDialogVisibility = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
                 PaymentData(paymentDataItems = paymentDataItems)
-                PaymentDialogButtons(onDismiss)
+                PaymentDialogButtons(
+                    onDismiss = onDismiss,
+                    isPaymentLoading = isPaymentLoading,
+                    makePurchase = viewModel::makePurchase,
+                    price = cart.cartItems.sumOf { it.price },
+                    cardDetails = CardDetails(
+                        cardName = paymentDataItems[0].value,
+                        cardNumber = paymentDataItems[1].value,
+                        cardExpireDate = paymentDataItems[2].value,
+                        cardCVC = paymentDataItems[3].value,
+                    ),
+                    productsIDs = cart.cartItems.map { it.productId }
+                )
             }
         }
     }
@@ -75,14 +90,20 @@ private fun PaymentProductsRow(
 
 @Composable
 private fun PaymentDialogButtons(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    isPaymentLoading: Boolean,
+    makePurchase: (Long, CardDetails, List<Long>) -> Boolean,
+    price: Long,
+    cardDetails: CardDetails,
+    productsIDs: List<Long>
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
         StoreAppLoadingButton(
-            onClick = { },
+            onClick = { if (makePurchase(price, cardDetails, productsIDs)) onDismiss() },
             modifier = Modifier.padding(top = 16.dp),
-            isLoading = false,
+            isLoading = isPaymentLoading,
+            enabled = cardDetails.checkCardDetails(),
             defaultText = R.string.payment_action_pay,
             actionText = R.string.payment_action_verifying
         )
@@ -265,7 +286,7 @@ fun GetPaymentDataItems(): List<PaymentDataItem> {
         ),
         PaymentDataItem(
             value = cardExpireDate,
-            valueChange = { newValue -> cardExpireDate = newValue },
+            valueChange = { newValue -> if (newValue.length < 5) cardExpireDate = newValue },
             placeholder = stringResource(id = R.string.payment_data_card_expire_date)
         ),
         PaymentDataItem(
