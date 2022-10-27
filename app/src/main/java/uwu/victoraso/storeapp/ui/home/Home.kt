@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.ui.home
 
 import androidx.annotation.FloatRange
-import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -14,11 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -41,13 +34,8 @@ import androidx.compose.ui.util.lerp
 import androidx.core.os.ConfigurationCompat
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
-import uwu.victoraso.storeapp.ui.home.cart.Cart
-import uwu.victoraso.storeapp.ui.home.feed.Feed
-import uwu.victoraso.storeapp.ui.home.profile.Profile
-import uwu.victoraso.storeapp.ui.home.search.Search
+import uwu.victoraso.storeapp.ui.home.navigation.*
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import java.util.*
 
@@ -59,50 +47,31 @@ fun NavGraphBuilder.addHomeGraph(
     onNavigateTo: (String, NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    composable(HomeSections.FEED.route) { from ->
-        Feed(
-            onProductClick = { id, category -> onProductSelected(id, category, from) },
-            onProductCreate = { onProductCreate(from) },
-            onNavigateTo = { category -> onNavigateTo(category, from) },
-            modifier = modifier,
-        )
-    }
-    composable(route = HomeSections.SEARCH.route) { from ->
-        Search(
-            onProductClick = { id, category -> onProductSelected(id, category, from) },
-            modifier = modifier
-        )
-    }
-    composable(HomeSections.CART.route) { from ->
-        Cart(
-            onProductClick = { id, category -> onProductSelected(id, category, from) },
-            modifier = modifier,
-            onProductList = { category -> onProductList(category, from) },
-        )
-    }
-    composable(HomeSections.PROFILE.route) { from ->
-        Profile(
-            restartApp = { route -> restartApp(route) },
-            onNavigateTo = { route -> onNavigateTo(route, from) },
-            modifier = modifier,
-        )
-    }
-}
-
-enum class HomeSections(
-    @StringRes val title: Int,
-    val icon: ImageVector,
-    val route: String
-) {
-    FEED(R.string.home_feed, Icons.Outlined.Home, "home/feed"),
-    SEARCH(R.string.home_search, Icons.Outlined.Search, "home/search"),
-    CART(R.string.home_cart, Icons.Outlined.ShoppingCart, "home/cart"),
-    PROFILE(R.string.home_profile, Icons.Outlined.AccountCircle, "home/profile")
+    feedScreen(
+        onProductSelected = onProductSelected,
+        onProductCreate = onProductCreate,
+        onNavigateTo = onNavigateTo,
+        modifier = modifier,
+    )
+    searchScreen(
+        onProductSelected = onProductSelected,
+        modifier = modifier
+    )
+    cartScreen(
+        onProductSelected = onProductSelected,
+        onProductList = onProductList,
+        modifier = modifier
+    )
+    profileScreen(
+        restartApp = restartApp,
+        onNavigateTo = onNavigateTo,
+        modifier = modifier
+    )
 }
 
 @Composable
 fun StoreAppBottomBar(
-    tabs: Array<HomeSections>,
+    tabs: Array<TopLevelDestination>,
     currentRoute: String,
     navigateToRoute: (String) -> Unit,
     color: Color = StoreAppTheme.colors.iconPrimary,
@@ -360,7 +329,7 @@ private val BottomNavigationItemPadding = Modifier.padding(horizontal = 16.dp, v
 private fun JetsnackBottomNavPreview() {
     StoreAppTheme {
         StoreAppBottomBar(
-            tabs = HomeSections.values(),
+            tabs = TopLevelDestination.values(),
             currentRoute = "home/feed",
             navigateToRoute = { }
         )

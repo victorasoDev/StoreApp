@@ -1,22 +1,22 @@
 package uwu.victoraso.storeapp
 
 import android.content.res.Resources
+import android.util.Log
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination
-import androidx.navigation.NavGraph
-import androidx.navigation.NavHostController
+import androidx.navigation.*
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.model.SnackbarManager
-import uwu.victoraso.storeapp.ui.home.HomeSections
+import uwu.victoraso.storeapp.ui.home.navigation.*
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_CART
 
 object MainDestinations {
     const val HOME_ROUTE = "home"
@@ -73,7 +73,9 @@ class StoreAppState(
         }
     }
 
-    val bottomBarTabs = HomeSections.values()
+    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
+
+    val bottomBarTabs = TopLevelDestination.values()
     private val bottomBarRoutes = bottomBarTabs.map { it.route } // just routes arraylist
 
     // Reading this attribute will cause recompositions when the bottom bar needs shown, or not.
@@ -89,16 +91,22 @@ class StoreAppState(
     }
 
     fun navigateToBottomBarRoute(route: String) {
-        if (route != currentRoute) {
-            navController.navigate(route) {
-                launchSingleTop = true
-                restoreState = true
-                // Pop up backstack to the first destination and save state. This makes going back
-                // to the start destination when pressing back in any other bottom tab.
-                popUpTo(findStartDestination(navController.graph).id) {
-                    saveState = true
-                }
+        val topLevelOptions = navOptions {
+            popUpTo(navController.graph.findStartDestination().id) {
+                Log.d(DEBUG_TAG_CART, "ID -> ${navController.graph.findStartDestination().id}")
+                saveState = true
             }
+            // Avoid multiple copies of the same destination when
+            // reselecting the same item
+            launchSingleTop = true
+            // Restore state when reselecting a previously selected item
+            restoreState = true
+        }
+        when (route) {
+            TopLevelDestination.FEED.route -> navController.navigateToFeed(navOptions = topLevelOptions)
+            TopLevelDestination.SEARCH.route -> navController.navigateToSearch(navOptions = topLevelOptions)
+            TopLevelDestination.CART.route -> navController.navigateToCart(navOptions = topLevelOptions)
+            TopLevelDestination.PROFILE.route -> navController.navigateToProfile(navOptions = topLevelOptions)
         }
     }
 

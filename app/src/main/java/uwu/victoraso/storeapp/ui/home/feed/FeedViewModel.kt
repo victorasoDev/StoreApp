@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.*
 import uwu.victoraso.storeapp.model.CollectionType
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.ProductCollection
-import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
+import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import javax.inject.Inject
 
 @HiltViewModel

@@ -38,7 +38,7 @@ import uwu.victoraso.storeapp.model.CartProduct
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.fill
 import uwu.victoraso.storeapp.ui.components.*
-import uwu.victoraso.storeapp.ui.home.HomeSections
+import uwu.victoraso.storeapp.ui.home.navigation.TopLevelDestination
 import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
@@ -482,7 +482,7 @@ private fun CartBottomBar(
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                         StoreAppButton(
-                            onClick = { onNavigateTo(HomeSections.CART.route) },
+                            onClick = { onNavigateTo(TopLevelDestination.CART.route) },
                             modifier = Modifier.weight(1f)
                         ) {
                             Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = stringResource(id = R.string.go_to_cart))

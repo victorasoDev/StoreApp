@@ -84,20 +84,20 @@ private fun Feed(
 }
 
 fun getProductsCollections(feedUiState: FeedScreenUiState): List<ProductCollection> {
-    val productCollection = ArrayList<ProductCollection>()
-    if (feedUiState.processors is FeedUiState.Success) productCollection.add(feedUiState.processors.productCollection)
-    if (feedUiState.motherboards is FeedUiState.Success) productCollection.add(feedUiState.motherboards.productCollection)
-    if (feedUiState.graphicCards is FeedUiState.Success) productCollection.add(feedUiState.graphicCards.productCollection)
-    if (feedUiState.storages is FeedUiState.Success) productCollection.add(feedUiState.storages.productCollection)
-    if (feedUiState.coolingSystems is FeedUiState.Success) productCollection.add(feedUiState.coolingSystems.productCollection)
-    if (feedUiState.rams is FeedUiState.Success) productCollection.add(feedUiState.rams.productCollection)
-    if (feedUiState.laptops is FeedUiState.Success) productCollection.add(feedUiState.laptops.productCollection)
-    if (feedUiState.builds is FeedUiState.Success) productCollection.add(feedUiState.builds.productCollection)
-    if (feedUiState.monitors is FeedUiState.Success) productCollection.add(feedUiState.monitors.productCollection)
-    if (feedUiState.mouses is FeedUiState.Success) productCollection.add(feedUiState.mouses.productCollection)
-    if (feedUiState.keyboards is FeedUiState.Success) productCollection.add(feedUiState.keyboards.productCollection)
+    val productCollections = ArrayList<ProductCollection>()
+    if (feedUiState.processors is FeedUiState.Success) productCollections.add(feedUiState.processors.productCollection)
+    if (feedUiState.motherboards is FeedUiState.Success) productCollections.add(feedUiState.motherboards.productCollection)
+    if (feedUiState.graphicCards is FeedUiState.Success) productCollections.add(feedUiState.graphicCards.productCollection)
+    if (feedUiState.storages is FeedUiState.Success) productCollections.add(feedUiState.storages.productCollection)
+    if (feedUiState.coolingSystems is FeedUiState.Success) productCollections.add(feedUiState.coolingSystems.productCollection)
+    if (feedUiState.rams is FeedUiState.Success) productCollections.add(feedUiState.rams.productCollection)
+    if (feedUiState.laptops is FeedUiState.Success) productCollections.add(feedUiState.laptops.productCollection)
+    if (feedUiState.builds is FeedUiState.Success) productCollections.add(feedUiState.builds.productCollection)
+    if (feedUiState.monitors is FeedUiState.Success) productCollections.add(feedUiState.monitors.productCollection)
+    if (feedUiState.mouses is FeedUiState.Success) productCollections.add(feedUiState.mouses.productCollection)
+    if (feedUiState.keyboards is FeedUiState.Success) productCollections.add(feedUiState.keyboards.productCollection)
 
-    return productCollection
+    return productCollections
 }
 
 @Composable

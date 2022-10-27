@@ -11,9 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import uwu.victoraso.storeapp.ui.components.StoreAppScaffold
 import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
-import uwu.victoraso.storeapp.ui.home.HomeSections
 import uwu.victoraso.storeapp.ui.home.StoreAppBottomBar
 import uwu.victoraso.storeapp.ui.home.addHomeGraph
+import uwu.victoraso.storeapp.ui.home.navigation.TopLevelDestination
 import uwu.victoraso.storeapp.ui.home.profile.wishlist.Wishlist
 import uwu.victoraso.storeapp.ui.log.login.LoginScreen
 import uwu.victoraso.storeapp.ui.log.signup.SignUpScreen
@@ -26,9 +26,10 @@ import uwu.victoraso.storeapp.ui.splash.Splash
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
-fun StoreApp() {
+fun StoreApp(
+    appState: StoreAppState = rememberStoreAppState()
+) {
     StoreAppTheme {
-        val appState = rememberStoreAppState()
         StoreAppScaffold(
             bottomBar = {
                 if (appState.shouldShowBottomBar) {
@@ -76,7 +77,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
 ) {
     navigation(
         route = MainDestinations.HOME_ROUTE,
-        startDestination = HomeSections.FEED.route
+        startDestination = TopLevelDestination.FEED.route
     ) {
         addHomeGraph(onProductSelected, onProductCreate, onNavigateTo, onClearAndNavigate, onNavigateTo)
     }
