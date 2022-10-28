@@ -83,14 +83,15 @@ class StoreAppState(
     val shouldShowBottomBar: Boolean
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination?.route in bottomBarRoutes
 
-    val currentRoute: String?
-        get() = navController.currentDestination?.route
+    val currentDestination: NavDestination?
+        @Composable get() = navController
+            .currentBackStackEntryAsState().value?.destination
 
     fun upPress() {
         navController.navigateUp()
     }
 
-    fun navigateToBottomBarRoute(route: String) {
+    fun navigateToBottomBarRoute(topLevelDestination: TopLevelDestination) {
         val topLevelOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
                 Log.d(DEBUG_TAG_CART, "ID -> ${navController.graph.findStartDestination().id}")
@@ -102,11 +103,11 @@ class StoreAppState(
             // Restore state when reselecting a previously selected item
             restoreState = true
         }
-        when (route) {
-            TopLevelDestination.FEED.route -> navController.navigateToFeed(navOptions = topLevelOptions)
-            TopLevelDestination.SEARCH.route -> navController.navigateToSearch(navOptions = topLevelOptions)
-            TopLevelDestination.CART.route -> navController.navigateToCart(navOptions = topLevelOptions)
-            TopLevelDestination.PROFILE.route -> navController.navigateToProfile(navOptions = topLevelOptions)
+        when (topLevelDestination) {
+            TopLevelDestination.FEED -> navController.navigateToFeed(navOptions = topLevelOptions)
+            TopLevelDestination.SEARCH -> navController.navigateToSearch(navOptions = topLevelOptions)
+            TopLevelDestination.CART -> navController.navigateToCart(navOptions = topLevelOptions)
+            TopLevelDestination.PROFILE -> navController.navigateToProfile(navOptions = topLevelOptions)
         }
     }
 

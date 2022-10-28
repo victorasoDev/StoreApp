@@ -34,9 +34,9 @@ fun StoreApp(
             bottomBar = {
                 if (appState.shouldShowBottomBar) {
                     StoreAppBottomBar(
-                        tabs = appState.bottomBarTabs,
-                        currentRoute = appState.currentRoute!!,
-                        navigateToRoute = appState::navigateToBottomBarRoute
+                        destinations = appState.topLevelDestinations,
+                        currentDestination = appState.currentDestination,
+                        onNavigateToDestination = appState::navigateToBottomBarRoute
                     )
                 }
             },

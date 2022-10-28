@@ -41,14 +41,14 @@ class WishlistViewModel
                     is Result.Success -> {
                         WishlistUiState.Success(result.data)
                     }
+                    is Result.Loading -> {
+                        WishlistUiState.Loading
+                    }
                     is Result.Error -> {
                         WishlistUiState.Error
                     }
-                    is Result.Loading -> {
-                        WishlistUiState.Error
-                    }
                 }
-            }
+            }.distinctUntilChanged()
     }
 }
 

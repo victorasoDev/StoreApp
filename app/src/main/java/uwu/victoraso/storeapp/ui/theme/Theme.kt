@@ -3,6 +3,8 @@ package uwu.victoraso.storeapp.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -261,6 +263,14 @@ fun StoreAppTheme(
             content = content
         )
     }
+}
+
+object NoRippleTheme : RippleTheme {
+    @Composable
+    override fun defaultColor() = Color.Transparent
+
+    @Composable
+    override fun rippleAlpha() = RippleAlpha(0F, 0F, 0F, 0F)
 }
 
 @Composable

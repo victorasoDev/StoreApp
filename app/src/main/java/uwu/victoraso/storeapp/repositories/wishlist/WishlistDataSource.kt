@@ -56,7 +56,7 @@ class WishlistDataSource @Inject constructor(
                     }
                 }
             }
-            .addOnFailureListener {  }
+            .addOnFailureListener { }
             .await()
         emit(exists)
     }
@@ -68,8 +68,8 @@ class WishlistDataSource @Inject constructor(
         val productList = ArrayList<Product>()
         db.collection("wishlists").document(userId).get()
             .addOnSuccessListener { documentSnapshot ->
-                for (id in documentSnapshot.data!!["products"] as ArrayList<*>) {
-                    CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.IO).launch {
+                    for (id in documentSnapshot.data!!["products"] as ArrayList<*>) {
                         db.document(id.toString())
                             .get()
                             .addOnSuccessListener { doc ->
