@@ -32,6 +32,10 @@ class UserPreferencesRepository @Inject constructor(
     override suspend fun setRememberMe(rememberMe: Boolean) { preferencesDataSource.setRememberMe(rememberMe) }
     override val getRememberMe: Flow<Boolean> = preferencesDataSource.rememberMe
 
+    /** DarkMode Preference **/
+    override suspend fun setDarkMode(darkMode: Boolean) { preferencesDataSource.setRememberMe(darkMode) }
+    override val getDarkMode: Flow<Boolean> = preferencesDataSource.darkMode
+
 }
 
 sealed interface UserPreferencesRepositoryInterface {
@@ -40,6 +44,7 @@ sealed interface UserPreferencesRepositoryInterface {
     val getUserEmail: Flow<String>
     val getUserPassword: Flow<String>
     val getRememberMe: Flow<Boolean>
+    val getDarkMode: Flow<Boolean>
     /** User DataStore Preferences Setters **/
     suspend fun setUserName(username: String)
     suspend fun setUserEmail(email: String)
@@ -47,4 +52,5 @@ sealed interface UserPreferencesRepositoryInterface {
     suspend fun setUserPhone(phone: String)
     suspend fun setUserPassword(password: String)
     suspend fun setRememberMe(rememberMe: Boolean)
+    suspend fun setDarkMode(darkMode: Boolean)
 }

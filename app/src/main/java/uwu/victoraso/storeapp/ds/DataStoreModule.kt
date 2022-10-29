@@ -11,9 +11,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
@@ -26,6 +24,7 @@ val USER_ADRESS_PREFERENCE = stringPreferencesKey("user_adress")
 val USER_PHONE_PREFERENCE = stringPreferencesKey("user_phone")
 val USER_PASSWORD_PREFERENCE = stringPreferencesKey("user_password")
 val REMEMBER_ME_PREFERENCE = booleanPreferencesKey("remember_me")
+val DARK_MODE_PREFERENCE = booleanPreferencesKey("dark_mode")
 
 @Module
 @InstallIn(SingletonComponent::class)

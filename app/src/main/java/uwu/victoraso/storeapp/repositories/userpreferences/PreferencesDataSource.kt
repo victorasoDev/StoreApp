@@ -55,4 +55,9 @@ class PreferencesDataSource @Inject constructor(
     val rememberMe: Flow<Boolean> = userPreferences.data.map { preferences -> preferences[REMEMBER_ME_PREFERENCE] ?: false }
 
     suspend fun setRememberMe(rememberMe: Boolean) = userPreferences.edit { preferences -> preferences[REMEMBER_ME_PREFERENCE] = rememberMe }
+
+    /** Setter & Getter of [DARK_MODE_PREFERENCE] DataStore Preference **/
+    val darkMode: Flow<Boolean> = userPreferences.data.map { preferences -> preferences[DARK_MODE_PREFERENCE] ?: false }
+
+    suspend fun setDarkMode(darkMode: Boolean) = userPreferences.edit { preferences -> preferences[DARK_MODE_PREFERENCE] = darkMode }
 }

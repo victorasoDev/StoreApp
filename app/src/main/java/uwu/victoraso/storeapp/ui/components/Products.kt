@@ -1,6 +1,6 @@
 package uwu.victoraso.storeapp.ui.components
 
-import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,10 +18,12 @@ import androidx.compose.material.icons.outlined.ReadMore
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -104,6 +106,39 @@ fun ProductCollection(
     }
 }
 
+@Composable
+fun ProductCollectionShimmer(
+    modifier: Modifier = Modifier,
+    highlight: Boolean = true
+) {
+    Column(modifier = modifier) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .heightIn(min = 56.dp)
+                .padding(start = 24.dp)
+        ) {
+            Spacer(modifier = Modifier
+                .width(130.dp)
+                .height(40.dp)
+                .padding(8.dp)
+                .clip(CircleShape)
+                .weight(1f)
+                .wrapContentWidth(Alignment.Start)
+                .background(ShimmerEffect()))
+        }
+        LazyRow(
+            modifier = modifier,
+            contentPadding = PaddingValues(start = 12.dp, end = 12.dp),
+        ) {
+            items(5) {
+                if (highlight) HighlightedProductItemShimmer() else ProductItemShimmer()
+            }
+        }
+    }
+}
+
+
 private val HighlightCardWidth = 170.dp
 private val HighlightCardPadding = 16.dp
 
@@ -164,7 +199,6 @@ private fun Products(
     LazyRow(
         modifier = modifier,
         contentPadding = PaddingValues(start = 12.dp, end = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
         itemsIndexed(products) { index, product ->
             if (products.lastIndex != index) {
@@ -194,14 +228,12 @@ fun ProductItem(
                 end = 4.dp,
                 bottom = 8.dp
             )
-            .width(200.dp)
+            .width(140.dp)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .clickable(onClick = { onProductClick(product.id, product.categories.first()) })
                 .padding(8.dp)
-                .fillMaxSize()
         ) {
             ProductImage(
                 imageUrl = product.imageUrl,
@@ -212,11 +244,47 @@ fun ProductItem(
             Text(
                 text = product.name,
                 style = MaterialTheme.typography.subtitle1,
+                textAlign = TextAlign.Center,
                 color = StoreAppTheme.colors.textSecondary,
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier
+                    .width(130.dp)
+                    .padding(top = 8.dp),
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 1
+                maxLines = 2
             )
+        }
+    }
+}
+
+@Composable
+fun ProductItemShimmer(
+    modifier: Modifier = Modifier
+) {
+    StoreAppSurface(
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier
+            .padding(
+                start = 4.dp,
+                end = 4.dp,
+                bottom = 8.dp
+            )
+            .width(140.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            Spacer(modifier = Modifier
+                .size(120.dp)
+                .clip(CircleShape)
+                .background(ShimmerEffect()))
+            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier
+                .width(130.dp)
+                .height(20.dp)
+                .padding(horizontal = 8.dp)
+                .clip(CircleShape)
+                .background(ShimmerEffect()))
         }
     }
 }
@@ -283,6 +351,56 @@ private fun HighlightedProductItem(
                 color = StoreAppTheme.colors.textHelp,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+        }
+    }
+}
+
+@Composable
+private fun HighlightedProductItemShimmer(
+    modifier: Modifier = Modifier
+) {
+    StoreAppCard(
+        modifier = modifier
+            .size(
+                width = 170.dp,
+                height = 250.dp
+            )
+            .padding(bottom = 16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(160.dp)
+                    .fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                )
+                Spacer(modifier = modifier
+                    .padding(horizontal = 16.dp)
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .align(Alignment.BottomCenter)
+                    .background(ShimmerEffect()))
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+                .height(20.dp)
+                .clip(CircleShape)
+                .background(ShimmerEffect()))
+            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+                .height(20.dp)
+                .clip(CircleShape)
+                .background(ShimmerEffect()))
         }
     }
 }
@@ -392,8 +510,6 @@ private fun ViewMoreCard(
 }
 
 @Preview("default")
-@Preview("dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview("large font", fontScale = 2f)
 @Composable
 private fun ProductCardPreview() {
     StoreAppTheme {
@@ -411,5 +527,31 @@ private fun ProductCardPreview() {
 //            onProductList = {},
 //            productCollectionCategory = "Untitled"
 //        )
+    }
+}
+
+@Preview("default")
+@Composable
+private fun ProductCardSimplePreview() {
+    StoreAppTheme {
+        val product = products.first()
+        ProductItem(
+            product = product,
+            onProductClick = { id, category -> },
+        )
+    }
+}
+@Preview("default")
+@Composable
+private fun ProductCardShimmerPreview() {
+    StoreAppTheme {
+        HighlightedProductItemShimmer()
+    }
+}
+@Preview("default")
+@Composable
+private fun ProductCardSimpleShimmerPreview() {
+    StoreAppTheme {
+        ProductItemShimmer()
     }
 }

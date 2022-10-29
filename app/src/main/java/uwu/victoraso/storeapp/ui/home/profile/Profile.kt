@@ -100,8 +100,8 @@ fun ProfileContent(
     onSignOutClick: ((String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isDialogShowing by remember { mutableStateOf(false) }
-    PersonalInfoDialog(show = isDialogShowing, onDismiss = { isDialogShowing = !isDialogShowing })
+    var isPersonalInfoDialogShowing by remember { mutableStateOf(false) }
+    PersonalInfoDialog(show = isPersonalInfoDialogShowing, onDismiss = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
 
     Column(modifier) {
         Spacer( //TODO sustituir todos los del proyecto pasándolo a Utils
@@ -137,7 +137,7 @@ fun ProfileContent(
                     Column {
                         //TODO probar constraint layout sería foto, derecha nombre y debajo email
                         UserProfile(modifier)
-                        ProfileOptions(onNavigateTo = onNavigateTo, changePIDialogVisibility = { isDialogShowing = !isDialogShowing })
+                        ProfileOptions(onNavigateTo = onNavigateTo, changePIDialogVisibility = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
                         LogoutButton(
                             restartApp = restartApp,
                             onSignOutClick = onSignOutClick
