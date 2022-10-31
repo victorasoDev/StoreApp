@@ -1,10 +1,11 @@
 package uwu.victoraso.storeapp
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -34,11 +35,15 @@ fun StoreApp(
         StoreAppScaffold(
             bottomBar = {
                 if (appState.shouldShowBottomBar) {
-                    StoreAppBottomBar(
-                        destinations = appState.topLevelDestinations,
-                        currentDestination = appState.currentDestination,
-                        onNavigateToDestination = appState::navigateToBottomBarRoute
-                    )
+                    Column(Modifier.fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(2.dp).fillMaxWidth().background(color = StoreAppTheme.colors.brand.copy(alpha = 0.2f)))
+                        StoreAppBottomBar(
+                            destinations = appState.topLevelDestinations,
+                            currentDestination = appState.currentDestination,
+                            onNavigateToDestination = appState::navigateToBottomBarRoute
+                        )
+                    }
+
                 }
             },
             snackbarHost = {

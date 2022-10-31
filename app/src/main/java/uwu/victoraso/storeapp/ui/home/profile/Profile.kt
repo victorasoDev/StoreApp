@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.profile.personalinfo.PersonalInfoDialog
@@ -51,7 +52,7 @@ fun Profile(
     when (profileUiState) {
         is ProfileUiState.Success -> {
             Profile(
-                profileUiState = profileUiState,
+                userProfile = (profileUiState as ProfileUiState.Success).userProfile,
                 restartApp = restartApp,
                 onNavigateTo = onNavigateTo,
                 onSignOutClick = viewModel::onSignOutClick,
@@ -70,7 +71,7 @@ fun Profile(
 
 @Composable
 private fun Profile(
-    profileUiState: ProfileUiState,
+    userProfile: UserProfile,
     restartApp: (String) -> Unit,
     onNavigateTo: (String) -> Unit,
     onSignOutClick: ((String) -> Unit) -> Unit,
@@ -80,6 +81,7 @@ private fun Profile(
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
             ProfileContent(
+                userProfile = userProfile,
                 restartApp = restartApp,
                 onNavigateTo = onNavigateTo,
                 onSignOutClick = onSignOutClick,
@@ -87,7 +89,7 @@ private fun Profile(
             )
             DestinationBar(
                 modifier = Modifier.align(Alignment.TopCenter),
-                title = "Hi Victoraso!",
+                title = stringResource(id = R.string.user_profile_title, userProfile.name),
                 onDestinationBarButtonClick = { }
             )
         }
@@ -96,6 +98,7 @@ private fun Profile(
 
 @Composable
 fun ProfileContent(
+    userProfile: UserProfile,
     restartApp: (String) -> Unit,
     onNavigateTo: (String) -> Unit,
     onSignOutClick: ((String) -> Unit) -> Unit,
@@ -123,7 +126,7 @@ fun ProfileContent(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Profile",
+                    text = stringResource(id = R.string.home_profile),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.h6,
@@ -138,8 +141,7 @@ fun ProfileContent(
                     color = StoreAppTheme.colors.uiBackground,
                 ) {
                     Column {
-                        //TODO probar constraint layout sería foto, derecha nombre y debajo email
-                        UserProfile(modifier)
+                        UserProfile(userProfile, modifier)
                         ProfileOptions(
                             onNavigateTo = onNavigateTo,
                             changePIDialogVisibility = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing },
@@ -158,6 +160,7 @@ fun ProfileContent(
 
 @Composable
 private fun UserProfile(
+    userProfile: UserProfile,
     modifier: Modifier
 ) {
     ConstraintLayout(
@@ -181,7 +184,7 @@ private fun UserProfile(
                 }
         )
         Text(
-            text = "Victoraso",
+            text = userProfile.name,
             style = MaterialTheme.typography.subtitle1,
             color = StoreAppTheme.colors.textSecondary,
             modifier = Modifier.constrainAs(name) {
@@ -195,7 +198,7 @@ private fun UserProfile(
             }
         )
         Text(
-            text = "victorsgmii@gmail.com",
+            text = userProfile.email,
             style = MaterialTheme.typography.body1,
             color = StoreAppTheme.colors.textHelp,
             modifier = Modifier.constrainAs(email) {

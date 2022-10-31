@@ -8,10 +8,10 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 private val BottomNavHeight = 56.dp
 
@@ -21,8 +21,9 @@ fun StoreAppNavigationBar(
     content: @Composable RowScope.() -> Unit
 ) {
     NavigationBar(
-        modifier = modifier.height(BottomNavHeight).shadow(elevation = 12.dp),
+        modifier = modifier.height(BottomNavHeight),
         contentColor = StoreAppNavigationDefaults.navigationContentColor(),
+        containerColor = StoreAppTheme.colors.uiBackground,
         tonalElevation = 0.dp,
         content = content
     )
@@ -62,7 +63,7 @@ fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestin
 
 object StoreAppNavigationDefaults {
     @Composable
-    fun navigationContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
+    fun navigationContentColor() = StoreAppTheme.colors.textSecondary
     @Composable
     fun navigationSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
     @Composable

@@ -13,6 +13,7 @@ private val LightColorPalette = StoreAppColors(
     brand = Shadow5,
     brandSecondary = Ocean3,
     uiBackground = Neutral0,
+    bottomBarBackground = Neutral2,
     uiBorder = Neutral4,
     uiFloated = FunctionalGrey,
     loadingBackgroundColor = LoadingBackgroundColor,
@@ -41,6 +42,7 @@ private val DarkColorPalette = StoreAppColors(
     brand = Shadow1,
     brandSecondary = Ocean2,
     uiBackground = Neutral8,
+    bottomBarBackground = Neutral7,
     uiBorder = Neutral3,
     uiFloated = FunctionalDarkGrey,
     textPrimary = Shadow1,
@@ -89,6 +91,7 @@ class StoreAppColors(
     brand: Color,
     brandSecondary: Color,
     uiBackground: Color,
+    bottomBarBackground: Color,
     uiBorder: Color,
     uiFloated: Color,
     interactivePrimary: List<Color> = gradient2_1,
@@ -130,6 +133,8 @@ class StoreAppColors(
     var brandSecondary by mutableStateOf(brandSecondary)
         private set
     var uiBackground by mutableStateOf(uiBackground)
+        private set
+    var bottomBarBackground by mutableStateOf(bottomBarBackground)
         private set
     var uiBorder by mutableStateOf(uiBorder)
         private set
@@ -185,6 +190,7 @@ class StoreAppColors(
         brand = other.brand
         brandSecondary = other.brandSecondary
         uiBackground = other.uiBackground
+        bottomBarBackground = other.bottomBarBackground
         uiBorder = other.uiBorder
         uiFloated = other.uiFloated
         interactivePrimary = other.interactivePrimary
@@ -219,6 +225,7 @@ class StoreAppColors(
         brand = brand,
         brandSecondary = brandSecondary,
         uiBackground = uiBackground,
+        bottomBarBackground = bottomBarBackground,
         uiBorder = uiBorder,
         uiFloated = uiFloated,
         interactivePrimary = interactivePrimary,
