@@ -32,6 +32,7 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.profile.personalinfo.PersonalInfoDialog
+import uwu.victoraso.storeapp.ui.home.profile.settings.SettingsDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.mirroringIcon
@@ -102,6 +103,8 @@ fun ProfileContent(
 ) {
     var isPersonalInfoDialogShowing by remember { mutableStateOf(false) }
     PersonalInfoDialog(show = isPersonalInfoDialogShowing, onDismiss = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
+    var isSettingsDialogShowing by remember { mutableStateOf(false) }
+    SettingsDialog(show = isSettingsDialogShowing, onDismiss = { isSettingsDialogShowing = !isSettingsDialogShowing })
 
     Column(modifier) {
         Spacer( //TODO sustituir todos los del proyecto pasándolo a Utils
@@ -137,7 +140,11 @@ fun ProfileContent(
                     Column {
                         //TODO probar constraint layout sería foto, derecha nombre y debajo email
                         UserProfile(modifier)
-                        ProfileOptions(onNavigateTo = onNavigateTo, changePIDialogVisibility = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
+                        ProfileOptions(
+                            onNavigateTo = onNavigateTo,
+                            changePIDialogVisibility = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing },
+                            changeSettingsDialogVisibility = { isSettingsDialogShowing = !isSettingsDialogShowing }
+                        )
                         LogoutButton(
                             restartApp = restartApp,
                             onSignOutClick = onSignOutClick
@@ -214,6 +221,7 @@ private fun UserProfile(
 private fun ProfileOptions(
     onNavigateTo: (String) -> Unit,
     changePIDialogVisibility: () -> Unit,
+    changeSettingsDialogVisibility: () -> Unit,
     profileDestinations: List<ProfileDestination> = profileDestinationsList
 ) {
     LazyColumn {
@@ -222,7 +230,8 @@ private fun ProfileOptions(
                 text = profileDestination.destinationName,
                 route = profileDestination.route,
                 onNavigateTo = onNavigateTo,
-                changeDialogVisibility = { changePIDialogVisibility() }
+                changePIDialogVisibility = { changePIDialogVisibility() },
+                changeSettingsDialogVisibility = { changeSettingsDialogVisibility() }
             )
         }
     }
@@ -233,14 +242,21 @@ private fun DesinationRow(
     text: String,
     route: String,
     onNavigateTo: (String) -> Unit,
-    changeDialogVisibility: () -> Unit
+    changePIDialogVisibility: () -> Unit,
+    changeSettingsDialogVisibility: () -> Unit
 ) {
     Row(
         modifier = Modifier.clickable { //TODO: buscar otra manera
-            if (text != "Personal Info") {
-                onNavigateTo(route)
-            } else {
-                changeDialogVisibility()
+            when (text) {
+                "Personal Info" -> {
+                    changePIDialogVisibility()
+                }
+                "Settings" -> {
+                    changeSettingsDialogVisibility()
+                }
+                else -> {
+                    onNavigateTo(route)
+                }
             }
         }
     ) {

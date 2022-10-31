@@ -1,13 +1,16 @@
 package uwu.victoraso.storeapp.ui.home.profile.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import uwu.victoraso.storeapp.repositories.Result
-import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_WISHLIST
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,11 +18,10 @@ class SettingsViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository
 ): ViewModel() {
 
-    private val darkThemeConfigStream: Flow<Result<Boolean>> = userPreferencesRepository.getDarkMode.asResult()
-
     val settingsUiState: StateFlow<SettingsUiState> =
-        userPreferencesRepository.getDarkMode
+        userPreferencesRepository.darkThemeConfig
             .map {
+                Log.d(DEBUG_TAG_WISHLIST, "SettingsViewModel -> $it")
                 SettingsUiState.Success(
                     settings = UserEditableSettings(
                         darkThemeConfig = it
@@ -40,7 +42,8 @@ class SettingsViewModel @Inject constructor(
 
     fun updateDarkThemeConfig(darkThemeConfig: Boolean) {
         viewModelScope.launch {
-            userPreferencesRepository.setDarkMode(darkThemeConfig)
+            Log.d(DEBUG_TAG_WISHLIST, darkThemeConfig.toString())
+            userPreferencesRepository.setDarkThemeConfig(darkThemeConfig)
         }
     }
 }

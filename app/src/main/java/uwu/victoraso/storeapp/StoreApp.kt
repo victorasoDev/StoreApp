@@ -27,9 +27,10 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
 fun StoreApp(
+    darkTheme: Boolean,
     appState: StoreAppState = rememberStoreAppState()
 ) {
-    StoreAppTheme {
+    StoreAppTheme(darkTheme = darkTheme) {
         StoreAppScaffold(
             bottomBar = {
                 if (appState.shouldShowBottomBar) {

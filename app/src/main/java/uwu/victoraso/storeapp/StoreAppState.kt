@@ -2,6 +2,7 @@ package uwu.victoraso.storeapp
 
 import android.content.res.Resources
 import android.util.Log
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
@@ -178,4 +179,15 @@ private tailrec fun findStartDestination(graph: NavDestination): NavDestination 
 private fun resources(): Resources {
     LocalConfiguration.current
     return LocalContext.current.resources
+}
+
+@Composable
+fun shouldUseDarkTheme(
+    uiState: MainActivityUiState,
+): Boolean = when (uiState) {
+    MainActivityUiState.Loading -> isSystemInDarkTheme()
+    is MainActivityUiState.Success -> when (uiState.darkMode) {
+        true -> true
+        false -> false
+    }
 }

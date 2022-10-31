@@ -1,15 +1,21 @@
 package uwu.victoraso.storeapp.ui.home.profile.settings
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material3.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,6 +25,8 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.StoreAppDialog
 import uwu.victoraso.storeapp.ui.components.StoreAppDialogButton
 import uwu.victoraso.storeapp.ui.components.StoreAppDialogTitle
+import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_WISHLIST
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -45,12 +53,17 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     onChangeDarkThemeConfig: (Boolean) -> Unit
 ) {
-    StoreAppDialog(onDismiss = onDismiss, properties = DialogProperties(dismissOnClickOutside = true)) {
+    Log.d(DEBUG_TAG_WISHLIST, "SettingsDialog")
+    StoreAppDialog(
+        onDismiss = onDismiss,
+        properties = DialogProperties(dismissOnClickOutside = true),
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
         Column(
             Modifier
                 .fillMaxWidth()
         ) {
-            StoreAppDialogTitle(stringID = R.string.user_profile_personal_info)
+            StoreAppDialogTitle(stringID = R.string.user_profile_settings)
             SettingsPanel(settingsUiState = settingsUiState, onChangeDarkThemeConfig = onChangeDarkThemeConfig)
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
@@ -69,8 +82,9 @@ private fun SettingsPanel(
             CircularProgressIndicator()
         }
         is SettingsUiState.Success -> {
+            Log.d(DEBUG_TAG_WISHLIST, settingsUiState.settings.darkThemeConfig.toString())
             SettingsDialogSectionTitle(text = stringResource(id = R.string.user_profile_dark_mode_preference))
-            Column (Modifier.selectableGroup()) {
+            Column(Modifier.selectableGroup()) {
                 SettingsDialogThemeChooserRow(
                     text = stringResource(R.string.dark_mode_config_light),
                     selected = !settingsUiState.settings.darkThemeConfig,
@@ -90,8 +104,11 @@ private fun SettingsPanel(
 private fun SettingsDialogSectionTitle(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+        style = MaterialTheme.typography.subtitle1,
+        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 16.dp),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        color = StoreAppTheme.colors.textPrimary
     )
 }
 
@@ -110,7 +127,7 @@ fun SettingsDialogThemeChooserRow(
                 role = Role.RadioButton,
                 onClick = onClick,
             )
-            .padding(8.dp),
+            .padding(vertical = 8.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
@@ -118,6 +135,13 @@ fun SettingsDialogThemeChooserRow(
             onClick = null
         )
         Spacer(Modifier.width(8.dp))
-        Text(text)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.subtitle1,
+            color = StoreAppTheme.colors.textSecondary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+        )
     }
 }

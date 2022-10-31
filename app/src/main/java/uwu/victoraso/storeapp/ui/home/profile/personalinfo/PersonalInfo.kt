@@ -50,7 +50,11 @@ fun PersonalInfoDialog(
             viewModel = viewModel
         )
 
-        StoreAppDialog(onDismiss = onDismiss, properties = DialogProperties(dismissOnClickOutside = true)) {
+        StoreAppDialog(
+            onDismiss = onDismiss,
+            properties = DialogProperties(dismissOnClickOutside = true),
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
