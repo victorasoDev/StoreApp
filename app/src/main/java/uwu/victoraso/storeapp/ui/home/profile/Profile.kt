@@ -122,7 +122,7 @@ fun ProfileContent(
                 .weight(1f),
         ) {
             Column(
-                modifier = Modifier.background(Brush.horizontalGradient(colors = StoreAppTheme.colors.gradient2_2))
+                modifier = Modifier.background(Brush.horizontalGradient(colors = StoreAppTheme.colors.gradientLavander))
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(

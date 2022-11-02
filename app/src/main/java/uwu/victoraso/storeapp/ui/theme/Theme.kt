@@ -13,27 +13,21 @@ private val LightColorPalette = StoreAppColors(
     brand = Shadow5,
     brandSecondary = Ocean3,
     uiBackground = Neutral0,
-    bottomBarBackground = Neutral2,
+    buttonBackground = Lavender3,
     uiBorder = Neutral4,
     uiFloated = FunctionalGrey,
-    loadingBackgroundColor = LoadingBackgroundColor,
+    textPrimary = Shadow7,
     textSecondary = Neutral7,
     textHelp = Neutral6,
     textInteractive = Neutral0,
     textLink = Ocean11,
+    iconPrimary = Shadow3,
     iconSecondary = Neutral7,
     iconInteractive = Neutral0,
     iconInteractiveInactive = Neutral1,
-    loadingButtonAnimStartColor = Ocean4,
-    loadingButtonAnimEndColor = Ocean8,
     error = FunctionalRed,
-    gradient6_1 = listOf(Shadow4, Ocean3, Shadow2, Ocean3, Shadow4),
-    gradient6_2 = listOf(Rose4, Lavender3, Rose2, Lavender3, Rose4),
-    gradient3_1 = listOf(Shadow2, Ocean3, Shadow4),
-    gradient3_2 = listOf(Rose2, Lavender3, Rose4),
-    gradient2_1 = listOf(Shadow4, Shadow11),
-    gradient2_2 = listOf(Ocean3, Shadow3),
-    gradient2_3 = listOf(Lavender3, Rose2),
+    gradientDarkLavander = listOf(Lavender6, Lavender4, Lavender6),
+    gradientLavander = listOf(Lavender4, Lavender3, Lavender4),
     tornado1 = listOf(Shadow4, Ocean3),
     isDark = false
 )
@@ -42,7 +36,7 @@ private val DarkColorPalette = StoreAppColors(
     brand = Shadow1,
     brandSecondary = Ocean2,
     uiBackground = Neutral8,
-    bottomBarBackground = Neutral7,
+    buttonBackground = Lavender4,
     uiBorder = Neutral3,
     uiFloated = FunctionalDarkGrey,
     textPrimary = Shadow1,
@@ -54,17 +48,9 @@ private val DarkColorPalette = StoreAppColors(
     iconSecondary = Neutral0,
     iconInteractive = Neutral7,
     iconInteractiveInactive = Neutral6,
-    loadingButtonAnimStartColor = Ocean5,
-    loadingButtonAnimEndColor = Ocean10,
-    loadingBackgroundColor = LoadingBackgroundColor,
     error = FunctionalRedDark,
-    gradient6_1 = listOf(Shadow5, Ocean7, Shadow9, Ocean7, Shadow5),
-    gradient6_2 = listOf(Rose11, Lavender7, Rose8, Lavender7, Rose11),
-    gradient3_1 = listOf(Shadow9, Ocean7, Shadow5),
-    gradient3_2 = listOf(Rose8, Lavender7, Rose11),
-    gradient2_1 = listOf(Ocean3, Shadow3),
-    gradient2_2 = listOf(Ocean4, Shadow2),
-    gradient2_3 = listOf(Lavender3, Rose3),
+    gradientDarkLavander = listOf(Lavender7, Lavender5, Lavender7),
+    gradientLavander = listOf(Lavender5, Lavender4, Lavender5),
     tornado1 = listOf(Shadow4, Ocean3),
     isDark = true
 )
@@ -81,52 +67,31 @@ private val LocalStoreAppColors = staticCompositionLocalOf<StoreAppColors> {
 
 @Stable
 class StoreAppColors(
-    gradient6_1: List<Color>,
-    gradient6_2: List<Color>,
-    gradient3_1: List<Color>,
-    gradient3_2: List<Color>,
-    gradient2_1: List<Color>,
-    gradient2_2: List<Color>,
-    gradient2_3: List<Color>,
+    gradientLavander: List<Color>,
+    gradientDarkLavander: List<Color>,
     brand: Color,
     brandSecondary: Color,
     uiBackground: Color,
-    bottomBarBackground: Color,
+    buttonBackground: Color,
     uiBorder: Color,
     uiFloated: Color,
-    interactivePrimary: List<Color> = gradient2_1,
-    interactiveSecondary: List<Color> = gradient2_2,
-    interactiveMask: List<Color> = gradient6_1,
-    textPrimary: Color = brand,
+    interactiveSecondary: List<Color> = gradientLavander,
+    textPrimary: Color,
     textSecondary: Color,
     textHelp: Color,
     textInteractive: Color,
     textLink: Color,
     tornado1: List<Color>,
-    iconPrimary: Color = brand,
+    iconPrimary: Color,
     iconSecondary: Color,
     iconInteractive: Color,
     iconInteractiveInactive: Color,
-    loadingButtonAnimStartColor: Color,
-    loadingButtonAnimEndColor: Color,
-    loadingBackgroundColor: Color,
     error: Color,
-    notificationBadge: Color = error,
     isDark: Boolean
 ) {
-    var gradient6_1 by mutableStateOf(gradient6_1)
+    var gradientDarkLavander by mutableStateOf(gradientDarkLavander)
         private set
-    var gradient6_2 by mutableStateOf(gradient6_2)
-        private set
-    var gradient3_1 by mutableStateOf(gradient3_1)
-        private set
-    var gradient3_2 by mutableStateOf(gradient3_2)
-        private set
-    var gradient2_1 by mutableStateOf(gradient2_1)
-        private set
-    var gradient2_2 by mutableStateOf(gradient2_2)
-        private set
-    var gradient2_3 by mutableStateOf(gradient2_3)
+    var gradientLavander by mutableStateOf(gradientLavander)
         private set
     var brand by mutableStateOf(brand)
         private set
@@ -134,17 +99,13 @@ class StoreAppColors(
         private set
     var uiBackground by mutableStateOf(uiBackground)
         private set
-    var bottomBarBackground by mutableStateOf(bottomBarBackground)
+    var buttonBackground by mutableStateOf(buttonBackground)
         private set
     var uiBorder by mutableStateOf(uiBorder)
         private set
     var uiFloated by mutableStateOf(uiFloated)
         private set
-    var interactivePrimary by mutableStateOf(interactivePrimary)
-        private set
     var interactiveSecondary by mutableStateOf(interactiveSecondary)
-        private set
-    var interactiveMask by mutableStateOf(interactiveMask)
         private set
     var textPrimary by mutableStateOf(textPrimary)
         private set
@@ -166,36 +127,20 @@ class StoreAppColors(
         private set
     var iconInteractiveInactive by mutableStateOf(iconInteractiveInactive)
         private set
-    var loadingButtonAnimStartColor by mutableStateOf(loadingButtonAnimStartColor)
-        private set
-    var loadingButtonAnimEndColor by mutableStateOf(loadingButtonAnimEndColor)
-        private set
-    var loadingBackgroundColor by mutableStateOf(loadingBackgroundColor)
-        private set
     var error by mutableStateOf(error)
-        private set
-    var notificationBadge by mutableStateOf(notificationBadge)
         private set
     var isDark by mutableStateOf(isDark)
         private set
 
     fun update(other: StoreAppColors) {
-        gradient6_1 = other.gradient6_1
-        gradient6_2 = other.gradient6_2
-        gradient3_1 = other.gradient3_1
-        gradient3_2 = other.gradient3_2
-        gradient2_1 = other.gradient2_1
-        gradient2_2 = other.gradient2_2
-        gradient2_3 = other.gradient2_3
+        gradientDarkLavander = other.gradientDarkLavander
+        gradientLavander = other.gradientLavander
         brand = other.brand
         brandSecondary = other.brandSecondary
         uiBackground = other.uiBackground
-        bottomBarBackground = other.bottomBarBackground
         uiBorder = other.uiBorder
         uiFloated = other.uiFloated
-        interactivePrimary = other.interactivePrimary
         interactiveSecondary = other.interactiveSecondary
-        interactiveMask = other.interactiveMask
         textPrimary = other.textPrimary
         textSecondary = other.textSecondary
         textHelp = other.textHelp
@@ -206,31 +151,20 @@ class StoreAppColors(
         iconSecondary = other.iconSecondary
         iconInteractive = other.iconInteractive
         iconInteractiveInactive = other.iconInteractiveInactive
-        loadingButtonAnimStartColor = other.loadingButtonAnimEndColor
-        loadingButtonAnimEndColor = other.loadingButtonAnimEndColor
-        loadingBackgroundColor = other.loadingBackgroundColor
         error = other.error
-        notificationBadge = other.notificationBadge
         isDark = other.isDark
     }
 
     fun copy(): StoreAppColors = StoreAppColors(
-        gradient6_1 = gradient6_1,
-        gradient6_2 = gradient6_2,
-        gradient3_1 = gradient3_1,
-        gradient3_2 = gradient3_2,
-        gradient2_1 = gradient2_1,
-        gradient2_2 = gradient2_2,
-        gradient2_3 = gradient2_3,
+        gradientLavander = gradientLavander,
+        gradientDarkLavander = gradientDarkLavander,
         brand = brand,
         brandSecondary = brandSecondary,
         uiBackground = uiBackground,
-        bottomBarBackground = bottomBarBackground,
+        buttonBackground = buttonBackground,
         uiBorder = uiBorder,
         uiFloated = uiFloated,
-        interactivePrimary = interactivePrimary,
         interactiveSecondary = interactiveSecondary,
-        interactiveMask = interactiveMask,
         textPrimary = textPrimary,
         textSecondary = textSecondary,
         textHelp = textHelp,
@@ -241,18 +175,15 @@ class StoreAppColors(
         iconSecondary = iconSecondary,
         iconInteractive = iconInteractive,
         iconInteractiveInactive = iconInteractiveInactive,
-        loadingButtonAnimStartColor = loadingButtonAnimStartColor,
-        loadingButtonAnimEndColor = loadingButtonAnimEndColor,
-        loadingBackgroundColor = loadingBackgroundColor,
         error = error,
-        notificationBadge = notificationBadge,
         isDark = isDark,
     )
 }
+
 @Composable
 fun StoreAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
 

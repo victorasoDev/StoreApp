@@ -17,9 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -64,11 +62,11 @@ fun StoreAppButton(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = ButtonShape,
     border: BorderStroke? = null,
-    backgroundGradient: List<Color> = StoreAppTheme.colors.interactiveSecondary,
-    disabledBackgroundGradient: List<Color> = StoreAppTheme.colors.interactiveSecondary,
+    backgroundGradient: Color = StoreAppTheme.colors.buttonBackground,
+    disabledBackgroundGradient: Color = StoreAppTheme.colors.buttonBackground.copy(alpha = 0.6f),
     contentColor: Color = StoreAppTheme.colors.textInteractive,
+    disabledContentColor: Color = StoreAppTheme.colors.textInteractive.copy(alpha = 0.6f),
     color: Color = Color.Transparent,
-    disabledContentColor: Color = StoreAppTheme.colors.textHelp,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -79,11 +77,7 @@ fun StoreAppButton(
         border = border,
         modifier = modifier
             .clip(shape)
-            .background(
-                Brush.horizontalGradient(
-                    colors = if (enabled) backgroundGradient else disabledBackgroundGradient
-                )
-            )
+            .background(color = if (enabled) backgroundGradient else disabledBackgroundGradient)
             .clickable(
                 onClick = onClick,
                 enabled = enabled,
@@ -113,7 +107,6 @@ private val ButtonShape = RoundedCornerShape(percent = 50)
 
 @Preview("default", "round")
 @Preview("dark theme", "round", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview("large font", "round", fontScale = 2f)
 @Composable
 private fun ButtonPreview() {
     StoreAppTheme {
@@ -123,15 +116,12 @@ private fun ButtonPreview() {
     }
 }
 
-@Preview("default", "rectangle")
-@Preview("dark theme", "rectangle", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview("large font", "rectangle", fontScale = 2f)
+@Preview("default", "round")
+@Preview("dark theme", "round", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun RectangleButtonPreview() {
+private fun ButtonPreviewDisabled() {
     StoreAppTheme {
-        StoreAppButton(
-            onClick = {}, shape = RectangleShape
-        ) {
+        StoreAppButton(onClick = {}, enabled = false) {
             Text(text = "Demo")
         }
     }

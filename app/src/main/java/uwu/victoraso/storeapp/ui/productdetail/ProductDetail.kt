@@ -149,7 +149,7 @@ private fun Header() {
         modifier = Modifier
             .height(280.dp)
             .fillMaxWidth()
-            .background(Brush.horizontalGradient(StoreAppTheme.colors.tornado1))
+            .background(Brush.horizontalGradient(StoreAppTheme.colors.gradientLavander))
     )
 }
 

@@ -33,6 +33,9 @@ class PaymentViewModel @Inject constructor(
     private var _isPaymentLoading = mutableStateOf(false)
     val isPaymentLoading get() = _isPaymentLoading
 
+    private var _isPaymentCompleted = mutableStateOf(false)
+    val isPaymentCompleted get() = _isPaymentCompleted
+
     val paymentUiState: StateFlow<PaymentDataUiState> = paymentUserDataUiStateStream(
         userDataRepository = userPreferencesRepository
     )
@@ -79,7 +82,10 @@ class PaymentViewModel @Inject constructor(
     fun makePurchase(price: Long, cardDetails: CardDetails, productsIDs: List<Long>): Boolean {
         _isPaymentLoading.startLoading()
 
-        var isPaymentCompleted = false
+        if (cardDetails.cardNumber.length != 8) return purchaseNotCompleted()
+        if (!cardDetails.cardExpireDate.matches(Regex("(?:0[1-9]|1[0-2])/[0-9]{2}"))) return purchaseNotCompleted()
+        if (cardDetails.cardCVC.length != 3) return purchaseNotCompleted()
+
         viewModelScope.launch {
             val userData = userPreferencesRepository.getUserProfile.first()
             val makePurchase = purchasesRepository.makePurchase(
@@ -96,10 +102,15 @@ class PaymentViewModel @Inject constructor(
                 )
             )
             delay(2_000)
-            if (makePurchase) isPaymentCompleted = true
+            if (makePurchase) _isPaymentCompleted.value = true
             _isPaymentLoading.stopLoading()
         }
-        return isPaymentCompleted
+        return _isPaymentCompleted.value
+    }
+
+    private fun purchaseNotCompleted(): Boolean {
+        _isPaymentLoading.stopLoading()
+        return false
     }
 
     private fun MutableState<Boolean>.startLoading() { this.value = true }

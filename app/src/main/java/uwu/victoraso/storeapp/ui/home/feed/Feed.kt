@@ -14,7 +14,6 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.model.ProductCollection
 import uwu.victoraso.storeapp.ui.components.ProductCollection
-import uwu.victoraso.storeapp.ui.components.StoreAppCircularIndicator
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.home.DestinationBar
@@ -66,13 +65,7 @@ private fun Feed(
                 }
             }
         }
-        is FeedUiState.Loading -> {
-            Log.d(DEBUG_TAG, "Feed Loading")
-            StoreAppCircularIndicator()
-        }
-        is FeedUiState.Error -> {
-            Log.d(DEBUG_TAG, "Feed Error")
-        }
+        else -> Unit
     }
 
 }

@@ -186,7 +186,7 @@ fun shouldUseDarkTheme(
     uiState: MainActivityUiState,
 ): Boolean = when (uiState) {
     MainActivityUiState.Loading -> isSystemInDarkTheme()
-    is MainActivityUiState.Success -> when (uiState.darkMode) {
+    is MainActivityUiState.Success -> when (uiState.darkTheme) {
         true -> true
         false -> false
     }

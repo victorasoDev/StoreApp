@@ -1,12 +1,10 @@
 package uwu.victoraso.storeapp.ui.home.search
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,30 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.SearchCategory
 import uwu.victoraso.storeapp.model.SearchCategoryCollection
-import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.components.VerticalGrid
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import java.lang.Math.max
 
 @Composable
 fun SearchCategories(
@@ -70,14 +61,9 @@ private fun SearchCategoryCollection(
                 .wrapContentHeight()
         )
         VerticalGrid(Modifier.padding(horizontal = 16.dp)) {
-            val gradient = when (index % 2) {
-                0 -> StoreAppTheme.colors.gradient2_2
-                else -> StoreAppTheme.colors.gradient2_3
-            }
             collection.categories.forEach { category ->
                 SearchCategory(
                     category = category,
-                    gradient = gradient,
                     modifier = Modifier.padding(8.dp)
                 )
             }
@@ -91,7 +77,6 @@ private val CategoryShape = RoundedCornerShape(10.dp)
 @Composable
 private fun SearchCategory(
     category: SearchCategory,
-    gradient: List<Color>,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -99,7 +84,6 @@ private fun SearchCategory(
             .aspectRatio(1.45f)
             .shadow(elevation = 3.dp, shape = CategoryShape)
             .clip(CategoryShape)
-            .background(Brush.horizontalGradient(gradient))
             .clickable { /* todo */ },
         contentAlignment = Alignment.Center
     ) {
@@ -157,7 +141,6 @@ private fun SearchCategoryPreview() {
                 name = "Desserts",
                 imageUrl = ""
             ),
-            gradient = StoreAppTheme.colors.gradient3_2
         )
     }
 }

@@ -13,7 +13,7 @@ class PurchasesDataSource
 
     fun makePurchase(purchase: Purchase): Boolean {
         try {
-            db.collection("purchases").document(purchase.id.toString()).set(purchase)
+            db.collection("purchases").document(purchase.id).set(purchase)
             return true
         } catch (e: Exception) {
             e.printStackTrace()

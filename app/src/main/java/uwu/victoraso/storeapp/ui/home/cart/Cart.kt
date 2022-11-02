@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.home.cart
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -36,6 +37,7 @@ import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.cart.payment.PaymentDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_LOGIN
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -140,15 +142,11 @@ fun CartContent(
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) { //TODO: el Order (2 items) no cambia al eliminar un producto
+    Log.d(DEBUG_TAG_LOGIN, "recomposes CartContent -> $cart")
     val resources = LocalContext.current.resources
-    val productCount by remember { mutableStateOf(cart.cartItems.size) }
+    val productCount = cart.cartItems.size
     var totalCost by remember { mutableStateOf(0L) }
-    val productCountFormattedString = remember(0, resources) {
-        resources.getQuantityString(
-            R.plurals.cart_order_count,
-            productCount, productCount
-        )
-    }
+    val productCountFormattedString = resources.getQuantityString(R.plurals.cart_order_count, productCount, productCount)
 
     var isDialogShowing by remember { mutableStateOf(false) }
     PaymentDialog(show = isDialogShowing, cart = cart, onDismiss = { isDialogShowing = !isDialogShowing })
@@ -186,6 +184,7 @@ fun CartContent(
         item {
             SummaryItem(
                 subtotal = totalCost,
+                productsCount = productCount,
                 showPaymentDialog = { isDialogShowing = true },
                 shippingCosts = 369
             )
@@ -200,10 +199,6 @@ fun CartContent(
                     highlight = true,
                     showMore = false
                 )
-            }
-        } else {
-            item {
-                StoreAppCircularIndicator(modifier = Modifier.padding(top = 32.dp))
             }
         }
     }
@@ -274,12 +269,13 @@ fun CartItem(
 @Composable
 fun SummaryItem(
     subtotal: Long,
+    productsCount: Int,
     showPaymentDialog: () -> Unit,
     shippingCosts: Long,
     modifier: Modifier = Modifier
 ) {
 
-
+    Log.d(DEBUG_TAG_LOGIN, "recomposes SummaryItem -> $productsCount")
     Column(modifier) {
         Text(
             text = stringResource(id = R.string.cart_summary_header),
@@ -332,10 +328,11 @@ fun SummaryItem(
         ) {
             StoreAppButton(
                 onClick = { showPaymentDialog() },
+                enabled = productsCount > 0
             ) {
                 Icon(
                     imageVector = Icons.Default.ShoppingCartCheckout,
-                    tint = StoreAppTheme.colors.brand,
+                    tint = if (productsCount > 0) StoreAppTheme.colors.textInteractive else StoreAppTheme.colors.textInteractive.copy(alpha = 0.2f),
                     contentDescription = null
                 )
                 Text(

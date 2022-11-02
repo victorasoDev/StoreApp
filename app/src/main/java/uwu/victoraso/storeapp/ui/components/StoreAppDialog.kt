@@ -67,7 +67,7 @@ fun StoreAppDialogTitle(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(Brush.horizontalGradient(colors = StoreAppTheme.colors.gradient2_2)),
+            .background(Brush.horizontalGradient(colors = StoreAppTheme.colors.gradientLavander)),
         contentAlignment = Alignment.Center
     ) {
         Text(

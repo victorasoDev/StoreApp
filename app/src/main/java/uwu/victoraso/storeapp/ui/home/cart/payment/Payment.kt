@@ -1,6 +1,5 @@
 package uwu.victoraso.storeapp.ui.home.cart.payment
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -49,10 +48,15 @@ fun PaymentDialog(
         val paymentDataItems = GetPaymentDataItems()
         var isPersonalInfoDialogShowing by remember { mutableStateOf(false) }
         val isPaymentLoading by remember { viewModel.isPaymentLoading }
+        val isPaymentCompleted by remember { viewModel.isPaymentCompleted }
 
         PersonalInfoDialog(show = isPersonalInfoDialogShowing, onDismiss = { isPersonalInfoDialogShowing = !isPersonalInfoDialogShowing })
 
-        StoreAppDialog(onDismiss = onDismiss, properties = DialogProperties(dismissOnClickOutside = true)) {
+        StoreAppDialog(
+            onDismiss = onDismiss,
+            properties = DialogProperties(dismissOnClickOutside = true),
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
             Column(Modifier.fillMaxWidth()) {
                 StoreAppDialogTitle(stringID = R.string.cart_payment_title)
                 PaymentProductsRow(cart, viewModel::removeProduct)
@@ -61,6 +65,7 @@ fun PaymentDialog(
                 PaymentDialogButtons(
                     onDismiss = onDismiss,
                     isPaymentLoading = isPaymentLoading,
+                    isPaymentCompleted = isPaymentCompleted,
                     makePurchase = viewModel::makePurchase,
                     price = cart.cartItems.sumOf { it.price },
                     cardDetails = CardDetails(
@@ -92,6 +97,7 @@ private fun PaymentProductsRow(
 private fun PaymentDialogButtons(
     onDismiss: () -> Unit,
     isPaymentLoading: Boolean,
+    isPaymentCompleted: Boolean,
     makePurchase: (Long, CardDetails, List<Long>) -> Boolean,
     price: Long,
     cardDetails: CardDetails,
@@ -100,13 +106,17 @@ private fun PaymentDialogButtons(
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
         StoreAppLoadingButton(
-            onClick = { if (makePurchase(price, cardDetails, productsIDs)) onDismiss() },
+            onClick = { makePurchase(price, cardDetails, productsIDs) },
             modifier = Modifier.padding(top = 16.dp),
             isLoading = isPaymentLoading,
             enabled = cardDetails.checkCardDetails(),
             defaultText = R.string.payment_action_pay,
             actionText = R.string.payment_action_verifying
         )
+    }
+
+    LaunchedEffect(isPaymentLoading) {
+        if (isPaymentCompleted) onDismiss()
     }
 }
 
@@ -118,10 +128,9 @@ private fun PaymentProductItem(
 ) {
     Row(
         modifier = Modifier
-            .padding(vertical = 16.dp)
-            .padding(start = 16.dp)
-            .wrapContentWidth()
-            .background(StoreAppTheme.colors.uiBackground),
+            .padding(vertical = 8.dp)
+            .padding(start = 8.dp)
+            .wrapContentWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ProductImage(
@@ -281,12 +290,12 @@ fun GetPaymentDataItems(): List<PaymentDataItem> {
         ),
         PaymentDataItem(
             value = cardNumber,
-            valueChange = { newValue -> if (newValue.length < 13) cardNumber = newValue },
+            valueChange = { newValue -> if (newValue.length < 9) cardNumber = newValue },
             placeholder = stringResource(id = R.string.payment_data_card_number)
         ),
         PaymentDataItem(
             value = cardExpireDate,
-            valueChange = { newValue -> if (newValue.length < 5) cardExpireDate = newValue },
+            valueChange = { newValue -> if (newValue.length < 6) cardExpireDate = newValue },
             placeholder = stringResource(id = R.string.payment_data_card_expire_date)
         ),
         PaymentDataItem(

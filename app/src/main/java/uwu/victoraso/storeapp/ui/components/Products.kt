@@ -153,8 +153,8 @@ private fun HighlightedProducts(
     ) {
     val scroll = rememberScrollState(0)
     val gradient = when ((index / 2) % 2) {
-        0 -> StoreAppTheme.colors.gradient6_1
-        else -> StoreAppTheme.colors.gradient6_2
+        0 -> StoreAppTheme.colors.gradientLavander
+        else -> StoreAppTheme.colors.gradientDarkLavander
     }
 
     // The Cards show a gradient which spans 3 cards and scrolls with parallax.
@@ -306,7 +306,7 @@ private fun HighlightedProductItem(
         modifier = modifier
             .size(
                 width = 170.dp,
-                height = 250.dp
+                height = 230.dp
             )
             .padding(bottom = 16.dp)
     ) {
@@ -340,16 +340,10 @@ private fun HighlightedProductItem(
                 text = product.name,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.subtitle1,
+                textAlign = TextAlign.Center,
                 color = StoreAppTheme.colors.textSecondary,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = product.tagline,
-                style = MaterialTheme.typography.body1,
-                color = StoreAppTheme.colors.textHelp,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()
             )
         }
     }
@@ -441,7 +435,7 @@ private fun ViewMoreHighlightCard(
         modifier = modifier
             .size(
                 width = 170.dp,
-                height = 250.dp
+                height = 230.dp
             )
             .padding(bottom = 16.dp)
     ) {
@@ -518,7 +512,7 @@ private fun ProductCardPreview() {
             product = product,
             onProductClick = { id, category -> },
             index = 0,
-            gradient = StoreAppTheme.colors.gradient6_1,
+            gradient = StoreAppTheme.colors.gradientDarkLavander,
             gradientWidth = gradientWidth,
             scroll = 0
         )

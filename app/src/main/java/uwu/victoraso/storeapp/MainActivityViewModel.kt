@@ -26,5 +26,5 @@ class MainActivityViewModel @Inject constructor(
 
 sealed interface MainActivityUiState {
     object Loading : MainActivityUiState
-    data class Success(val darkMode: Boolean) : MainActivityUiState
+    data class Success(val darkTheme: Boolean) : MainActivityUiState
 }
