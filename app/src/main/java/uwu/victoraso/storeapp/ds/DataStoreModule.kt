@@ -25,6 +25,7 @@ val USER_PHONE_PREFERENCE = stringPreferencesKey("user_phone")
 val USER_PASSWORD_PREFERENCE = stringPreferencesKey("user_password")
 val REMEMBER_ME_PREFERENCE = booleanPreferencesKey("remember_me")
 val DARK_MODE_PREFERENCE = booleanPreferencesKey("dark_mode")
+val SELECTED_CART_INDEX_PREFERENCE = intPreferencesKey("selected_cart_index")
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -36,6 +36,9 @@ class UserPreferencesRepository @Inject constructor(
     override suspend fun setDarkThemeConfig(darkMode: Boolean) { preferencesDataSource.setDarkThemeConfig(darkMode) }
     override val darkThemeConfig: Flow<Boolean> = preferencesDataSource.darkThemeConfig
 
+    /** DarkMode Preference **/
+    override suspend fun setSelectedCartIndex(selectedCartIndex: Int) { preferencesDataSource.setSelectedCartIndex(selectedCartIndex) }
+    override val selectedCartIndex: Flow<Int> = preferencesDataSource.selectedCartIndex
 }
 
 sealed interface UserPreferencesRepositoryInterface {
@@ -45,6 +48,7 @@ sealed interface UserPreferencesRepositoryInterface {
     val getUserPassword: Flow<String>
     val getRememberMe: Flow<Boolean>
     val darkThemeConfig: Flow<Boolean>
+    val selectedCartIndex: Flow<Int>
     /** User DataStore Preferences Setters **/
     suspend fun setUserName(username: String)
     suspend fun setUserEmail(email: String)
@@ -53,4 +57,5 @@ sealed interface UserPreferencesRepositoryInterface {
     suspend fun setUserPassword(password: String)
     suspend fun setRememberMe(rememberMe: Boolean)
     suspend fun setDarkThemeConfig(darkMode: Boolean)
+    suspend fun setSelectedCartIndex(selectedCartIndex: Int)
 }

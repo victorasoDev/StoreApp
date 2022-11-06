@@ -53,12 +53,15 @@ fun Cart(
 
     val inspiredByCart: InspiredByCartProductsUiState = cartUiState.inspiredByCartProductsUiState
     val cart: CartsProductsUiState = cartUiState.cartProductsUiState
+    val selectedCart: SelectedCartUiState = cartUiState.selectedCartUiState
 
     Cart(
         removeProduct = viewModel::removeProduct,
         changeCartName = viewModel::changeCartName,
+        setSelectedCartIndex = viewModel::setSelectedCartIndex,
         inspiredByCart = inspiredByCart,
         cartUiState = cart,
+        selectedCartUiState = selectedCart,
         onProductClick = onProductClick,
         onProductList = onProductList,
         modifier = modifier
@@ -69,8 +72,10 @@ fun Cart(
 fun Cart(
     removeProduct: (Long, Long) -> Unit,
     changeCartName: (Cart) -> Unit,
+    setSelectedCartIndex: (Int) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
     cartUiState: CartsProductsUiState,
+    selectedCartUiState: SelectedCartUiState,
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -81,6 +86,7 @@ fun Cart(
 
     when (cartUiState) {
         is CartsProductsUiState.Success -> {
+            if (selectedCartUiState is SelectedCartUiState.Success) selectedCart = selectedCartUiState.selectedCartIndex
             val mainCart = cartUiState.carts[selectedCart]
             nameTextFieldValue = mainCart.name
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
@@ -113,6 +119,7 @@ fun Cart(
                                 items = cartUiState.carts,
                                 onItemClick = { cart ->
                                     selectedCart = cartUiState.carts.indexOf(cart)
+                                    setSelectedCartIndex(selectedCart)
                                 },
                                 onAddCartClick = { },
                                 itemText = { item ->
@@ -141,7 +148,7 @@ fun CartContent(
     onProductClick: (Long, String) -> Unit,
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
-) { //TODO: el Order (2 items) no cambia al eliminar un producto
+) {
     Log.d(DEBUG_TAG_LOGIN, "recomposes CartContent -> $cart")
     val resources = LocalContext.current.resources
     val productCount = cart.cartItems.size

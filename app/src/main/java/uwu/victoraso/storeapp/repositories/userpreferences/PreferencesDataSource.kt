@@ -60,4 +60,9 @@ class PreferencesDataSource @Inject constructor(
     val darkThemeConfig: Flow<Boolean> = userPreferences.data.map { preferences -> preferences[DARK_MODE_PREFERENCE] ?: false }
 
     suspend fun setDarkThemeConfig(darkMode: Boolean) = userPreferences.edit { preferences -> preferences[DARK_MODE_PREFERENCE] = darkMode }
+
+    /** Setter & Getter of [DARK_MODE_PREFERENCE] DataStore Preference **/
+    val selectedCartIndex: Flow<Int> = userPreferences.data.map { preferences -> preferences[SELECTED_CART_INDEX_PREFERENCE] ?: 0 }
+
+    suspend fun setSelectedCartIndex(selectedCartIndex: Int) = userPreferences.edit { preferences -> preferences[SELECTED_CART_INDEX_PREFERENCE] = selectedCartIndex }
 }

@@ -409,7 +409,7 @@ fun ProductImage(
     StoreAppSurface(
         color = Color.LightGray,
         elevation = elevation,
-        shape = CircleShape,
+        shape = MaterialTheme.shapes.medium,
         modifier = modifier
     ) {
         AsyncImage(

@@ -100,7 +100,10 @@ fun DestinationBar(
                 BasicTextField(
                     value = title,
                     onValueChange = onTitleValueChange,
-                    textStyle = MaterialTheme.typography.subtitle1.copy(textAlign = TextAlign.Center),
+                    textStyle = MaterialTheme.typography.subtitle1.copy(
+                        textAlign = TextAlign.Center,
+                        color = StoreAppTheme.colors.textSecondary
+                    ),
                     maxLines = 1,
                     modifier = Modifier
                         .weight(1f)
