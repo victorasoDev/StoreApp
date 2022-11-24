@@ -404,7 +404,8 @@ fun ProductImage(
     imageUrl: String,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp
+    elevation: Dp = 0.dp,
+    contentScale: ContentScale = ContentScale.Crop
 ) {
     StoreAppSurface(
         color = Color.LightGray,
@@ -420,7 +421,7 @@ fun ProductImage(
             contentDescription = contentDescription,
 //            placeholder = painterResource(id = R.color.black),
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+            contentScale = contentScale
         )
     }
 }
