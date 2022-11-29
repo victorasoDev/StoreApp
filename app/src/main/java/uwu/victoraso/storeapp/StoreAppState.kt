@@ -129,6 +129,7 @@ class StoreAppState(
     fun navigateTo(route: String, from: NavBackStackEntry) {
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {
+            Log.d("debugprueba", "ruta -> $route")
             navController.navigate(route) {
                 launchSingleTop = route == MainDestinations.LOGIN_ROUTE
             }

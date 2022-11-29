@@ -1,6 +1,7 @@
 package uwu.victoraso.storeapp.ui.productdetail
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,7 +17,6 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
@@ -98,9 +98,10 @@ private fun ProductDetail(
     when (productDetailState) {
         is ProductDetailUiState.Success -> {
             val product = productDetailState.product
+            Log.d("debugprueba", "prodct -> ${product.toString()}")
             Box(modifier = Modifier.fillMaxSize()) {
                 val scroll = rememberScrollState(0)
-                Header()
+                Header(product.imageUrl)
                 Body(
                     relatedState = relatedState,
                     product = product,
@@ -116,7 +117,7 @@ private fun ProductDetail(
                     countTitleLines = { lines -> titleLines = lines }
                 ) { scroll.value }
                 Image(
-                    imageUrl = product.imageUrl
+                    imageUrl = product.iconUrl
                 ) { scroll.value }
                 Up(upPress)
                 CartBottomBar(
@@ -144,12 +145,14 @@ private fun ProductDetail(
 }
 
 @Composable
-private fun Header() {
-    Spacer(
+private fun Header(imageUrl: String) {
+    ProductImage(
+        imageUrl = imageUrl,
+        shape = androidx.compose.material3.Shapes.None,
+        contentDescription = "Product detail header",
         modifier = Modifier
             .height(280.dp)
             .fillMaxWidth()
-            .background(Brush.horizontalGradient(StoreAppTheme.colors.gradientLavander))
     )
 }
 
@@ -383,7 +386,7 @@ private fun Image(
 ) {
     val collapseRange = with(LocalDensity.current) { (MaxTitleOffset - MinTitleOffset).toPx() }
     val collapseFractionProvider = { (scrollProvider() / collapseRange).coerceIn(0f, 1f) }
-
+Log.d("debugprueba", "imageUrl -> $imageUrl")
     CollapsingImageLayout(
         collapseFractionProvider = collapseFractionProvider,
         modifier = HzPadding.then(Modifier.statusBarsPadding())

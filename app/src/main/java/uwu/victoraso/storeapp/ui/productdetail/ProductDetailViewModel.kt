@@ -57,9 +57,10 @@ constructor(
                                 id = productDetailResult.data.id,
                                 name = productDetailResult.data.name,
                                 imageUrl = productDetailResult.data.imageUrl,
+                                iconUrl = productDetailResult.data.iconUrl,
                                 price = productDetailResult.data.price,
                                 tagline = productDetailResult.data.tagline,
-                                categories = productDetailResult.data.categories,
+                                category = productDetailResult.data.category,
                                 isWishlist = isWishlisted
                             )
                         )
@@ -76,7 +77,7 @@ constructor(
                     is Result.Success -> RelatedProductsUiState.Success(
                         ProductCollection(
                             id = 1L,
-                            name = relatedProductsResult.data.first().categories.first(), //TODO: mucho first por aqui
+                            name = relatedProductsResult.data.first().category, //TODO: mucho first por aqui
                             products = relatedProductsResult.data,
                             type = CollectionType.Highlight
                         )

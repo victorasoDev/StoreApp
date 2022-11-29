@@ -9,8 +9,10 @@ import kotlinx.parcelize.Parcelize
 data class Product(
     var id: Long = 0,
     var name: String = "",
+    var nameLowercase: String = name.lowercase(),
+    var iconUrl: String = "",
     var imageUrl: String = "",
-    var price: String = "",
+    var price: Long = (499..3500).random().toLong(),
     var tagline: String = "",
     var category: String = "",
     var isWishlist: Boolean = false
@@ -25,370 +27,370 @@ val products = listOf(
         id = 1,
         name = "Red Dead Redemption 2",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5bf6edd7efb1110b457da905e7ac696c6c619ed1.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1174180/header.jpg?t=1656615305",
         category = "Open-World",
-        price = ""
     ),
     Product(
         id = 2,
         name = "Marvel’s Spider-Man Remastered",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1817070/17c356390aee122b2bb73d3e11a4654ed8dd5927.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1817070/header.jpg?t=1667406675",
         category = "Adventure",
-        price = ""
     ),
     Product(
         id = 3,
         name = "DayZ",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/221100/f8c16699ed5ce1cc8aa9b15ed3fdd66553fce2bf.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/221100/header.jpg?t=1667310902",
         category = "Survival",
-        price = ""
     ),
     Product(
         id = 4,
         name = "Rust",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/252490/acf87ad23570b3c81f8c9cfc19544a07edd8b632.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/252490/header_alt_assets_19.jpg?t=1669127647",
         category = "Survival",
-        price = ""
     ),
     Product(
         id = 5,
         name = "Raft",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/648800/5d02897be07521435a513bdde6505b5e1177e3fa.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/648800/header.jpg?t=1655744208",
         category = "Exploration",
-        price = ""
     ),Product(
         id = 6,
         name = "Grounded",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/962130/c32d52dd08904e453d46e3110aec9b5ed914b258.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/962130/header.jpg?t=1664324694",
         category = "Exploration",
-        price = ""
     ),Product(
         id = 7,
         name = "The Forest",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/242760/e32c68d02e346fe27b0ac7671fc3b5c9ebf031af.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/242760/header.jpg?t=1666811027",
         category = "Survival",
-        price = ""
     ),Product(
         id = 8,
         name = "Days Gone",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1259420/ff8636bb7530abcbba7f25c0c7eade46c146ffe0.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1259420/header.jpg?t=1635476187",
         category = "Adventure",
-        price = ""
     ),Product(
         id = 9,
         name = "God Of War",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1593500/13a56d5a2f9248b14f6d2cc0486e2b05b19d9554.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1593500/header.jpg?t=1650554420",
         category = "Adventure",
-        price = ""
     ),Product(
         id = 10,
-        name = "",
+        name = "The Elder Scrolls Online",
         tagline = "A tag line",
-        imageUrl = "",
-        category = "",
-        price = ""
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/306130/8c6ccd16c7cfd661e009c2d3e437623e954bb521.ico",
+        imageUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/306130/12b778bee50eb8d75f5ed04eb01117eae97f1e37.jpg",
+        category = "Multiplayer",
     ),Product(
         id = 11,
         name = "UNCHARTED™: Legacy of Thieves Collection",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1659420/30f34a35bb06902c0502963411c92abd92d539c8.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1659420/header.jpg?t=1666804146",
         category = "Adventure",
-        price = ""
     ),Product(
         id = 12,
         name = "Kena: Bridge of Spirits",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1954200/a791fdd1e16df8232e4d63e920ae57551da55818.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1954200/header.jpg?t=1664298117",
-        category = "Indie",
-        price = ""
+        category = "Adventure",
     ),Product(
         id = 13,
         name = "The Elder Scrolls V: Skyrim Special Edition",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/72850/e15fa6de9b0120058a1876db6c3a22ccc6dac9d5.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/489830/header.jpg?t=1650909796",
         category = "Open-World",
-        price = ""
     ),Product(
         id = 14,
         name = "Elden Ring",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1245620/2e048bfc2073ca30804ed5b8c454a9ca0e2f98de.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg?t=1668042166",
         category = "Adventure",
-        price = ""
     ),Product(
         id = 15,
         name = "Outer Wilds",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/753640/776c33c3fe66b54a132832449bd8b2e17df93593.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/753640/header.jpg?t=1660850445",
         category = "Exploration",
-        price = ""
     ),Product(
         id = 16,
         name = "Subnautica",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/264710/33576b78a79e5ffa345253b190b03fe90dd47612.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/header.jpg?t=1664411699",
         category = "Exploration",
-        price = ""
     ),Product(
         id = 17,
         name = "Two Point Campus",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1649080/84cdc4e6de1998ffd9a1f1a27c0082f25e347a74.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1649080/header.jpg?t=1667908870",
         category = "Simulation",
-        price = ""
     ),Product(
         id = 18,
         name = "Cities Skylines",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/255710/3f2b22c6d7bca4d39f06c203d16facb50014bbbb.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/255710/header.jpg?t=1668007889",
         category = "Simulation",
-        price = ""
     ),Product(
         id = 19,
         name = "Planet Zoo",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/703080/11259023bfc7749c0016034a6e2fe84eaef69450.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/703080/header.jpg?t=1668012490",
         category = "Simulation",
-        price = ""
     ),Product(
         id = 20,
         name = "Going Medieval",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1029780/7f3c80b6a0de15112286fbc8477baa5a4a31b19c.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1029780/header_alt_assets_3.jpg?t=1667909578",
         category = "Simulation",
-        price = ""
     ),Product(
         id = 21,
         name = "Kenshi",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/233860/026b00a6ba7ee1d0cd9408c5316214ac54b7a6f4.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/233860/header.jpg?t=1668010883",
         category = "Simulation",
-        price = ""
     ),Product(
         id = 22,
         name = "Stray",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1332010/c28b0f828625bf051e75f4addd6cca2e9973086e.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1332010/header.jpg?t=1660855681",
         category = "Adventure",
-        price = ""
     ),Product(
         id = 23,
         name = "Resident Evil 7",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/418370/843cd329f00631fcbed76082268ab385ce5980d1.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/418370/header.jpg?t=1656996016",
         category = "Horror",
-        price = ""
     ),Product(
         id = 24,
         name = "Resident Evil 2",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/883710/944337601cbaf7e04fb397170ec25124f5b34822.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/883710/header.jpg?t=1668647869",
         category = "Horror",
-        price = ""
     ),Product(
         id = 25,
         name = "Scorn",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/698670/b29bef67d4e2ce1d34deaab5bf39addf90e756a6.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/698670/header.jpg?t=1667894197",
         category = "Horror",
-        price = ""
     ),Product(
         id = 26,
         name = "Madison",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1670870/5afe2a135e950e6f7bdc4e5dbe8f1374fb9b8c80.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1670870/header.jpg?t=1661462096",
         category = "Horror",
-        price = ""
     ),Product(
         id = 27,
         name = "The Ascent",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/979690/56e988e59c3a3ce3364feb6aff6b02eb4c28daea.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/979690/header.jpg?t=1661169382",
         category = "Multiplayer",
-        price = ""
     ),Product(
         id = 28,
         name = "Borderlands 3",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/397540/38a69eba696ad2cd4746c8771e491f17a6f6d14f.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/397540/header.jpg?t=1657214217",
         category = "Open-World",
-        price = ""
     ),Product(
         id = 29,
         name = "PUBG: Battlegrounds",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/578080/f962202b06de547cf47c156bdd7aaa5bf7f2cdbb.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/578080/header.jpg?t=1667814365",
         category = "Multiplayer",
-        price = ""
     ),Product(
         id = 30,
         name = "Apex Legends",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1172470/b43afd1b01edf1bcea4556ef9c8c15570c8fd940.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1172470/header.jpg?t=1667588841",
         category = "Multiplayer",
-        price = ""
     ),Product(
         id = 31,
         name = "Sea of Thieves",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1172620/108273e62bc0bf501a3fb1eb74a55689ad947d11.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1172620/header.jpg?t=1668434378",
         category = "Multiplayer",
-        price = ""
     ),Product(
         id = 32,
         name = "Hades",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1145360/c2af83dde08c0636a1cd511abd0f9290913e6249.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/header.jpg?t=1661549369",
         category = "Rogue-Like",
-        price = ""
     ),Product(
         id = 33,
         name = "The Binding of Isaac: Rebirth",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/250900/3536f1077c4ff06a682541cfdffd81214168cead.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/250900/header.jpg?t=1617174663",
         category = "Rogue-Like",
-        price = ""
     ),Product(
         id = 34,
         name = "Dead Cells",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/588650/4937672451bb8f5abedd20852eed355fd82ec1a3.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/588650/header.jpg?t=1665137249",
         category = "Rogue-Like",
-        price = ""
     ),Product(
         id = 35,
         name = "Vampire Survivors",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1794680/b61dc182c372d4f9517043ba04f4fa61308a30bb.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1794680/header.jpg?t=1666779006",
         category = "Rogue-Like",
-        price = ""
     ),Product(
         id = 36,
         name = "Eastward",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/977880/890956965efd6fc345943191ba5e5910b4f10c45.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/977880/header.jpg?t=1669027228",
         category = "Adventure",
-        price = ""
     ),Product(
         id = 37,
         name = "Children of Morta",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/330020/f5f9f815fb8d2c447ed86cdfb6edadfa064c0343.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/330020/header_alt_assets_1.jpg?t=1667827288",
         category = "Rogue-Like",
-        price = ""
     ),Product(
         id = 38,
         name = "Risk of Rain 2",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/632360/3f53e1f00e3021cec85a45663c597128890e74b5.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/632360/header.jpg?t=1660063598",
         category = "Rogue-Like",
-        price = ""
     ),Product(
         id = 39,
         name = "Portal 2",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/620/25a5a16b2423bf7487ac5340b5b0948cef48c5f8.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/620/header.jpg?t=1665427328",
         category = "Multiplayer",
-        price = ""
     ),Product(
         id = 40,
         name = "It Takes Two",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1426210/323a899705796f44d4a95c4e22094dd6f28fb442.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1426210/header.jpg?t=1666121755",
         category = "Multiplayer",
-        price = ""
     ),Product(
         id = 41,
         name = "Litte Nightmares 2",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/860510/d088c44f26cea361433d82d954e54d0b5c4793fd.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/860510/header.jpg?t=1661866261",
         category = "Horror",
-        price = ""
     ),Product(
         id = 42,
         name = "Hollow Knight",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/367520/53a67be1a52c2b76def636cb5c0c9b85dd4fa535.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg?t=1667006028",
         category = "Metroidvania",
-        price = ""
     ),Product(
         id = 43,
         name = "Blasphemous",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/774361/566ae07473b877f0450bef7193ae08dedb00108a.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/774361/header.jpg?t=1660838704",
         category = "Metroidvania",
-        price = ""
     ),Product(
         id = 44,
         name = "Forza Horizon 5",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1551360/cf2cee9ce3d0d8688d0c661e5363aabd1f359c3a.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1551360/header.jpg?t=1668017884",
         category = "Simulation",
-        price = ""
     ),Product(
         id = 45,
         name = "Cult of the Lamb",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1313140/629aef46877c0c0560b6c5b2960bcb070568297e.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1313140/header.jpg?t=1667289686",
         category = "Metroidvania",
-        price = ""
     ),Product(
         id = 46,
         name = "Ori and the Will of the Wisps",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1057090/0e0bf569e49bb40343cb3ec7dc81c4a0c3d50b1e.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1057090/header.jpg?t=1667504225",
         category = "Metroidvania",
-        price = ""
     ),Product(
         id = 47,
         name = "Skul",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1147560/5e9a2814031737b9438bce7f6fad402d963b822c.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1147560/header.jpg?t=1656292935",
         category = "Metroidvania",
-        price = ""
     ),Product(
         id = 48,
         name = "Slime Rancher 2",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1657630/a224549477241ae27531ace8872f84ef30d79085.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1657630/header.jpg?t=1663866007",
         category = "Casual",
-        price = ""
     ),Product(
         id = 49,
         name = "Stardew Valley",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/413150/913064b27b4b25e2c03cbd261a8b03fd67da693c.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/header.jpg?t=1666917466",
         category = "Casual",
-        price = ""
     ),Product(
         id = 50,
         name = "Overcooked 2",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/728880/589930a652d56d6da7241339f62fd4ac1fc10a97.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/728880/header.jpg?t=1643298085",
         category = "Casual",
-        price = ""
     ),Product(
         id = 51,
         name = "The Sims 4",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1222670/f972f7624b8e98135c71fe4b04cd87cf22329ec9.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/1222670/header.jpg?t=1668103304",
         category = "Casual",
-        price = ""
     ),Product(
         id = 52,
         name = "Return to Monkey Island",
         tagline = "A tag line",
+        iconUrl = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/2060130/a017aa79a1676a0c66b4efe1f5f00979488a561b.ico",
         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/2060130/header.jpg?t=1667933041",
         category = "Casual",
-        price = ""
     ),
 
 )

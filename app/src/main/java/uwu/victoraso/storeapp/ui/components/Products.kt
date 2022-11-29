@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -181,7 +182,7 @@ private fun HighlightedProducts(
                     ViewMoreHighlightCard(
                         modifier = modifier,
                         onProductList = onProductList,
-                        productCollectionCategory = products.first().categories.first()
+                        productCollectionCategory = products.first().category
                     )
                 }
             }
@@ -207,7 +208,7 @@ private fun Products(
                 ViewMoreCard(
                     modifier = modifier,
                     onProductList = onProductList,
-                    productCollectionCategory = products.first().categories.first()
+                    productCollectionCategory = products.first().category
                 )
             }
         }
@@ -232,11 +233,11 @@ fun ProductItem(
     ) {
         Column(
             modifier = Modifier
-                .clickable(onClick = { onProductClick(product.id, product.categories.first()) })
+                .clickable(onClick = { onProductClick(product.id, product.category) })
                 .padding(8.dp)
         ) {
             ProductImage(
-                imageUrl = product.imageUrl,
+                imageUrl = product.iconUrl,
                 elevation = 4.dp,
                 contentDescription = null,
                 modifier = Modifier.size(120.dp)
@@ -312,7 +313,7 @@ private fun HighlightedProductItem(
     ) {
         Column(
             modifier = Modifier
-                .clickable(onClick = { onProductClick(product.id, product.categories.first()) })
+                .clickable(onClick = { onProductClick(product.id, product.category) })
                 .fillMaxSize()
         ) {
             Box(
@@ -328,7 +329,7 @@ private fun HighlightedProductItem(
                         .offsetGradientBackground(gradient, gradientWidth, gradientOffset)
                 )
                 ProductImage(
-                    imageUrl = product.imageUrl,
+                    imageUrl = product.iconUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .size(120.dp)
@@ -402,6 +403,7 @@ private fun HighlightedProductItemShimmer(
 @Composable
 fun ProductImage(
     imageUrl: String,
+    shape: Shape = MaterialTheme.shapes.medium,
     contentDescription: String?,
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
@@ -410,7 +412,7 @@ fun ProductImage(
     StoreAppSurface(
         color = Color.LightGray,
         elevation = elevation,
-        shape = MaterialTheme.shapes.medium,
+        shape = shape,
         modifier = modifier
     ) {
         AsyncImage(
@@ -443,10 +445,10 @@ private fun ViewMoreHighlightCard(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .clickable { onProductList(productCollectionCategory) },
+                .clickable { onProductList(MainDestinations.PRODUCT_LIST_ROUTE + "/" + productCollectionCategory) },
             contentAlignment = Alignment.Center,
         ) {
-            IconButton(onClick = { onProductList(productCollectionCategory) }) {
+            IconButton(onClick = { onProductList(MainDestinations.PRODUCT_LIST_ROUTE + "/" + productCollectionCategory) }) {
                 Icon(
                     imageVector = mirroringIcon(
                         ltrIcon = Icons.Outlined.ReadMore,
@@ -479,7 +481,7 @@ private fun ViewMoreCard(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .clickable(onClick = { onProductList(productCollectionCategory) })
+                .clickable(onClick = { onProductList(MainDestinations.PRODUCT_LIST_ROUTE + "/" + productCollectionCategory) })
                 .padding(8.dp)
         ) {
             StoreAppSurface(
@@ -488,7 +490,7 @@ private fun ViewMoreCard(
                 modifier = modifier.size(120.dp),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(onClick = { onProductList(productCollectionCategory) }) {
+                IconButton(onClick = { onProductList(MainDestinations.PRODUCT_LIST_ROUTE + "/" + productCollectionCategory) }) {
                     Icon(
                         imageVector = mirroringIcon(
                             ltrIcon = Icons.Outlined.ReadMore,

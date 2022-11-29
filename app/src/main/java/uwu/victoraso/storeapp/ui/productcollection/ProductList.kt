@@ -1,27 +1,20 @@
 package uwu.victoraso.storeapp.ui.productcollection
 
 import android.util.Log
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,12 +25,9 @@ import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
-import uwu.victoraso.storeapp.ui.home.DestinationBar
-import uwu.victoraso.storeapp.ui.theme.Neutral8
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.formatPrice
-import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -143,7 +133,7 @@ fun ProductListItem(
         ProductListItemContent(
             product = product,
             addProduct = addProduct,
-            removeProduct = removeProduct
+            removeProduct = removeProduct,
         )
     }
 }
@@ -158,7 +148,7 @@ fun ProductListItem(
 ) {
     Box(
         modifier = modifier
-            .clickable { onProductSelected(product.id, product.categories.firstOrNull() ?: "") }
+            .clickable { onProductSelected(product.id, product.category) }
     ) {
         ProductListItemContent(
             product = product,
@@ -174,7 +164,7 @@ private fun ProductListItemContent(
     addProduct: (Long) -> Unit,
     removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
-) {
+) { //TODO
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
@@ -185,7 +175,7 @@ private fun ProductListItemContent(
         createVerticalChain(name, tag, priceSpacer, price, chainStyle = ChainStyle.Packed)
 
         ProductImage(
-            imageUrl = product.imageUrl,
+            imageUrl = product.iconUrl,
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)
@@ -198,6 +188,7 @@ private fun ProductListItemContent(
         Text(
             text = product.name,
             style = MaterialTheme.typography.subtitle1,
+            maxLines = 2,
             color = StoreAppTheme.colors.textSecondary,
             modifier = Modifier
                 .constrainAs(name) {
@@ -209,7 +200,6 @@ private fun ProductListItemContent(
                         bias = 0f
                     )
                 }
-                .horizontalScroll(rememberScrollState())
         )
         Text(
             text = product.tagline,

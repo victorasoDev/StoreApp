@@ -19,41 +19,37 @@ constructor(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
 
-    private val processorProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Processors")
-    private val motherboardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Motherboards")
-    private val graphicsCardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Graphic Cards")
-    private val storagesCardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Storages")
-    private val coolingSystemCardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Cooling systems")
-    private val ramsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("RAMs")
-    private val laptopsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Laptops")
-    private val buildsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Builds")
-    private val monitorsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Monitors")
-    private val mousesProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Mouses")
-    private val keyboardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Keyboards")
+    private val adventureProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Adventure")
+    private val openWorldProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Open-World")
+    private val survivalCardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Survival")
+    private val explorationCardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Exploration")
+    private val rogueLikeCardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Rogue-Like")
+    private val metroidvaniaProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Metroidvania")
+    private val horrorProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Horror")
+    private val simulationProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Simulation")
+    private val casualProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Casual")
 
     val uiState: StateFlow<FeedScreenUiState> =
         feedCombine(
-            processorProductsStream,
-            motherboardsProductsStream,
-            graphicsCardsProductsStream,
-            storagesCardsProductsStream,
-            coolingSystemCardsProductsStream,
-            ramsProductsStream,
-            laptopsProductsStream,
-            buildsProductsStream,
-            monitorsProductsStream,
-            mousesProductsStream,
-            keyboardsProductsStream,
-        ) { processorResult, motherboardsResult, graphicsCardsResult, storagesResult, coolingSystemsResult,
-            ramsResult, laptopsResult, buildsResult, monitorsResult, mousesResult, keyboardsResult ->
+            adventureProductsStream,
+            openWorldProductsStream,
+            survivalCardsProductsStream,
+            explorationCardsProductsStream,
+            rogueLikeCardsProductsStream,
+            metroidvaniaProductsStream,
+            horrorProductsStream,
+            simulationProductsStream,
+            casualProductsStream,
+        ) { adventureResult, openWorldResult, survivalResult, explorationResult, rogueLikeResult,
+            metroidvaniaResult, horrorResult, simulationResult, casualResult ->
             /** Get processor list **/
             val processors: FeedUiState =
-                when (processorResult) {
+                when (adventureResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 1L,
-                            name = "Processors",
-                            products = processorResult.data,
+                            name = "Adventure",
+                            products = adventureResult.data,
                             type = CollectionType.Highlight
                         )
                     )
@@ -63,12 +59,12 @@ constructor(
 
             /** Get motherboards list **/
             val motherboards: FeedUiState =
-                when (motherboardsResult) {
+                when (openWorldResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 2L,
-                            name = "Motherboards",
-                            products = motherboardsResult.data,
+                            name = "Open-World",
+                            products = openWorldResult.data,
                             type = CollectionType.Normal
                         )
                     )
@@ -78,12 +74,12 @@ constructor(
 
             /** Get graphic cards list **/
             val graphicCards: FeedUiState =
-                when (graphicsCardsResult) {
+                when (survivalResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 3L,
-                            name = "Graphic Cards",
-                            products = graphicsCardsResult.data,
+                            name = "Survival",
+                            products = survivalResult.data,
                             type = CollectionType.Highlight
                         )
                     )
@@ -93,12 +89,12 @@ constructor(
 
             /** Get storages list **/
             val storages: FeedUiState =
-                when (storagesResult) {
+                when (explorationResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 4L,
-                            name = "Storages",
-                            products = storagesResult.data,
+                            name = "Exploration",
+                            products = explorationResult.data,
                             type = CollectionType.Highlight
                         )
                     )
@@ -108,12 +104,12 @@ constructor(
 
             /** Get cooling systems list **/
             val coolingSystems: FeedUiState =
-                when (coolingSystemsResult) {
+                when (rogueLikeResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 5L,
-                            name = "Cooling Systems",
-                            products = coolingSystemsResult.data,
+                            name = "Rogue-Like",
+                            products = rogueLikeResult.data,
                             type = CollectionType.Highlight
                         )
                     )
@@ -123,12 +119,12 @@ constructor(
 
             /** Get rams list **/
             val rams: FeedUiState =
-                when (ramsResult) {
+                when (metroidvaniaResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 6L,
-                            name = "RAMs",
-                            products = ramsResult.data,
+                            name = "Metroidvania",
+                            products = metroidvaniaResult.data,
                             type = CollectionType.Highlight
                         )
                     )
@@ -138,12 +134,12 @@ constructor(
 
             /** Get laptops list **/
             val laptops: FeedUiState =
-                when (laptopsResult) {
+                when (horrorResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 7L,
-                            name = "Laptops",
-                            products = laptopsResult.data,
+                            name = "Horror",
+                            products = horrorResult.data,
                             type = CollectionType.Highlight
                         )
                     )
@@ -153,12 +149,12 @@ constructor(
 
             /** Get builds list **/
             val builds: FeedUiState =
-                when (buildsResult) {
+                when (simulationResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 8L,
-                            name = "Builds",
-                            products = buildsResult.data,
+                            name = "Simulation",
+                            products = simulationResult.data,
                             type = CollectionType.Highlight
                         )
                     )
@@ -168,49 +164,19 @@ constructor(
 
             /** Get monitors list **/
             val monitors: FeedUiState =
-                when (monitorsResult) {
+                when (casualResult) {
                     is Result.Success -> FeedUiState.Success(
                         ProductCollection(
                             id = 9L,
-                            name = "Monitors",
-                            products = monitorsResult.data,
+                            name = "Casual",
+                            products = casualResult.data,
                             type = CollectionType.Highlight
                         )
                     )
                     is Result.Loading -> FeedUiState.Loading
                     is Result.Error -> FeedUiState.Error
                 }
-
-            /** Get mouses list **/
-            val mouses: FeedUiState =
-                when (mousesResult) {
-                    is Result.Success -> FeedUiState.Success(
-                        ProductCollection(
-                            id = 10L,
-                            name = "Mouses",
-                            products = mousesResult.data,
-                            type = CollectionType.Highlight
-                        )
-                    )
-                    is Result.Loading -> FeedUiState.Loading
-                    is Result.Error -> FeedUiState.Error
-                }
-
-            /** Get keyboards list **/
-            val keyboards: FeedUiState =
-                when (keyboardsResult) {
-                    is Result.Success -> FeedUiState.Success(
-                        ProductCollection(
-                            id = 11L,
-                            name = "Keyboards",
-                            products = keyboardsResult.data,
-                            type = CollectionType.Highlight
-                        )
-                    )
-                    is Result.Loading -> FeedUiState.Loading
-                    is Result.Error -> FeedUiState.Error
-                }
-            FeedScreenUiState(processors, motherboards, graphicCards, storages, coolingSystems, rams, laptops, builds, monitors, mouses, keyboards)
+            FeedScreenUiState(processors, motherboards, graphicCards, storages, coolingSystems, rams, laptops, builds, monitors)
         }
             .stateIn(
                 scope = viewModelScope,
@@ -225,8 +191,6 @@ constructor(
                     laptops = FeedUiState.Loading,
                     builds = FeedUiState.Loading,
                     monitors = FeedUiState.Loading,
-                    mouses = FeedUiState.Loading,
-                    keyboards = FeedUiState.Loading,
                 )
             )
 
@@ -236,7 +200,7 @@ constructor(
     }
 }
 
-private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> feedCombine(
+private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> feedCombine(
     flow: Flow<T1>,
     flow2: Flow<T2>,
     flow3: Flow<T3>,
@@ -246,11 +210,9 @@ private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> feedCombine
     flow7: Flow<T7>,
     flow8: Flow<T8>,
     flow9: Flow<T9>,
-    flow10: Flow<T10>,
-    flow11: Flow<T11>,
-    crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11) -> R
+    crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9) -> R
 ): Flow<R> {
-    return combine(flow, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9, flow10, flow11) { args: Array<*> ->
+    return combine(flow, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9) { args: Array<*> ->
         @Suppress("UNCHECKED_CAST")
         transform(
             args[0] as T1,
@@ -261,9 +223,7 @@ private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> feedCombine
             args[5] as T6,
             args[6] as T7,
             args[7] as T8,
-            args[8] as T9,
-            args[9] as T10,
-            args[10] as T11,
+            args[8] as T9
         )
     }
 }
@@ -284,6 +244,4 @@ data class FeedScreenUiState(
     val laptops: FeedUiState,
     val builds: FeedUiState,
     val monitors: FeedUiState,
-    val mouses: FeedUiState,
-    val keyboards: FeedUiState,
 )

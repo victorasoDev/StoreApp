@@ -21,13 +21,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.products
-import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import androidx.constraintlayout.compose.ConstraintLayout
 import uwu.victoraso.storeapp.ui.components.*
+import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @Composable
@@ -62,7 +62,7 @@ private fun SearchResult(
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onProductClick(product.id, product.categories.first()) }
+            .clickable { onProductClick(product.id, product.category) }
             .padding(horizontal = 24.dp)
     ) {
         val (divider, image, name, tag, priceSpacer, price, add) = createRefs()

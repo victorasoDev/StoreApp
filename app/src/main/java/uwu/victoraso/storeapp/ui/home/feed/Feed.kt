@@ -128,8 +128,6 @@ fun getProductsCollections(feedUiState: FeedScreenUiState): List<ProductCollecti
     if (feedUiState.laptops is FeedUiState.Success) productCollections.add(feedUiState.laptops.productCollection)
     if (feedUiState.builds is FeedUiState.Success) productCollections.add(feedUiState.builds.productCollection)
     if (feedUiState.monitors is FeedUiState.Success) productCollections.add(feedUiState.monitors.productCollection)
-    if (feedUiState.mouses is FeedUiState.Success) productCollections.add(feedUiState.mouses.productCollection)
-    if (feedUiState.keyboards is FeedUiState.Success) productCollections.add(feedUiState.keyboards.productCollection)
 
     return productCollections
 }

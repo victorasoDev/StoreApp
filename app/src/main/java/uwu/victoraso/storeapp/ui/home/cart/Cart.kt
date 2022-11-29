@@ -58,6 +58,7 @@ fun Cart(
     Cart(
         removeProduct = viewModel::removeProduct,
         changeCartName = viewModel::changeCartName,
+        insertCart = viewModel::insertCart,
         setSelectedCartIndex = viewModel::setSelectedCartIndex,
         inspiredByCart = inspiredByCart,
         cartUiState = cart,
@@ -72,6 +73,7 @@ fun Cart(
 fun Cart(
     removeProduct: (Long, Long) -> Unit,
     changeCartName: (Cart) -> Unit,
+    insertCart: (Cart) -> Unit,
     setSelectedCartIndex: (Int) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
     cartUiState: CartsProductsUiState,
@@ -87,7 +89,13 @@ fun Cart(
     when (cartUiState) {
         is CartsProductsUiState.Success -> {
             if (selectedCartUiState is SelectedCartUiState.Success) selectedCart = selectedCartUiState.selectedCartIndex
-            val mainCart = cartUiState.carts[selectedCart]
+            val mainCart: Cart
+            if (cartUiState.carts.isNotEmpty()) {
+                mainCart = cartUiState.carts[selectedCart]
+            } else {
+                mainCart = Cart(name = "New cart")
+                insertCart(mainCart)
+            }
             nameTextFieldValue = mainCart.name
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
                 Box {

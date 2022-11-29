@@ -32,7 +32,7 @@ fun CartProduct.fill(product: Product, cart: Cart): CartProduct { //TODO posible
     name = product.name
     imageUrl = product.imageUrl
     price = product.price
-    category = product.categories.first()
+    category = product.category
     cartId = cart.id
     addDate = System.currentTimeMillis() / 1000
     return this

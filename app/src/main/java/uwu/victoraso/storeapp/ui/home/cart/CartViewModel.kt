@@ -3,6 +3,7 @@ package uwu.victoraso.storeapp.ui.home.cart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.model.*
@@ -11,6 +12,7 @@ import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.cart.CartRepository
 import uwu.victoraso.storeapp.repositories.products.ProductRepository
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
+import uwu.victoraso.storeapp.room.model.CartEntity
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,8 +24,7 @@ constructor(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
-    private val inspiredByCartProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory("Graphic Cards").asResult()
-//    private val cartStream: Flow<Result<Cart>> = cartRepository.getCartByIdStream("1").asResult()
+    private val inspiredByCartProductsStream: Flow<Result<List<Product>>> = productRepository.getProductsByCategory("Adventure").asResult()
     private val cartsStream: Flow<Result<List<Cart>>> = cartRepository.getCartsStream().asResult()
     private val selectedCartStream: Flow<Result<Int>> = userPreferencesRepository.selectedCartIndex.asResult()
 
@@ -79,6 +80,12 @@ constructor(
     fun changeCartName(cart: Cart) {
         viewModelScope.launch {
             cartRepository.updateCart(cart.asEntity())
+        }
+    }
+
+    fun insertCart(cart: Cart) {
+        viewModelScope.launch(Dispatchers.IO) {
+            cartRepository.insertCart(CartEntity(name = cart.name))
         }
     }
 
