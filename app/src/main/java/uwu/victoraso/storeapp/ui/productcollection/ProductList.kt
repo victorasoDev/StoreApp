@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.ui.productcollection
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,9 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ChainStyle
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -165,82 +163,41 @@ private fun ProductListItemContent(
     removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) { //TODO
-    ConstraintLayout(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(StoreAppTheme.colors.uiBackground)
-            .padding(horizontal = 24.dp)
-    ) {
-        val (divider, image, name, tag, priceSpacer, price) = createRefs()
-        createVerticalChain(name, tag, priceSpacer, price, chainStyle = ChainStyle.Packed)
 
+    Row(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .padding(start = 8.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         ProductImage(
             imageUrl = product.iconUrl,
             contentDescription = null,
-            modifier = Modifier
-                .size(100.dp)
-                .constrainAs(image) {
-                    top.linkTo(parent.top, margin = 16.dp)
-                    bottom.linkTo(parent.bottom, margin = 16.dp)
-                    start.linkTo(parent.start)
-                }
+            modifier = Modifier.size(100.dp)
         )
-        Text(
-            text = product.name,
-            style = MaterialTheme.typography.subtitle1,
-            maxLines = 2,
-            color = StoreAppTheme.colors.textSecondary,
-            modifier = Modifier
-                .constrainAs(name) {
-                    linkTo(
-                        start = image.end,
-                        startMargin = 16.dp,
-                        end = parent.end,
-                        endMargin = 16.dp,
-                        bias = 0f
-                    )
-                }
-        )
-        Text(
-            text = product.tagline,
-            style = MaterialTheme.typography.body1,
-            color = StoreAppTheme.colors.textHelp,
-            modifier = Modifier.constrainAs(tag) {
-                linkTo(
-                    start = image.end,
-                    startMargin = 16.dp,
-                    endMargin = 16.dp,
-                    end = parent.end,
-                    bias = 0f
-                )
-            }
-        )
-        Spacer(
-            modifier = Modifier
-                .height(8.dp)
-                .constrainAs(priceSpacer) {
-                    linkTo(top = tag.bottom, bottom = price.top)
-                }
-        )
-        Text(
-            text = formatPrice(product.price),
-            style = MaterialTheme.typography.subtitle1,
-            color = StoreAppTheme.colors.textPrimary,
-            modifier = Modifier.constrainAs(price) {
-                linkTo(
-                    start = image.end,
-                    end = parent.end,
-                    startMargin = 16.dp,
-                    endMargin = 16.dp,
-                    bias = 0f
-                )
-            }
-        )
-        StoreAppDivider(
-            Modifier.constrainAs(divider) {
-                linkTo(start = parent.start, end = parent.end)
-                top.linkTo(parent.bottom)
-            }
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = product.name,
+                style = MaterialTheme.typography.subtitle1,
+                color = StoreAppTheme.colors.textSecondary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+            )
+            Text(
+                text = formatPrice(product.price),
+                style = MaterialTheme.typography.subtitle1,
+                color = StoreAppTheme.colors.textPrimary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
     }
+    StoreAppDivider(modifier = Modifier.fillMaxWidth())
 }

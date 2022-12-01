@@ -107,39 +107,6 @@ fun ProductCollection(
     }
 }
 
-@Composable
-fun ProductCollectionShimmer(
-    modifier: Modifier = Modifier,
-    highlight: Boolean = true
-) {
-    Column(modifier = modifier) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .heightIn(min = 56.dp)
-                .padding(start = 24.dp)
-        ) {
-            Spacer(modifier = Modifier
-                .width(130.dp)
-                .height(40.dp)
-                .padding(8.dp)
-                .clip(CircleShape)
-                .weight(1f)
-                .wrapContentWidth(Alignment.Start)
-                .background(ShimmerEffect()))
-        }
-        LazyRow(
-            modifier = modifier,
-            contentPadding = PaddingValues(start = 12.dp, end = 12.dp),
-        ) {
-            items(5) {
-                if (highlight) HighlightedProductItemShimmer() else ProductItemShimmer()
-            }
-        }
-    }
-}
-
-
 private val HighlightCardWidth = 170.dp
 private val HighlightCardPadding = 16.dp
 
@@ -178,9 +145,17 @@ private fun HighlightedProducts(
                     scroll = scroll.value
                 )
             } else {
+                HighlightedProductItem(
+                    product = product,
+                    onProductClick = onProductClick,
+                    index = index,
+                    gradient = gradient,
+                    gradientWidth = gradientWidth,
+                    scroll = scroll.value
+                )
                 if (showMore) {
                     ViewMoreHighlightCard(
-                        modifier = modifier,
+                        modifier = modifier.padding(start = 16.dp),
                         onProductList = onProductList,
                         productCollectionCategory = products.first().category
                     )
@@ -205,8 +180,9 @@ private fun Products(
             if (products.lastIndex != index) {
                 ProductItem(product = product, onProductClick = onProductClick)
             } else {
+                ProductItem(product = product, onProductClick = onProductClick)
                 ViewMoreCard(
-                    modifier = modifier,
+                    modifier = modifier.padding(start = 16.dp),
                     onProductList = onProductList,
                     productCollectionCategory = products.first().category
                 )

@@ -18,7 +18,7 @@ import uwu.victoraso.storeapp.ui.components.ProductCollection
 import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
-import uwu.victoraso.storeapp.ui.home.DestinationBar
+import uwu.victoraso.storeapp.ui.home.DestinationBarWithLogo
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -57,7 +57,12 @@ private fun Feed(
             Log.d(DEBUG_TAG, "Feed Success -> ${feedUiState.processors.productCollection.products.size}")
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
                 Column {
-                    DestinationBar(onDestinationBarButtonClick = onProductCreate)
+                    DestinationBarWithLogo(
+                        onDestinationBarButtonClick = onProductCreate,
+                        onLogoButtonClick = {
+
+                        }
+                    )
                     FeedContent(
                         productCollections = productCollections,
                         onProductClick = onProductClick,
@@ -81,7 +86,7 @@ private fun FeedContent(
     val lazyColumnState = rememberLazyListState()
 
     Box(modifier = modifier) {
-        LazyColumn (state = lazyColumnState) {
+        LazyColumn(state = lazyColumnState) {
             item {
                 FeedProductHeader()
             }

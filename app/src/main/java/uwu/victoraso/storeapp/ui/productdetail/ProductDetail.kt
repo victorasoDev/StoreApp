@@ -240,14 +240,14 @@ private fun Body(
                     )
                     Spacer(modifier = Modifier.height(40.dp))
                     Text(
-                        text = stringResource(id = R.string.ingredients),
+                        text = stringResource(id = R.string.platforms),
                         style = MaterialTheme.typography.body1,
                         color = StoreAppTheme.colors.textHelp,
                         modifier = HzPadding
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = stringResource(id = R.string.ingredients_list),
+                        text = stringResource(id = R.string.platforms_variety),
                         style = MaterialTheme.typography.body1,
                         color = StoreAppTheme.colors.textHelp,
                         modifier = HzPadding

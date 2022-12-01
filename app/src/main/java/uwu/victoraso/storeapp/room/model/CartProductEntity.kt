@@ -44,6 +44,8 @@ data class CartProductEntity(
     val productId: Long,
     @ColumnInfo(name = "name")
     val name: String,
+    @ColumnInfo(name = "icon_url")
+    val iconUrl: String,
     @ColumnInfo(name = "image_url")
     val imageUrl: String,
     @ColumnInfo(name = "price")
@@ -58,6 +60,7 @@ data class CartProductEntity(
 fun CartProductEntity.asExternalModel() = CartProduct(
     productId = productId,
     name = name,
+    iconUrl = iconUrl,
     imageUrl = imageUrl,
     price = price,
     category = category,

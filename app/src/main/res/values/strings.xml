@@ -13,8 +13,8 @@
     <!-- Details -->
     <string name="detail_header">%s\'s details</string>
     <string name="detail_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tempus, sem vitae convallis imperdiet, lectus nunc pharetra diam, ac rhoncus quam eros eu risus. Nulla pulvinar condimentum erat, pulvinar tempus turpis blandit ut. Etiam sed ipsum sed lacus eleifend hendrerit eu quis quam. Etiam ligula eros, finibus vestibulum tortor ac, ultrices accumsan dolor. Vivamus vel nisl a libero lobortis posuere. Aenean facilisis nibh vel ultrices bibendum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse ac est vitae lacus commodo efficitur at ut massa. Etiam vestibulum sit amet sapien sed varius. Aliquam non ipsum imperdiet, pulvinar enim nec, mollis risus. Fusce id tincidunt nisl.</string>
-    <string name="ingredients">Ingredients</string>
-    <string name="ingredients_list">Vanilla, Almond Flour, Eggs, Butter, Cream, Sugar</string>
+    <string name="platforms">Platforms</string>
+    <string name="platforms_variety">PC, PS4/PS5, Xbox Series X/S</string>
     <string name="quantity">Qty</string>
     <string name="add_to_cart">ADD TO CART</string>
     <string name="add_cart">Add new cart</string>
@@ -98,6 +98,7 @@
     <string name="log_out">Log out</string>
     <string name="signing_in">Signing in…</string>
     <string name="sign_up">Sign up</string>
+    <string name="remember_me">Remember me</string>
 
     <!-- Profile -->
     <string name="user_profile_title">Hi %s!</string>

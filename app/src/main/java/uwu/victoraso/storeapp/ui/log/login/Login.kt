@@ -2,13 +2,11 @@ package uwu.victoraso.storeapp.ui.log.login
 
 import StoreAppTextButton
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -118,14 +116,23 @@ fun LoginScreenContent(
                         onClick = { viewModel.onForgotPasswordClick(LoginUiFields(email, password)) },
                     )
                 }
-                Checkbox(checked = rememberMe, onCheckedChange = { rememberMe = it })
-
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    StoreAppTextButton(
+                        text = stringResource(id = R.string.remember_me),
+                        onClick = { rememberMe = !rememberMe }
+                    )
+                    Checkbox(checked = rememberMe, onCheckedChange = { rememberMe = it })
+                }
                 /** Login Button **/
                 StoreAppLoadingButton(
                     onClick = { viewModel.onSignInClick(onClearAndNavigate, LoginUiFields(email, password), rememberMe) },
                     modifier = Modifier
                         .align(CenterHorizontally)
-                        .padding(bottom = 16.dp),
+                        .padding(bottom = 16.dp, top = 8.dp),
                     isLoading = isSignInLoading,
                     defaultText = R.string.sign_in,
                     actionText = R.string.signing_in

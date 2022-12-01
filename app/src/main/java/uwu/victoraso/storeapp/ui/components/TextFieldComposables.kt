@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
@@ -35,9 +36,10 @@ fun StoreAppTextField( //TODO hacer lo mismo que con el textField de la pass
             .fillMaxWidth()
             .padding(bottom = 8.dp)
             .padding(horizontal = 16.dp),
-        placeholder = { Text(text = placeholder, style = MaterialTheme.typography.body1) },
+        placeholder = { Text(text = placeholder, style = MaterialTheme.typography.body1, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,
+        maxLines = 1,
         leadingIcon = { Icon(imageVector = leadingIcon, contentDescription = value ) },
         colors = TextFieldDefaults.textFieldColors(
             textColor = StoreAppTheme.colors.textHelp,

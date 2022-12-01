@@ -20,11 +20,13 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.theme.AlphaNearOpaque
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -53,6 +55,34 @@ fun DestinationBar(
                     .weight(1f)
                     .align(CenterVertically)
                     .padding(start = 45.dp) //TODO habrá otra forma de centrarlo?
+            )
+            DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
+        }
+        StoreAppDivider()
+    }
+}
+
+@Composable
+fun DestinationBarWithLogo(
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector = Icons.Outlined.ExpandMore,
+    onDestinationBarButtonClick: () -> Unit,
+    onLogoButtonClick: () -> Unit
+) {
+    Column(modifier = modifier.statusBarsPadding()) {
+        TopAppBar(
+            backgroundColor = StoreAppTheme.colors.uiBackground.copy(alpha = AlphaNearOpaque),
+            contentColor = StoreAppTheme.colors.textSecondary,
+            elevation = 0.dp
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.g_k_store_logo),
+                contentDescription = null,
+                modifier = Modifier
+                    .weight(1f)
+                    .align(CenterVertically)
+                    .padding(start = 45.dp, top = 8.dp, bottom = 8.dp) //TODO habrá otra forma de centrarlo?
+                    .clickable { onLogoButtonClick() }
             )
             DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
         }

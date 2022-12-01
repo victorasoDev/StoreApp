@@ -237,7 +237,7 @@ fun CartItem(
             verticalAlignment = CenterVertically
         ) {
             ProductImage(
-                imageUrl = cartProduct.imageUrl,
+                imageUrl = cartProduct.iconUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .size(100.dp)

@@ -23,21 +23,21 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import uwu.victoraso.storeapp.R
-import uwu.victoraso.storeapp.model.Filter
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.products
-import uwu.victoraso.storeapp.ui.components.*
+import uwu.victoraso.storeapp.ui.components.ProductImage
+import uwu.victoraso.storeapp.ui.components.StoreAppButton
+import uwu.victoraso.storeapp.ui.components.StoreAppDivider
+import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @Composable
 fun SearchResults(
     searchResults: List<Product>,
-    filters: List<Filter>,
     onProductClick: (Long, String) -> Unit
 ) {
     Column {
-        FilterBar(filters = filters, onShowFilter = { /*TODO*/ })
         Text(
             text = stringResource(id = R.string.search_count, searchResults.size),
             style = MaterialTheme.typography.h6,
@@ -76,7 +76,7 @@ private fun SearchResult(
             )
         }
         ProductImage(
-            imageUrl = product.imageUrl,
+            imageUrl = product.iconUrl,
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)

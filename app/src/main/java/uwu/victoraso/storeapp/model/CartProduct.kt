@@ -10,6 +10,7 @@ import uwu.victoraso.storeapp.room.model.CartProductEntity
 data class CartProduct(//TODO hacer val?
     var productId: Long = 0,
     var name: String = "",
+    var iconUrl: String = "",
     var imageUrl: String = "",
     var price: Long = 0,
     var category: String = "",
@@ -20,6 +21,7 @@ data class CartProduct(//TODO hacer val?
 fun CartProduct.asEntity() = CartProductEntity(
     productId = productId,
     name = name,
+    iconUrl = iconUrl,
     imageUrl = imageUrl,
     price = price,
     category = category,
@@ -30,6 +32,7 @@ fun CartProduct.asEntity() = CartProductEntity(
 fun CartProduct.fill(product: Product, cart: Cart): CartProduct { //TODO posible guarrada?
     productId = product.id
     name = product.name
+    iconUrl = product.iconUrl
     imageUrl = product.imageUrl
     price = product.price
     category = product.category
