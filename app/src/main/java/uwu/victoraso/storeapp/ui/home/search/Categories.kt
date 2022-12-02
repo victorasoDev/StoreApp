@@ -34,11 +34,12 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
 fun SearchCategories(
-    categories: List<SearchCategoryCollection>
+    categories: List<SearchCategoryCollection>,
+    onNavigateTo: (String) -> Unit
 ) {
     LazyColumn {
         itemsIndexed(categories) { index, collection ->
-            SearchCategoryCollection(collection, index)
+            SearchCategoryCollection(collection, onNavigateTo)
         }
     }
     Spacer(modifier = Modifier.height(8.dp))
@@ -47,7 +48,7 @@ fun SearchCategories(
 @Composable
 private fun SearchCategoryCollection(
     collection: SearchCategoryCollection,
-    index: Int,
+    onNavigateTo: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -64,6 +65,7 @@ private fun SearchCategoryCollection(
             collection.categories.forEach { category ->
                 SearchCategory(
                     category = category,
+                    onNavigateTo,
                     modifier = Modifier.padding(8.dp)
                 )
             }
@@ -77,6 +79,7 @@ private val CategoryShape = RoundedCornerShape(10.dp)
 @Composable
 private fun SearchCategory(
     category: SearchCategory,
+    onNavigateTo: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -84,13 +87,13 @@ private fun SearchCategory(
             .aspectRatio(1.45f)
             .shadow(elevation = 3.dp, shape = CategoryShape)
             .clip(CategoryShape)
-            .clickable { /* todo */ },
+            .clickable { onNavigateTo(category.route) },
         contentAlignment = Alignment.Center
     ) {
         CategoryImage(imageUrl = category.imageUrl, contentDescription = "CategoryImage")
         Text(
             text = category.name,
-            color = StoreAppTheme.colors.textSecondary,
+            color = StoreAppTheme.colors.iconSecondary,
             style = MaterialTheme.typography.h5,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
@@ -137,10 +140,9 @@ fun CategoryImage(
 private fun SearchCategoryPreview() {
     StoreAppTheme {
         SearchCategory(
-            category = SearchCategory(
                 name = "Desserts",
-                imageUrl = ""
-            ),
-        )
+                imageUrl = "",
+                route = ""
+            )
     }
 }

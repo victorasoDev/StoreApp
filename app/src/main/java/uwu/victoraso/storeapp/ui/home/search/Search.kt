@@ -27,6 +27,7 @@ import uwu.victoraso.storeapp.ui.utils.mirroringBackIcon
 @Composable
 fun Search(
     onProductClick: (Long, String) -> Unit,
+    onNavigateTo: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
     state: SearchState = rememberSearchState()
@@ -59,7 +60,7 @@ fun Search(
                 state.searching = false
             }
             when (state.searchDisplay) {
-                SearchDisplay.Categories -> SearchCategories(state.categories)
+                SearchDisplay.Categories -> SearchCategories(state.categories, onNavigateTo)
                 SearchDisplay.Suggestions -> SearchSuggestions(
                     suggestions = state.suggestions,
                     onSuggestionSelect = { suggestion -> state.query = TextFieldValue(suggestion) }

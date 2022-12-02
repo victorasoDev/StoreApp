@@ -32,6 +32,7 @@ fun NavGraphBuilder.addHomeGraph(
     )
     searchScreen(
         onProductSelected = onProductSelected,
+        onNavigateTo = onNavigateTo,
         modifier = modifier
     )
     cartScreen(

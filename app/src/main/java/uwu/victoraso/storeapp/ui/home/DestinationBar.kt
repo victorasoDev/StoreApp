@@ -2,6 +2,7 @@ package uwu.victoraso.storeapp.ui.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -81,8 +82,13 @@ fun DestinationBarWithLogo(
                 modifier = Modifier
                     .weight(1f)
                     .align(CenterVertically)
-                    .padding(start = 45.dp, top = 8.dp, bottom = 8.dp) //TODO habrá otra forma de centrarlo?
-                    .clickable { onLogoButtonClick() }
+                    .padding(start = 50.dp, top = 8.dp, bottom = 8.dp) //TODO habrá otra forma de centrarlo?
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onLogoButtonClick()
+                    }
             )
             DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
         }

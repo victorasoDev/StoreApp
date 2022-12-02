@@ -14,11 +14,13 @@ fun NavController.navigateToSearch(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.searchScreen(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
+    onNavigateTo: (String, NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable(TopLevelDestination.SEARCH.route) { from ->
         Search(
             onProductClick = { id, category -> onProductSelected(id, category, from) },
+            onNavigateTo = { route -> onNavigateTo(route, from) },
             modifier = modifier,
         )
     }

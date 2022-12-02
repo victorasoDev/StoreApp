@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import uwu.victoraso.storeapp.MainDestinations
 
 object SearchRepo {
     fun getCategories(): List<SearchCategoryCollection> = searchCategoryCollections
@@ -25,7 +26,8 @@ data class SearchCategoryCollection(
 @Immutable
 data class SearchCategory(
     val name: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val route: String
 )
 
 @Immutable
@@ -42,59 +44,47 @@ data class SearchSuggestionGroup(
 private val searchCategoryCollections = listOf(
     SearchCategoryCollection(
         id = 0L,
-        name = "PC",
+        name = "Genres",
         categories = listOf(
             SearchCategory(
-                name = "Builds",
-                imageUrl = "https://source.unsplash.com/UsSdMZ78Q3E"
+                name = "Adventure",
+                imageUrl = "https://images.wallpapersden.com/image/wxl-diablo-immortal-hd-2022-gaming_86692.jpg",
+                route = "${MainDestinations.PRODUCT_LIST_ROUTE}/Adventure"
             ),
             SearchCategory(
-                name = "Laptops",
-                imageUrl = "https://source.unsplash.com/SfP1PtM9Qa8"
-            ),
-        )
-    ),
-    SearchCategoryCollection(
-        id = 1L,
-        name = "Components",
-        categories = listOf(
-            SearchCategory(
-                name = "Processors",
-                imageUrl = "https://source.unsplash.com/7meCnGCJ5Ms"
+                name = "Casual",
+                imageUrl = "https://c4.wallpaperflare.com/wallpaper/207/907/686/stardew-valley-wallpaper-preview.jpg",
+                route = "${MainDestinations.PRODUCT_LIST_ROUTE}/Casual"
             ),
             SearchCategory(
-                name = "Graphics Cards",
-                imageUrl = "https://source.unsplash.com/m741tj4Cz7M"
+                name = "Exploration",
+                imageUrl = "https://c4.wallpaperflare.com/wallpaper/836/656/845/outer-wilds-science-fiction-space-artwork-trees-hd-wallpaper-preview.jpg",
+                route = "${MainDestinations.PRODUCT_LIST_ROUTE}/Exploration"
             ),
             SearchCategory(
-                name = "Motherboards",
-                imageUrl = "https://source.unsplash.com/dt5-8tThZKg"
+                name = "Metroidvania",
+                imageUrl = "https://wallpaperaccess.com/full/771507.png",
+                route = "${MainDestinations.PRODUCT_LIST_ROUTE}/Metroidvania"
             ),
             SearchCategory(
-                name = "RAMs",
-                imageUrl = "https://source.unsplash.com/ReXxkS1m1H0"
+                name = "Open-World",
+                imageUrl = "https://cdn.mos.cms.futurecdn.net/SXsB2g4MumdofeWN7tm4jH.jpg",
+                "${MainDestinations.PRODUCT_LIST_ROUTE}/Open-World"
             ),
             SearchCategory(
-                name = "Cooling Systems",
-                imageUrl = "https://source.unsplash.com/IGfIGP5ONV0"
-            )
-        )
-    ),
-    SearchCategoryCollection(
-        id = 2L,
-        name = "Peripherals",
-        categories = listOf(
-            SearchCategory(
-                name = "Mouses",
-                imageUrl = "https://source.unsplash.com/UsSdMZ78Q3E"
+                name = "Rogue-Like",
+                imageUrl = "https://c4.wallpaperflare.com/wallpaper/896/224/864/the-binding-of-isaac-rebirth-wallpaper-preview.jpg",
+                "${MainDestinations.PRODUCT_LIST_ROUTE}/Rogue-Like"
             ),
             SearchCategory(
-                name = "Monitors",
-                imageUrl = "https://source.unsplash.com/SfP1PtM9Qa8"
+                name = "Simulation",
+                imageUrl = "https://images2.alphacoders.com/582/thumb-1920-582521.png",
+                route = "${MainDestinations.PRODUCT_LIST_ROUTE}/Simulation"
             ),
             SearchCategory(
-                name = "Keyboards",
-                imageUrl = "https://source.unsplash.com/SfP1PtM9Qa8"
+                name = "Survival",
+                imageUrl = "https://images6.alphacoders.com/107/1075749.png",
+                route = "${MainDestinations.PRODUCT_LIST_ROUTE}/Survival"
             )
         )
     )
@@ -105,20 +95,10 @@ private val searchSuggestions = listOf(
         id = 0L,
         name = "Recent searches",
         suggestions = listOf(
-            "MSI 3080",
-            "intel core i7"
-        )
-    ),
-    SearchSuggestionGroup(
-        id = 1L,
-        name = "Popular searches",
-        suggestions = listOf(
-            "Processors",
-            "Graphic Cards",
-            "Builds",
-            "Laptops",
-            "Keyboards",
-            "Monitors"
+            "red dead redemption",
+            "the binding of",
+            "outer wilds",
+            "subnautica"
         )
     )
 )
