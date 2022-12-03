@@ -15,6 +15,7 @@ import uwu.victoraso.storeapp.ui.components.StoreAppSnackbar
 import uwu.victoraso.storeapp.ui.home.StoreAppBottomBar
 import uwu.victoraso.storeapp.ui.home.addHomeGraph
 import uwu.victoraso.storeapp.ui.home.navigation.TopLevelDestination
+import uwu.victoraso.storeapp.ui.home.profile.purchasehistory.PurchaseHistory
 import uwu.victoraso.storeapp.ui.home.profile.wishlist.Wishlist
 import uwu.victoraso.storeapp.ui.log.login.LoginScreen
 import uwu.victoraso.storeapp.ui.log.signup.SignUpScreen
@@ -145,6 +146,11 @@ private fun NavGraphBuilder.storeAppNavGraph(
         Wishlist(
             upPress = upPress,
             onProductSelected = { id, category -> onProductSelected(id, category, navBackStackEntry) }
+        )
+    }
+    composable(route = MainDestinations.PURCHASE_HISTORY_ROUTE) { navBackStackEntry ->
+        PurchaseHistory(
+            upPress = upPress
         )
     }
 }

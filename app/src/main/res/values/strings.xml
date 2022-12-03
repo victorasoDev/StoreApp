@@ -103,6 +103,7 @@
     <!-- Profile -->
     <string name="user_profile_title">Hi %s!</string>
     <string name="user_profile_settings">Settings</string>
+    <string name="user_profile_purchase_history">Purchase history</string>
     <string name="user_profile_dark_mode_preference">Dark mode preference</string>
     <string name="dark_mode_config_light">Light</string>
     <string name="dark_mode_config_dark">Dark</string>

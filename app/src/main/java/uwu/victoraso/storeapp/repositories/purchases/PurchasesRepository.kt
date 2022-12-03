@@ -1,5 +1,6 @@
 package uwu.victoraso.storeapp.repositories.purchases
 
+import kotlinx.coroutines.flow.Flow
 import uwu.victoraso.storeapp.model.Purchase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,13 +14,11 @@ constructor(
 
     override fun makePurchase(purchase: Purchase): Boolean = purchaseDataSource.makePurchase(purchase)
 
-//    override fun getPurchasesListByUser(userID: Long): Flow<List<Purchase>> {
-//        TODO("Not yet implemented")
-//    }
+    override fun getUserPurchases(userId: String): Flow<List<Purchase>> = purchaseDataSource.getUserPurchases(userId)
 
 }
 
 sealed interface PurchasesRepositoryInterface {
     fun makePurchase(purchase: Purchase): Boolean
-//    fun getPurchasesListByUser(userID: Long): Flow<List<Purchase>>
+    fun getUserPurchases(userId: String): Flow<List<Purchase>>
 }
