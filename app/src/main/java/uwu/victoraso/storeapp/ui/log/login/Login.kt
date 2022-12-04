@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.ui.log.login
 
 import StoreAppTextButton
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,7 +19,6 @@ import uwu.victoraso.storeapp.MainDestinations
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -31,7 +29,6 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val screenUiState: LoginScreenUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
-    Log.d(DEBUG_TAG, "Recomposition")
 
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {

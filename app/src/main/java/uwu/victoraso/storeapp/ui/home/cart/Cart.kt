@@ -157,7 +157,6 @@ fun CartContent(
     onProductList: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Log.d(DEBUG_TAG_LOGIN, "recomposes CartContent -> $cart")
     val resources = LocalContext.current.resources
     val productCount = cart.cartItems.size
     var totalCost by remember { mutableStateOf(0L) }
@@ -290,7 +289,6 @@ fun SummaryItem(
     modifier: Modifier = Modifier
 ) {
 
-    Log.d(DEBUG_TAG_LOGIN, "recomposes SummaryItem -> $productsCount")
     Column(modifier) {
         Text(
             text = stringResource(id = R.string.cart_summary_header),

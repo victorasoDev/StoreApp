@@ -1,6 +1,5 @@
 package uwu.victoraso.storeapp.ui.home.profile.settings
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -26,7 +25,6 @@ import uwu.victoraso.storeapp.ui.components.StoreAppDialog
 import uwu.victoraso.storeapp.ui.components.StoreAppDialogButton
 import uwu.victoraso.storeapp.ui.components.StoreAppDialogTitle
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_WISHLIST
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -53,7 +51,6 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     onChangeDarkThemeConfig: (Boolean) -> Unit
 ) {
-    Log.d(DEBUG_TAG_WISHLIST, "SettingsDialog")
     StoreAppDialog(
         onDismiss = onDismiss,
         properties = DialogProperties(dismissOnClickOutside = true),
@@ -82,7 +79,6 @@ private fun SettingsPanel(
             CircularProgressIndicator()
         }
         is SettingsUiState.Success -> {
-            Log.d(DEBUG_TAG_WISHLIST, settingsUiState.settings.darkThemeConfig.toString())
             SettingsDialogSectionTitle(text = stringResource(id = R.string.user_profile_dark_mode_preference))
             Column(Modifier.selectableGroup()) {
                 SettingsDialogThemeChooserRow(

@@ -1,6 +1,5 @@
 package uwu.victoraso.storeapp.ui.productcollection
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +23,6 @@ import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -61,7 +59,6 @@ fun ProductList(
 ) {
     when(productListUiState) {
         is ProductListUiState.Success -> {
-            Log.d(DEBUG_TAG, " - " + productListUiState.mainList.size.toString()) //TODO
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
                 Box {
                     ListContent(
@@ -76,10 +73,8 @@ fun ProductList(
             }
         }
         ProductListUiState.Loading -> {
-            Log.d(DEBUG_TAG, " - Loading") //TODO
         }
         ProductListUiState.Error -> {
-            Log.d(DEBUG_TAG, " - Error") //TODO
         }
     }
 }

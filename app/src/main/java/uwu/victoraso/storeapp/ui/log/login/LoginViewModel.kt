@@ -16,7 +16,6 @@ import uwu.victoraso.storeapp.model.service.StorageService
 import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_LOGIN
 import uwu.victoraso.storeapp.ui.utils.isValidEmail
 import javax.inject.Inject
@@ -82,7 +81,6 @@ constructor(
                     updateUserId(oldUserId, onClearAndNavigate)
                     saveCredentials(loginUiFields.email, loginUiFields.password, rememberMe)
                 } else {
-                    Log.d(DEBUG_TAG_LOGIN, error.toString())
                     _isSignInLoading.stopLoading()
                 }
             }
@@ -108,7 +106,6 @@ constructor(
             val newUserId = accountService.getUserId()
             storageService.updateUserId(oldUserId, newUserId) { error ->
                 if (error != null) {
-                    Log.d(DEBUG_TAG_LOGIN, error.toString())
                     _isSignInLoading.stopLoading()
                 } else {
                     onClearAndNavigate(MainDestinations.HOME_ROUTE)

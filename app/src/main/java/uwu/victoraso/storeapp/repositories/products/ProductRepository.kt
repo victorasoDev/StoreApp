@@ -1,10 +1,8 @@
 package uwu.victoraso.storeapp.repositories.products
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,10 +42,8 @@ constructor(
             .get()
             .addOnSuccessListener {
                 lastIndex = it.size().toLong() + 1
-                Log.d(DEBUG_TAG, "lastIndex -> ${lastIndex}")
             }
             .addOnFailureListener {
-                Log.d(DEBUG_TAG, "${it}")
             }
     }
     /**

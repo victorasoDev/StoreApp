@@ -21,7 +21,6 @@ class SettingsViewModel @Inject constructor(
     val settingsUiState: StateFlow<SettingsUiState> =
         userPreferencesRepository.darkThemeConfig
             .map {
-                Log.d(DEBUG_TAG_WISHLIST, "SettingsViewModel -> $it")
                 SettingsUiState.Success(
                     settings = UserEditableSettings(
                         darkThemeConfig = it

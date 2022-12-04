@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,6 +20,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.StateFlow
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.Purchase
 import uwu.victoraso.storeapp.ui.components.StoreAppCircularIndicator
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
@@ -42,7 +44,7 @@ fun PurchaseHistory(
                 Box {
                     PurchaseHistory(
                         purchaseHistory = (purchaseHistoryUiState as PurchaseHistoryUiState.Success).purchases,
-                        getPurchaseProducts = viewModel::getPurchaseProductsStateFlow ,
+                        getPurchaseProducts = viewModel::getPurchaseProductsStateFlow,
                         modifier = modifier
                     )
                     StoreAppTopBar(upPress = upPress, screenTitle = stringResource(id = R.string.user_profile_purchase_history))
@@ -81,20 +83,18 @@ fun PurchaseHistory(
 @Composable
 fun PurchaseListItem(
     purchase: Purchase,
-    getPurchaseProducts: (List<Long>) -> StateFlow<PurchaseProductsUiState>
+    getPurchaseProducts: (List<Long>) -> StateFlow<PurchaseProductsUiState>,
+    viewModel: PurchaseHistoryViewModel = hiltViewModel()
 ) {
-    var isPurchaseClicked by remember { mutableStateOf(false) }
+    Log.d(DEBUG_TAG, "recompose PurchaseListItem")
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
 
-    val purchaseProductsItems = 
-        if (isPurchaseClicked) {
-            Log.d(DEBUG_TAG, "no vea no")
-            getPurchaseProducts(purchase.productsIDs).collectAsStateWithLifecycle().value
-        }
-        else PurchaseProductsUiState.Loading
-    
+    val purchaseProductsUiState: PurchaseProductsUiState by viewModel.getPurchaseProductsStateFlow(purchase.productsIDs).collectAsStateWithLifecycle()
+    var productList by remember { mutableStateOf(ArrayList<Product>()) }
+
     Row(
         modifier = Modifier
-            .clickable { isPurchaseClicked = !isPurchaseClicked }
+            .clickable { isExpanded = !isExpanded }
             .padding(vertical = 8.dp)
             .padding(start = 8.dp)
             .fillMaxWidth(),
@@ -121,14 +121,33 @@ fun PurchaseListItem(
                 maxLines = 1,
                 modifier = Modifier.padding(start = 8.dp)
             )
-            if (isPurchaseClicked && purchaseProductsItems is PurchaseProductsUiState.Success) {
-                Log.d(DEBUG_TAG, "si vea si")
-                for (p in purchaseProductsItems.purchaseProducts) {
-                    Log.d(DEBUG_TAG, "el for ${p.name}")
-                    Text(text = p.name, modifier = Modifier.fillMaxWidth().height(50.dp))
+            Log.d(DEBUG_TAG, "isExpanded $isExpanded")
+            if (isExpanded) {
+                when (purchaseProductsUiState) {
+                    is PurchaseProductsUiState.Success -> {
+                        Log.d(DEBUG_TAG, "SUCCESS -> isExpanded $isExpanded")
+                        productList = (purchaseProductsUiState as PurchaseProductsUiState.Success).purchaseProducts as ArrayList<Product>
+                        PurchaseProductsItems(productList = productList)
+                    }
+                    is PurchaseProductsUiState.Loading -> {
+                        if (productList.isNotEmpty()) {
+                            PurchaseProductsItems(productList = productList)
+                        } else {
+                            isExpanded = false
+                        }
+                    }
+                    is PurchaseProductsUiState.Error -> {}
                 }
             }
         }
     }
     StoreAppDivider(modifier = Modifier.fillMaxWidth())
+}
+
+@Composable
+fun PurchaseProductsItems(productList: List<Product>) {
+    StoreAppDivider(modifier = Modifier.fillMaxWidth())
+    productList.map {
+        Text(text = it.name)
+    }
 }

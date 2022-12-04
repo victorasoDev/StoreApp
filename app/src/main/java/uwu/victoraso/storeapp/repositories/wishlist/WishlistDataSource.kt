@@ -1,6 +1,5 @@
 package uwu.victoraso.storeapp.repositories.wishlist
 
-import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,11 +28,9 @@ class WishlistDataSource @Inject constructor(
             wishlistCollection.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        Log.d(DEBUG_TAG, "document != null")
                         if (wishlist) wishlistCollection.update("products", FieldValue.arrayUnion(productReference))
                         else wishlistCollection.update("products", FieldValue.arrayRemove(productReference))
                     } else {
-                        Log.d(DEBUG_TAG, "document == null")
                     }
 
                 }
@@ -77,13 +73,11 @@ class WishlistDataSource @Inject constructor(
                                 if (product != null) productList.add(product)
                             }
                             .addOnFailureListener {
-                                Log.d(DEBUG_TAG, "getWishlistByUserId -> ${it}")
                             }.await()
                     }
                 }
             }
             .addOnFailureListener {
-                Log.d(DEBUG_TAG, "WishlistDataSource -> ${it}")
             }
             .await()
         emit(productList)

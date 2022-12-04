@@ -1,6 +1,5 @@
 package uwu.victoraso.storeapp.ui.home.feed
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -19,7 +18,6 @@ import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.home.DestinationBarWithLogo
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -54,7 +52,6 @@ private fun Feed(
 ) {
     when (feedUiState.processors) {
         is FeedUiState.Success -> {
-            Log.d(DEBUG_TAG, "Feed Success -> ${feedUiState.processors.productCollection.products.size}")
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
                 Column {
                     DestinationBarWithLogo(

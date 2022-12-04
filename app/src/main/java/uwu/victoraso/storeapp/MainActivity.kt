@@ -52,7 +52,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val systemUiController = rememberSystemUiController()
             val darkTheme = shouldUseDarkTheme(uiState)
-            Log.d(DEBUG_TAG_WISHLIST, "MainAct -> $darkTheme")
 
             // Update the dark content of the system bars to match the theme
             DisposableEffect(systemUiController, darkTheme) {

@@ -46,7 +46,6 @@ fun Profile(
     viewModel: ProfileViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    Log.d(DEBUG_TAG, "antes de profileUiState")
     val profileUiState: ProfileUiState by viewModel.profileUiState.collectAsStateWithLifecycle()
 
     when (profileUiState) {
