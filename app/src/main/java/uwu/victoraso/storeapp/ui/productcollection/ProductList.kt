@@ -18,12 +18,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.model.Product
+import uwu.victoraso.storeapp.model.StoreAppFilters
 import uwu.victoraso.storeapp.ui.components.ProductImage
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.formatPrice
+import java.lang.Math.random
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -41,8 +43,6 @@ fun ProductList(
         productListUiState = productListUiState,
         category = category,
         upPress = upPress,
-        addProduct = viewModel::addProductToCart,
-        removeProduct = viewModel::removeProductFromCart,
         modifier = modifier
     )
 }
@@ -53,8 +53,6 @@ fun ProductList(
     productListUiState: ProductListUiState,
     category: String,
     upPress: () -> Unit,
-    addProduct: (Long) -> Unit,
-    removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when(productListUiState) {
@@ -64,8 +62,6 @@ fun ProductList(
                     ListContent(
                         productList = productListUiState.mainList,
                         onProductSelected = onProductSelected,
-                        addProduct = addProduct,
-                        removeProduct = removeProduct,
                         modifier = Modifier.align(Alignment.TopCenter)
                     )
                     StoreAppTopBar(upPress = upPress, screenTitle = category)
@@ -83,8 +79,6 @@ fun ProductList(
 fun ListContent(
     productList: List<Product>,
     onProductSelected: (Long) -> Unit,
-    addProduct: (Long) -> Unit,
-    removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val resources = LocalContext.current.resources
@@ -102,9 +96,7 @@ fun ListContent(
             //TODO: posible swipe para añadir (en cart está para eliminar)
             ProductListItem(
                 product = product,
-                onProductSelected = onProductSelected,
-                addProduct = addProduct,
-                removeProduct = removeProduct
+                onProductSelected = onProductSelected
             )
         }
     }
@@ -115,19 +107,13 @@ fun ListContent(
 fun ProductListItem(
     product: Product,
     onProductSelected: (Long) -> Unit,
-    addProduct: (Long) -> Unit,
-    removeProduct: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .clickable { onProductSelected(product.id) }
     ) {
-        ProductListItemContent(
-            product = product,
-            addProduct = addProduct,
-            removeProduct = removeProduct,
-        )
+        ProductListItemContent(product = product)
     }
 }
 
@@ -135,28 +121,24 @@ fun ProductListItem(
 fun ProductListItem(
     product: Product,
     onProductSelected: (Long, String) -> Unit,
-    addProduct: (Long) -> Unit,
-    removeProduct: (Long) -> Unit,
+    small: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
-            .clickable { onProductSelected(product.id, product.category) }
+            .clickable { onProductSelected(product.id, product.category.ifEmpty { StoreAppFilters[random().toInt()].name }) }
     ) {
-        ProductListItemContent(
-            product = product,
-            addProduct = addProduct,
-            removeProduct = removeProduct
-        )
+        if (small) {
+            ProductListItemSmallContent(product = product)
+        } else {
+            ProductListItemContent(product = product)
+        }
     }
 }
 
 @Composable
 private fun ProductListItemContent(
-    product: Product,
-    addProduct: (Long) -> Unit,
-    removeProduct: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    product: Product
 ) { //TODO
 
     Row(
@@ -191,6 +173,47 @@ private fun ProductListItemContent(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+    }
+    StoreAppDivider(modifier = Modifier.fillMaxWidth())
+}
+
+@Composable
+private fun ProductListItemSmallContent(
+    product: Product,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .padding(start = 24.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ProductImage(
+            imageUrl = product.iconUrl,
+            contentDescription = null,
+            modifier = Modifier.size(45.dp)
+        )
+        Column {
+            Text(
+                text = product.name,
+                style = MaterialTheme.typography.subtitle2,
+                color = StoreAppTheme.colors.textSecondary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+            )
+            Text(
+                text = formatPrice(product.price),
+                style = MaterialTheme.typography.subtitle2,
+                color = StoreAppTheme.colors.textPrimary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp)
             )
         }
     }

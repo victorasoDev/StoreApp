@@ -9,7 +9,7 @@ data class Purchase(
     val cardDetails: CardDetails = CardDetails("", "", "", ""),
     val price: Long = 0,
     val date: String = "",
-    val productsIDs: List<Long> = emptyList(),
+    val products: List<Product> = emptyList(),
 )
 
 data class PurchaseSimplified(

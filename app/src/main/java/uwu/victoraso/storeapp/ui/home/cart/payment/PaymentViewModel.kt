@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.model.CardDetails
+import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.Purchase
 import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.model.service.AccountService
@@ -79,7 +80,7 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
-    fun makePurchase(price: Long, cardDetails: CardDetails, productsIDs: List<Long>): Boolean {
+    fun makePurchase(price: Long, cardDetails: CardDetails, products: List<Product>): Boolean {
         _isPaymentLoading.startLoading()
 
         if (cardDetails.cardNumber.length != 8) return purchaseNotCompleted()
@@ -98,7 +99,7 @@ class PaymentViewModel @Inject constructor(
                     cardDetails = cardDetails,
                     price = price,
                     date = formatter.format(Date()),
-                    productsIDs = productsIDs
+                    products = products
                 )
             )
             delay(2_000)

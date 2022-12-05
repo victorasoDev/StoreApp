@@ -1,14 +1,11 @@
 package uwu.victoraso.storeapp.model
 
-import android.content.res.Resources
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
-
-import uwu.victoraso.storeapp.R
 
 class Filter(
     val name: String,
@@ -53,17 +50,11 @@ val lifeStyleFilters = listOf(
 )
 
 val StoreAppFilters = listOf(
-    Filter(name = "Processors"),
-    Filter(name = "Motherboards"),
-    Filter(name = "Graphic Cards"),
-    Filter(name = "Storages"),
-    Filter(name = "Cooling systems"),
-    Filter(name = "RAMs"),
-    Filter(name = "Laptops"),
-    Filter(name = "Builds"),
-    Filter(name = "Monitors"),
-    Filter(name = "Mouses"),
-    Filter(name = "Keyboards")
+    Filter(name = "Adventure"),
+    Filter(name = "Open-World"),
+    Filter(name = "Casual"),
+    Filter(name = "Simulation"),
+    Filter(name = "Multiplayer"),
 )
 
 var sortDefault = sortFilters[0].name

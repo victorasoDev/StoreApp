@@ -150,7 +150,8 @@ private fun NavGraphBuilder.storeAppNavGraph(
     }
     composable(route = MainDestinations.PURCHASE_HISTORY_ROUTE) { navBackStackEntry ->
         PurchaseHistory(
-            upPress = upPress
+            upPress = upPress,
+            onProductSelected = { id, category -> onProductSelected(id, category, navBackStackEntry) }
         )
     }
 }

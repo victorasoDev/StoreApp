@@ -73,9 +73,7 @@ private fun Wishlist(
             //TODO: posible swipe para añadir (en cart está para eliminar)
             ProductListItem(
                 product = product,
-                onProductSelected = onProductSelected,
-                addProduct = { /** Do nothing **/ },
-                removeProduct = { /** TODO **/ }
+                onProductSelected = onProductSelected
             )
         }
     }

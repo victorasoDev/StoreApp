@@ -23,10 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
-import uwu.victoraso.storeapp.model.CardDetails
-import uwu.victoraso.storeapp.model.Cart
-import uwu.victoraso.storeapp.model.CartProduct
-import uwu.victoraso.storeapp.model.checkCardDetails
+import uwu.victoraso.storeapp.model.*
 import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.profile.personalinfo.PersonalInfoDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -74,7 +71,7 @@ fun PaymentDialog(
                         cardExpireDate = paymentDataItems[2].value,
                         cardCVC = paymentDataItems[3].value,
                     ),
-                    productsIDs = cart.cartItems.map { it.productId }
+                    products = cart.cartItems.map { Product(id = it.productId, name = it.name, price = it.price, iconUrl = it.iconUrl) }
                 )
             }
         }
@@ -98,15 +95,15 @@ private fun PaymentDialogButtons(
     onDismiss: () -> Unit,
     isPaymentLoading: Boolean,
     isPaymentCompleted: Boolean,
-    makePurchase: (Long, CardDetails, List<Long>) -> Boolean,
+    makePurchase: (Long, CardDetails, List<Product>) -> Boolean,
     price: Long,
     cardDetails: CardDetails,
-    productsIDs: List<Long>
+    products: List<Product>
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         StoreAppDialogButton(onClick = onDismiss, stringID = R.string.close)
         StoreAppLoadingButton(
-            onClick = { makePurchase(price, cardDetails, productsIDs) },
+            onClick = { makePurchase(price, cardDetails, products) },
             modifier = Modifier.padding(top = 16.dp),
             isLoading = isPaymentLoading,
             enabled = cardDetails.checkCardDetails(),
