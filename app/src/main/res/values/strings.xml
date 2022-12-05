@@ -114,5 +114,10 @@
     <string name="user_phone_label">Phone</string>
     <string name="user_data_not_provided">No %s provided</string>
 
+    <string name="purchase_details">Purchase details</string>
+    <string name="purchase_details_name">Name: %s</string>
+    <string name="purchase_details_adress">Address: %s</string>
+    <string name="purchase_details_date">Date: %s</string>
+    <string name="purchase_details_total_price">Total price: %s</string>
 
 </resources>

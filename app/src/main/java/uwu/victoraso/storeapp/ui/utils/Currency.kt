@@ -5,7 +5,7 @@ import java.text.NumberFormat
 import java.util.*
 
 fun formatPrice(price: Long): String {
-    return NumberFormat.getCurrencyInstance().format(
+    return NumberFormat.getCurrencyInstance(Locale.FRANCE).format(
         BigDecimal(price).movePointLeft(2)
     )
 }
