@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.ui.home.cart
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -37,7 +36,6 @@ import uwu.victoraso.storeapp.ui.components.*
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.cart.payment.PaymentDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_LOGIN
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -139,12 +137,8 @@ fun Cart(
                 }
             }
         }
-        is CartsProductsUiState.Loading -> {
-            //TODO
-        }
-        is CartsProductsUiState.Error -> {
-            //TODO
-        }
+        is CartsProductsUiState.Loading -> {}
+        is CartsProductsUiState.Error -> {}
     }
 }
 

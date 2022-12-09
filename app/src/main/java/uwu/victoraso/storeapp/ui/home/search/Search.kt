@@ -32,7 +32,7 @@ fun Search(
     viewModel: SearchViewModel = hiltViewModel(),
     state: SearchState = rememberSearchState()
 ) {
-    val focusManager = LocalFocusManager.current //TODO pasar a una clase para acceder desde otros sitios?
+    val focusManager = LocalFocusManager.current
 
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Column {

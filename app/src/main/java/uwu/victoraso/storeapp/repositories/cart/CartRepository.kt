@@ -34,7 +34,7 @@ class CartRepository @Inject constructor(
 
     override suspend fun insertCartProduct(entity: CartProductEntity) {
         if (!isCartProductStored(entity.productId.toString(), entity.cartId.toString())) cartProductDao.insertOrIgnoreCartProduct(entity)
-    } //TODO: Devolver un boolean para mostrar un mensaje en viewHolder
+    }
 
     override suspend fun deleteCartProduct(productId: String, cartId: String) { cartProductDao.deleteCartProduct(productId, cartId) }
 }

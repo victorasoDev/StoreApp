@@ -9,10 +9,10 @@ import javax.inject.Singleton
 class WishlistRepository
 @Inject
 constructor(
-    private val wishlistDataSource: WishlistDataSource,
+    private val wishlistDataSource: WishlistDataSource
 ) : ProductRepositoryInterface
 {
-    override fun wishlistToggle(productId: Long, userId: String, wishlist: Boolean) = wishlistDataSource.wishlistToggle(productId, userId, wishlist)
+    override fun wishlistToggle(product: Product, userId: String, wishlist: Boolean) = wishlistDataSource.wishlistToggle(product, userId, wishlist)
 
     override fun isWishlisted(productId: Long, userId: String): Flow<Boolean> = wishlistDataSource.isWishlisted(productId, userId)
 
@@ -20,7 +20,7 @@ constructor(
 }
 
 sealed interface ProductRepositoryInterface {
-    fun wishlistToggle(productId: Long, userId: String, wishlist: Boolean)
+    fun wishlistToggle(product: Product, userId: String, wishlist: Boolean)
     fun isWishlisted(productId: Long, userId: String): Flow<Boolean>
     fun getUserWishlist(userId: String): Flow<List<Product>>
 }

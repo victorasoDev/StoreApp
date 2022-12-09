@@ -90,10 +90,8 @@ fun ListContent(
                     WindowInsets.statusBars.add(WindowInsets(top = 56.dp))
                 )
             )
-            //TODO: el filtro habrá que meterlo por aqui
         }
         items(productList) { product ->
-            //TODO: posible swipe para añadir (en cart está para eliminar)
             ProductListItem(
                 product = product,
                 onProductSelected = onProductSelected
@@ -139,8 +137,7 @@ fun ProductListItem(
 @Composable
 private fun ProductListItemContent(
     product: Product
-) { //TODO
-
+) {
     Row(
         modifier = Modifier
             .padding(vertical = 8.dp)

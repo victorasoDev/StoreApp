@@ -19,6 +19,7 @@ constructor(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
 
+    private val headerProductStream: Flow<Result<Product>> = productRepository.getHeaderProduct().asResult()
     private val adventureProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Adventure")
     private val openWorldProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Open-World")
     private val survivalCardsProductsStream: Flow<Result<List<Product>>> = getStreamResultByCategory("Survival")
@@ -31,6 +32,7 @@ constructor(
 
     val uiState: StateFlow<FeedScreenUiState> =
         feedCombine(
+            headerProductStream,
             adventureProductsStream,
             openWorldProductsStream,
             survivalCardsProductsStream,
@@ -40,8 +42,24 @@ constructor(
             horrorProductsStream,
             simulationProductsStream,
             casualProductsStream,
-        ) { adventureResult, openWorldResult, survivalResult, explorationResult, rogueLikeResult,
+        ) { headerResult, adventureResult, openWorldResult, survivalResult, explorationResult, rogueLikeResult,
             metroidvaniaResult, horrorResult, simulationResult, casualResult ->
+            /** Get header product **/
+            val header: FeedHeaderUiState =
+                when (headerResult) {
+                    is Result.Success -> FeedHeaderUiState.Success(
+                        Product(
+                            id = headerResult.data.id,
+                            name = headerResult.data.name,
+                            category = headerResult.data.category,
+                            price = headerResult.data.price,
+                            iconUrl = headerResult.data.iconUrl,
+                            imageUrl = headerResult.data.imageUrl
+                        )
+                    )
+                    is Result.Loading -> FeedHeaderUiState.Loading
+                    is Result.Error -> FeedHeaderUiState.Error
+                }
             /** Get processor list **/
             val processors: FeedUiState =
                 when (adventureResult) {
@@ -176,12 +194,13 @@ constructor(
                     is Result.Loading -> FeedUiState.Loading
                     is Result.Error -> FeedUiState.Error
                 }
-            FeedScreenUiState(processors, motherboards, graphicCards, storages, coolingSystems, rams, laptops, builds, monitors)
+            FeedScreenUiState(header, processors, motherboards, graphicCards, storages, coolingSystems, rams, laptops, builds, monitors)
         }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = FeedScreenUiState(
+                    headerProduct = FeedHeaderUiState.Loading,
                     processors = FeedUiState.Loading,
                     motherboards = FeedUiState.Loading,
                     graphicCards = FeedUiState.Loading,
@@ -200,7 +219,7 @@ constructor(
     }
 }
 
-private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> feedCombine(
+private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> feedCombine(
     flow: Flow<T1>,
     flow2: Flow<T2>,
     flow3: Flow<T3>,
@@ -210,9 +229,10 @@ private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> feedCombine(
     flow7: Flow<T7>,
     flow8: Flow<T8>,
     flow9: Flow<T9>,
-    crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9) -> R
+    flow10: Flow<T10>,
+    crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) -> R
 ): Flow<R> {
-    return combine(flow, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9) { args: Array<*> ->
+    return combine(flow, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9, flow10) { args: Array<*> ->
         @Suppress("UNCHECKED_CAST")
         transform(
             args[0] as T1,
@@ -223,7 +243,8 @@ private inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> feedCombine(
             args[5] as T6,
             args[6] as T7,
             args[7] as T8,
-            args[8] as T9
+            args[8] as T9,
+            args[9] as T10,
         )
     }
 }
@@ -234,7 +255,14 @@ sealed interface FeedUiState {
     object Loading : FeedUiState
 }
 
+sealed interface FeedHeaderUiState {
+    data class Success(val product: Product) : FeedHeaderUiState
+    object Error : FeedHeaderUiState
+    object Loading : FeedHeaderUiState
+}
+
 data class FeedScreenUiState(
+    val headerProduct: FeedHeaderUiState,
     val processors: FeedUiState,
     val motherboards: FeedUiState,
     val graphicCards: FeedUiState,

@@ -20,29 +20,6 @@ class StorageServiceImpl @Inject constructor() : StorageService {
         listenerRegistration?.remove()
     }
 
-    override fun getTask( //TODO: getWishlist?
-        taskId: String,
-        onError: (Throwable) -> Unit,
-        onSuccess: (String) -> Unit
-    ) {
-
-    }
-
-    override fun saveTask(task: String, onResult: (Throwable?) -> Unit) {
-        Firebase.firestore
-            .collection(WISHLIST_COLLECTION)
-            .add(task)
-            .addOnCompleteListener { onResult(it.exception) }
-    }
-
-    override fun updateTask(task: String, onResult: (Throwable?) -> Unit) {
-        Firebase.firestore
-            .collection(WISHLIST_COLLECTION)
-            .document(task)
-            .set(task)
-            .addOnCompleteListener { onResult(it.exception) }
-    }
-
     override fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
             .collection(WISHLIST_COLLECTION)
@@ -88,14 +65,11 @@ class StorageServiceImpl @Inject constructor() : StorageService {
 sealed interface StorageService {
     fun addListener(
         userId: String,
-        onDocumentEvent: (Boolean, String) -> Unit,//TODO: guardar Producto en wishlist?
+        onDocumentEvent: (Boolean, String) -> Unit,
         onError: (Throwable) -> Unit
     )
 
     fun removeListener()
-    fun getTask(taskId: String, onError: (Throwable) -> Unit, onSuccess: (String) -> Unit) //TODO: guardar Producto en wishlist?
-    fun saveTask(task: String, onResult: (Throwable?) -> Unit) //TODO: guardar Producto en wishlist?
-    fun updateTask(task: String, onResult: (Throwable?) -> Unit)//TODO: guardar Producto en wishlist?
     fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit)
     fun deleteAllForUser(userId: String, onResult: (Throwable?) -> Unit)
     fun updateUserId(oldUserId: String, newUserId: String, onResult: (Throwable?) -> Unit)

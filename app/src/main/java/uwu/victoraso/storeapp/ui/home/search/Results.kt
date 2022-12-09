@@ -6,12 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +22,6 @@ import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.Product
 import uwu.victoraso.storeapp.model.products
 import uwu.victoraso.storeapp.ui.components.ProductImage
-import uwu.victoraso.storeapp.ui.components.StoreAppButton
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -139,22 +134,6 @@ private fun SearchResult(
                 )
             }
         )
-        StoreAppButton(
-            onClick = { /* todo */ },
-            shape = CircleShape,
-            contentPadding = PaddingValues(0.dp),
-            modifier = Modifier
-                .size(36.dp)
-                .constrainAs(add) {
-                    linkTo(top = parent.top, bottom = parent.bottom)
-                    end.linkTo(parent.end)
-                }
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Add,
-                contentDescription = stringResource(R.string.label_add)
-            )
-        }
     }
 }
 

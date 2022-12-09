@@ -42,6 +42,7 @@ import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
 import uwu.victoraso.storeapp.ui.productcollection.ProductListItem
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
+import uwu.victoraso.storeapp.ui.utils.formatDate
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -130,7 +131,7 @@ fun PurchaseListItem(
             StoreAppDivider(modifier = Modifier.padding(horizontal = 16.dp))
             PurchaseDetailTextField(text = stringResource(id = R.string.purchase_details_name, purchase.userName))
             PurchaseDetailTextField(text = stringResource(id = R.string.purchase_details_adress, purchase.userAdress))
-            PurchaseDetailTextField(text = stringResource(id = R.string.purchase_details_date, purchase.date))
+            PurchaseDetailTextField(text = stringResource(id = R.string.purchase_details_date, purchase.date.formatDate()))
             PurchaseDetailTextField(
                 text = stringResource(id = R.string.purchase_details_total_price, formatPrice(purchase.price)),
                 modifier = Modifier.align(End).padding(end = 16.dp)

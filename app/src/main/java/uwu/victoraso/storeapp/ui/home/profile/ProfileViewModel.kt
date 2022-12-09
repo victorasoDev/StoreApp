@@ -6,11 +6,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uwu.victoraso.storeapp.MainDestinations
-import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
-import uwu.victoraso.storeapp.repositories.Result
-import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.model.UserProfile
 import uwu.victoraso.storeapp.model.service.AccountService
+import uwu.victoraso.storeapp.repositories.Result
+import uwu.victoraso.storeapp.repositories.asResult
+import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
 import uwu.victoraso.storeapp.ui.utils.CLEAR_USER_PREFERENCE
 import javax.inject.Inject
 
@@ -39,7 +39,7 @@ class ProfileViewModel
             accountService.signOut()
             clearPasswordPreference()
             cancelRememberMe()
-            restartApp(MainDestinations.LOGIN_ROUTE)//TODO -> al splash
+            restartApp(MainDestinations.LOGIN_ROUTE)
         }
     }
 

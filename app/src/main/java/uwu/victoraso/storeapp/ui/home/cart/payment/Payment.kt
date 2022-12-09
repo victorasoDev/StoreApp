@@ -37,7 +37,6 @@ fun PaymentDialog(
     viewModel: PaymentViewModel = hiltViewModel(),
     onDismiss: () -> Unit
 ) {
-
     val paymentUiState: PaymentDataUiState by viewModel.paymentUiState.collectAsStateWithLifecycle()
 
     if (show && paymentUiState is PaymentDataUiState.Success) {

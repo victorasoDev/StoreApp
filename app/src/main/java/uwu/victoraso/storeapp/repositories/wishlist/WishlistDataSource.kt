@@ -1,5 +1,6 @@
 package uwu.victoraso.storeapp.repositories.wishlist
 
+import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -10,6 +11,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import uwu.victoraso.storeapp.model.Product
+import uwu.victoraso.storeapp.model.ProductCollection
+import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,16 +24,18 @@ class WishlistDataSource @Inject constructor(
     /**
      * Wishlist a productID
      */
-    fun wishlistToggle(productId: Long, userId: String, wishlist: Boolean) {
+    fun wishlistToggle(product: Product, userId: String, wishlist: Boolean) {
         try {
-            val productReference = db.collection("products").document(productId.toString()).path
+            val productReference = db.collection("products").document(product.id.toString()).path
             val wishlistCollection = db.collection("wishlists").document(userId)
             wishlistCollection.get()
                 .addOnSuccessListener { document ->
-                    if (document != null) {
-                        if (wishlist) wishlistCollection.update("products", FieldValue.arrayUnion(productReference))
-                        else wishlistCollection.update("products", FieldValue.arrayRemove(productReference))
+                    if (document.data != null) {
+                        if (wishlist) wishlistCollection.update("products", FieldValue.arrayUnion(product))
+                        else wishlistCollection.update("products", FieldValue.arrayRemove(product))
                     } else {
+                        Log.d(DEBUG_TAG, "elseee")
+                        db.collection("wishlists").document(userId).set(ProductCollection(0, userId))
                     }
 
                 }
@@ -43,9 +48,9 @@ class WishlistDataSource @Inject constructor(
         var exists = false
         db.collection("wishlists").document(userId).get()
             .addOnSuccessListener { document ->
-                if (document != null) {
+                if (document.data != null) {
                     for (id in document.data!!["products"] as ArrayList<*>) {
-                        val idFormatted = (id as String).split("/")[1].toLong() //TODO
+                        val idFormatted = (id as HashMap<*, *>)["id"] as Long
                         if (productId == idFormatted) {
                             exists = true
                         }
@@ -62,18 +67,27 @@ class WishlistDataSource @Inject constructor(
      */
     fun getWishlistByUserId(userId: String): Flow<MutableList<Product>> = flow {
         val productList = ArrayList<Product>()
-        db.collection("wishlists").document(userId).get()
+        db.collection("wishlists")
+            .whereEqualTo("name", userId)
+            .get()
             .addOnSuccessListener { documentSnapshot ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    for (id in documentSnapshot.data!!["products"] as ArrayList<*>) {
-                        db.document(id.toString())
-                            .get()
-                            .addOnSuccessListener { doc ->
-                                val product = doc.toObject(Product::class.java)
-                                if (product != null) productList.add(product)
+                    if (!documentSnapshot.isEmpty) {
+                        for (p in documentSnapshot) {
+                            val products = p.data["products"] as ArrayList<*>
+                            products.map {
+                                val product = it as HashMap<*, *>
+                                productList.add(
+                                    Product(
+                                        id = product["id"] as Long,
+                                        iconUrl = product["iconUrl"] as String,
+                                        name = product["name"] as String,
+                                        price = product["price"] as Long
+                                    )
+                                )
                             }
-                            .addOnFailureListener {
-                            }.await()
+                            Log.d("asd", p.data["products"].toString())
+                        }
                     }
                 }
             }

@@ -7,7 +7,7 @@ import uwu.victoraso.storeapp.room.model.CartProductEntity
 
 @Immutable
 @Parcelize
-data class CartProduct(//TODO hacer val?
+data class CartProduct(
     var productId: Long = 0,
     var name: String = "",
     var iconUrl: String = "",
@@ -29,7 +29,7 @@ fun CartProduct.asEntity() = CartProductEntity(
     addDate = addDate
 )
 
-fun CartProduct.fill(product: Product, cart: Cart): CartProduct { //TODO posible guarrada?
+fun CartProduct.fill(product: Product, cart: Cart): CartProduct {
     productId = product.id
     name = product.name
     iconUrl = product.iconUrl

@@ -44,9 +44,7 @@ fun Wishlist(
                 is WishlistUiState.Loading -> {
                     StoreAppCircularIndicator(modifier = modifier.align(Alignment.Center))
                 }
-                is WishlistUiState.Error -> {
-                    //TODO
-                }
+                is WishlistUiState.Error -> {}
             }
             StoreAppTopBar(upPress = upPress, screenTitle = "Wishlist")
         }
@@ -67,10 +65,8 @@ private fun Wishlist(
                     WindowInsets.statusBars.add(WindowInsets(top = 56.dp))
                 )
             )
-            //TODO: el filtro habrá que meterlo por aqui
         }
         items(wishlist) { product ->
-            //TODO: posible swipe para añadir (en cart está para eliminar)
             ProductListItem(
                 product = product,
                 onProductSelected = onProductSelected

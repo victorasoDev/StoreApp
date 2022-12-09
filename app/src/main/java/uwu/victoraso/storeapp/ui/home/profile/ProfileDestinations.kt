@@ -21,10 +21,6 @@ val profileDestinationsList = listOf(
         route = MainDestinations.PURCHASE_HISTORY_ROUTE
     ),
     ProfileDestination(
-        destinationName = "Recommended",
-        route = MainDestinations.RECOMMENDED_ROUTE
-    ),
-    ProfileDestination(
         destinationName = "Settings",
         route = MainDestinations.SETTINGS_ROUTE
     )

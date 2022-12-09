@@ -89,7 +89,7 @@ private fun ProductDetail(
     relatedState: RelatedProductsUiState,
     cartsState: CartsUiState,
     onProductClick: (Long, String) -> Unit,
-    onWishlistClick: (Long, Boolean) -> Unit,
+    onWishlistClick: (Product, Boolean) -> Unit,
     onAddToCartClick: (CartProduct) -> Unit,
     onAddCartClick: (Cart) -> Unit,
     onNavigateTo: (String) -> Unit
@@ -109,7 +109,7 @@ private fun ProductDetail(
                     onProductClick = onProductClick,
                     titleLines = titleLines,
                     scroll = scroll
-                ) // TODO: el body espera un par de colecciones
+                )
                 Title(
                     product = product,
                     onWishlistClick = onWishlistClick,
@@ -273,11 +273,7 @@ private fun Body(
                                 StoreAppCircularIndicator()
                             }
                         }
-                        is RelatedProductsUiState.Error -> {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                //TODO:
-                            }
-                        }
+                        is RelatedProductsUiState.Error -> { }
                     }
 
                     Spacer(
@@ -295,7 +291,7 @@ private fun Body(
 @Composable
 private fun Title(
     product: Product,
-    onWishlistClick: (Long, Boolean) -> Unit,
+    onWishlistClick: (Product, Boolean) -> Unit,
     isWishlistItem: Boolean,
     countTitleLines: (Int) -> Unit,
     scrollProvider: () -> Int
@@ -343,7 +339,7 @@ private fun Title(
                 isWishlistItem = isWishlist,
                 onClick = {
                     isWishlist = !isWishlist
-                    onWishlistClick(product.id, isWishlist)
+                    onWishlistClick(product, isWishlist)
                 }
             )
         }
@@ -503,10 +499,8 @@ private fun CartBottomBar(
                 }
             }
         }
-        is CartsUiState.Error -> {
-            //TODO
-        }
-        is CartsUiState.Loading -> {} //TODO eliminar
+        is CartsUiState.Error -> {}
+        is CartsUiState.Loading -> {}
     }
 }
 

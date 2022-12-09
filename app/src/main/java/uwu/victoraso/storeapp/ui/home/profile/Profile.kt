@@ -1,18 +1,14 @@
 package uwu.victoraso.storeapp.ui.home.profile
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,13 +26,14 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uwu.victoraso.storeapp.R
 import uwu.victoraso.storeapp.model.UserProfile
-import uwu.victoraso.storeapp.ui.components.*
+import uwu.victoraso.storeapp.ui.components.StoreAppButton
+import uwu.victoraso.storeapp.ui.components.StoreAppCard
+import uwu.victoraso.storeapp.ui.components.StoreAppDivider
+import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.home.DestinationBar
 import uwu.victoraso.storeapp.ui.home.profile.personalinfo.PersonalInfoDialog
 import uwu.victoraso.storeapp.ui.home.profile.settings.SettingsDialog
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
-import uwu.victoraso.storeapp.ui.utils.mirroringIcon
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -58,12 +55,8 @@ fun Profile(
                 modifier = modifier
             )
         }
-        ProfileUiState.Loading -> {
-            //TODO()
-        }
-        ProfileUiState.Error -> {
-            //TODO()
-        }
+        ProfileUiState.Loading -> { }
+        ProfileUiState.Error -> { }
     }
 }
 
@@ -76,7 +69,6 @@ private fun Profile(
     onSignOutClick: ((String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    //TODO cargar los datos del usuario
     StoreAppSurface(modifier = modifier.fillMaxSize()) {
         Box {
             ProfileContent(
@@ -109,7 +101,7 @@ fun ProfileContent(
     SettingsDialog(show = isSettingsDialogShowing, onDismiss = { isSettingsDialogShowing = !isSettingsDialogShowing })
 
     Column(modifier) {
-        Spacer( //TODO sustituir todos los del proyecto pasándolo a Utils
+        Spacer(
             Modifier.windowInsetsTopHeight(
                 WindowInsets.statusBars.add(WindowInsets(top = 56.dp))
             )
@@ -166,29 +158,17 @@ private fun UserProfile(
         modifier = modifier
             .fillMaxWidth()
             .clickable { }
-            .padding(horizontal = 20.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ) {
-        val (divider, image, name, email) = createRefs()
+        val (divider, name, email) = createRefs()
         createVerticalChain(name, email, chainStyle = ChainStyle.Packed)
-        ProductImage(
-            imageUrl = "",
-            elevation = 4.dp,
-            contentDescription = null,
-            modifier = Modifier
-                .size(60.dp)
-                .constrainAs(image) {
-                    top.linkTo(parent.top, margin = 20.dp)
-                    bottom.linkTo(parent.bottom, margin = 20.dp)
-                    start.linkTo(parent.start)
-                }
-        )
         Text(
             text = userProfile.name,
             style = MaterialTheme.typography.subtitle1,
             color = StoreAppTheme.colors.textSecondary,
             modifier = Modifier.constrainAs(name) {
                 linkTo(
-                    start = image.end,
+                    start = parent.start,
                     startMargin = 16.dp,
                     end = parent.end,
                     endMargin = 16.dp,
@@ -200,9 +180,9 @@ private fun UserProfile(
             text = userProfile.email,
             style = MaterialTheme.typography.body1,
             color = StoreAppTheme.colors.textHelp,
-            modifier = Modifier.constrainAs(email) {
+            modifier = Modifier.padding(bottom = 20.dp).constrainAs(email) {
                 linkTo(
-                    start = image.end,
+                    start = parent.start,
                     startMargin = 16.dp,
                     endMargin = 16.dp,
                     end = parent.end,
@@ -248,7 +228,7 @@ private fun DesinationRow(
     changeSettingsDialogVisibility: () -> Unit
 ) {
     Row(
-        modifier = Modifier.clickable { //TODO: buscar otra manera
+        modifier = Modifier.clickable {
             when (text) {
                 "Personal Info" -> {
                     changePIDialogVisibility()
@@ -273,19 +253,6 @@ private fun DesinationRow(
                 .wrapContentWidth(Alignment.Start)
                 .weight(1f)
         )
-        IconButton(
-            onClick = { },
-            modifier = Modifier.align(Alignment.CenterVertically)
-        ) {
-            Icon(
-                imageVector = mirroringIcon(
-                    ltrIcon = Icons.Outlined.ArrowForward,
-                    rtlIcon = Icons.Outlined.ArrowBack
-                ),
-                tint = StoreAppTheme.colors.brand,
-                contentDescription = null
-            )
-        }
     }
     StoreAppDivider(modifier = Modifier.padding(start = 20.dp))
 }

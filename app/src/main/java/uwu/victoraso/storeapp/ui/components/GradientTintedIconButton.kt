@@ -2,7 +2,6 @@ package uwu.victoraso.storeapp.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -68,7 +67,7 @@ fun StoreAppGradientTintedIconButton(
                 indication = null
             )
             .clip(CircleShape)
-            .then(border) // TODO: por que utiliza el then y no directamente el mismo modifier?
+            .then(border)
             .then(background),
         color = Color.Transparent
     ) {

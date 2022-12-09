@@ -76,10 +76,10 @@ fun StoreApp(
 
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
-    onProductCreate: (NavBackStackEntry) -> Unit, //TODO: cambiar por el navigateTo
+    onProductCreate: (NavBackStackEntry) -> Unit,
     onPopUp: (String, String) -> Unit,
     onClearAndNavigate: (String) -> Unit,
-    onNavigateTo: (String, NavBackStackEntry) -> Unit, //TODO: para abrir otras ventanas puede servir
+    onNavigateTo: (String, NavBackStackEntry) -> Unit,
     upPress: () -> Unit
 ) {
     navigation(
@@ -116,7 +116,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
     ) { navBackStackEntry ->
         val argument = requireNotNull(navBackStackEntry.arguments)
         val category = argument.getString(MainDestinations.CATEGORY_ID_KEY)
-        ProductListViewModel.categorySelected = category!! //TODO: en product details se le pasa como argumento, cambiar esto
+        ProductListViewModel.categorySelected = category!!
 
         ProductList(
             onProductSelected = { id -> onProductSelected(id, category, navBackStackEntry) },

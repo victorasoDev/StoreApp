@@ -1,5 +1,6 @@
 package uwu.victoraso.storeapp.ui.home.feed
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -61,6 +62,7 @@ private fun Feed(
                         }
                     )
                     FeedContent(
+                        headerProductState = feedUiState.headerProduct,
                         productCollections = productCollections,
                         onProductClick = onProductClick,
                         onNavigateTo = onNavigateTo,
@@ -75,6 +77,7 @@ private fun Feed(
 
 @Composable
 private fun FeedContent(
+    headerProductState: FeedHeaderUiState,
     productCollections: List<ProductCollection>,
     onProductClick: (Long, String) -> Unit,
     onNavigateTo: (String) -> Unit,
@@ -85,7 +88,7 @@ private fun FeedContent(
     Box(modifier = modifier) {
         LazyColumn(state = lazyColumnState) {
             item {
-                FeedProductHeader()
+                FeedProductHeader(headerProductState, onProductClick)
             }
             itemsIndexed(productCollections) { index, productCollection ->
                 if (index > 0) {
@@ -105,17 +108,27 @@ private fun FeedContent(
 
 @Composable
 fun FeedProductHeader(
+    headerProductState: FeedHeaderUiState,
+    onProductClick: (Long, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ProductImage(
-        imageUrl = "https://cdn.akamai.steamstatic.com/steam/apps/722230/header.jpg?t=1618852074",
-        contentDescription = "header image",
-        contentScale = ContentScale.Crop,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(180.dp)
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-    )
+    when (headerProductState) {
+        is FeedHeaderUiState.Success -> {
+            Box(modifier = modifier.clickable { onProductClick(headerProductState.product.id, headerProductState.product.category) }) {
+                ProductImage(
+                    imageUrl = headerProductState.product.imageUrl,
+                    contentDescription = "${headerProductState.product.name} image",
+                    contentScale = ContentScale.Crop,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                )
+            }
+        }
+        is FeedHeaderUiState.Loading -> {}
+        is FeedHeaderUiState.Error -> {}
+    }
 }
 
 

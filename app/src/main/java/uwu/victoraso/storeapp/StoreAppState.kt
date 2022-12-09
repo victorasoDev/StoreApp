@@ -32,7 +32,6 @@ object MainDestinations {
     const val PERSONAL_INFO_ROUTE = "personalInfo"
     const val WISHLIST_ROUTE = "wishlist"
     const val PURCHASE_HISTORY_ROUTE = "purchaseHistory"
-    const val RECOMMENDED_ROUTE = "recommended"
     const val SETTINGS_ROUTE = "settings"
 }
 

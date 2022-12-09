@@ -2,8 +2,8 @@ package uwu.victoraso.storeapp.room.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import uwu.victoraso.storeapp.room.model.PopulatedCartProduct
 import uwu.victoraso.storeapp.room.model.CartProductEntity
+import uwu.victoraso.storeapp.room.model.PopulatedCartProduct
 
 /**
  * DAO for [WishlistProduct] and [CartProductEntity] access
@@ -37,15 +37,6 @@ interface CartProductDao {
     @Update
     suspend fun updateCartProducts(entities: List<CartProductEntity>)
 
-//    /**
-//     * Inserts or updates [wishlistProductEntities] in the db under the specified primary keys
-//     */
-//    @Transaction
-//    suspend fun upsertCartProducts(wishlistProductEntities: List<CartProductEntity>) = upsert(
-//        items = wishlistProductEntities,
-//        insertMany = ::insertOrIgnoreCartProduct,
-//        updateMany = ::updateCartProducts
-//    )
     /**
      * Deletes rows in the db matching the specified [ids]
      */

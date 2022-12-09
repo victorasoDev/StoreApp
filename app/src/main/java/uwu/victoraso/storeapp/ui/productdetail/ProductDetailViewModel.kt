@@ -77,7 +77,7 @@ constructor(
                     is Result.Success -> RelatedProductsUiState.Success(
                         ProductCollection(
                             id = 1L,
-                            name = relatedProductsResult.data.first().category, //TODO: mucho first por aqui
+                            name = relatedProductsResult.data.first().category,
                             products = relatedProductsResult.data,
                             type = CollectionType.Highlight
                         )
@@ -107,10 +107,10 @@ constructor(
                 )
             )
 
-    fun wishlistItemToggle(productId: Long, wishlist: Boolean) {
+    fun wishlistItemToggle(product: Product, wishlist: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             if (accountService.hasUser()) {
-                wishlistRepository.wishlistToggle(productId, accountService.getUserId(), wishlist)
+                wishlistRepository.wishlistToggle(product, accountService.getUserId(), wishlist)
             }
         }
     }
@@ -123,7 +123,7 @@ constructor(
 
     fun addCart(cart: Cart) {
         viewModelScope.launch(Dispatchers.IO) {
-            cartRepository.insertCart(CartEntity(name = cart.name)) //TODO ?
+            cartRepository.insertCart(CartEntity(name = cart.name))
         }
     }
 }

@@ -34,6 +34,8 @@ constructor(
 
     override fun getProductsByIds(productIds: List<Long>): Flow<List<Product>> = productDataSource.getProductsByIds(productIds)
 
+    override fun getHeaderProduct(): Flow<Product> = productDataSource.getHeaderProduct()
+
     /**
      * DEBUG
      * **/
@@ -58,4 +60,5 @@ sealed interface ProductRepositoryInterface {
     fun getProductDetailsById(productId: Long): Flow<Product>
     fun getProductsByInputText(inputText: String): Flow<List<Product>>
     fun getProductsByIds(productIds: List<Long>): Flow<List<Product>>
+    fun getHeaderProduct(): Flow<Product>
 }

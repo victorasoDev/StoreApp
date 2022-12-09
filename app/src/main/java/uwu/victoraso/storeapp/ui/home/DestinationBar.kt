@@ -35,7 +35,7 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 @Composable
 fun DestinationBar(
     modifier: Modifier = Modifier,
-    title: String = "Welcome to StoreApp", //TODO
+    title: String = "Welcome to StoreApp",
     imageVector: ImageVector = Icons.Outlined.ExpandMore,
     onDestinationBarButtonClick: () -> Unit
 ) {
@@ -55,7 +55,7 @@ fun DestinationBar(
                 modifier = Modifier
                     .weight(1f)
                     .align(CenterVertically)
-                    .padding(start = 45.dp) //TODO habrá otra forma de centrarlo?
+                    .padding(start = 45.dp)
             )
             DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
         }
@@ -82,7 +82,7 @@ fun DestinationBarWithLogo(
                 modifier = Modifier
                     .weight(1f)
                     .align(CenterVertically)
-                    .padding(start = 50.dp, top = 8.dp, bottom = 8.dp) //TODO habrá otra forma de centrarlo?
+                    .padding(start = 50.dp, top = 8.dp, bottom = 8.dp)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -126,7 +126,7 @@ fun DestinationBar(
                     modifier = Modifier
                         .weight(1f)
                         .align(CenterVertically)
-                        .padding(start = 45.dp) //TODO habrá otra forma de centrarlo?
+                        .padding(start = 45.dp)
                         .clickable {
                             nameTextFieldVisible = true
                         }

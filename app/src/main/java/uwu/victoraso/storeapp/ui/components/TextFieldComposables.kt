@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 @Composable
-fun StoreAppTextField( //TODO hacer lo mismo que con el textField de la pass
+fun StoreAppTextField(
     placeholder: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     value: String,
@@ -59,7 +59,7 @@ fun StoreAppEmailTextField(value: String, onValueChange: (String) -> Unit, modif
 
 @Composable
 private fun StoreAppEmailTextField(
-    placeholder: String, //TODO
+    placeholder: String,
     name: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier

@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -61,12 +60,6 @@ private fun getBackgroundColorForElevation(color: Color, elevation: Dp): Color {
     }
 }
 
-/**
- * Applies a [Color.White] overlay to this color based on the [elevation]. This increases visibility
- * of elevation for surfaces in a dark theme.
- *
- * TODO: Remove when public https://issuetracker.google.com/155181601
- */
 private fun Color.withElevation(elevation: Dp): Color {
     val foreground = calculateForeground(elevation)
     return foreground.compositeOver(this)

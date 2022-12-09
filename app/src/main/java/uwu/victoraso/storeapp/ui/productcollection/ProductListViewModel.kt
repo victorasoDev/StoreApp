@@ -26,15 +26,7 @@ constructor(
             initialValue = ProductListUiState.Loading
         )
 
-    fun addProductToCart(id: Long) {
-
-    }
-
-    fun removeProductFromCart(id: Long) {
-
-    }
-
-    companion object { //TODO: quitar cuando sepa como pasarle el parámetro
+    companion object {
         var categorySelected = ""
     }
 }

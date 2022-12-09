@@ -128,7 +128,6 @@ constructor(
         }
     }
 
-    //TODO: pasar a un viewModel padre?
     private fun MutableState<Boolean>.startLoading() { this.value = true }
     private fun MutableState<Boolean>.stopLoading() { this.value = false }
 }

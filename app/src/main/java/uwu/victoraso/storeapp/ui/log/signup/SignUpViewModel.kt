@@ -60,7 +60,7 @@ constructor(
     private fun linkWithEmail(signUpUiFields: SignUpUiFields) {
         viewModelScope.launch {
             accountService.linkAccount(signUpUiFields.email, signUpUiFields.password) { error ->
-                if (error != null) { Log.d(DEBUG_TAG, "NonFatalCrash") } //TODO
+                if (error != null) { Log.d(DEBUG_TAG, "NonFatalCrash") }
             }
         }
     }
@@ -70,7 +70,7 @@ constructor(
             val newUserId = accountService.getUserId()
 
             storageService.updateUserId(oldUserId, newUserId) { error ->
-                if (error != null) { Log.d(DEBUG_TAG, "NonFatalCrash") } //TODO
+                if (error != null) { Log.d(DEBUG_TAG, "NonFatalCrash") }
                 else openAndPopUp(MainDestinations.HOME_ROUTE, MainDestinations.SIGNUP_ROUTE)
             }
         }
