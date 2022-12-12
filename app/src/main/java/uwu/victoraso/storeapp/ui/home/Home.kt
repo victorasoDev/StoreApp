@@ -18,7 +18,6 @@ import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
 
 fun NavGraphBuilder.addHomeGraph(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
-    onProductCreate: (NavBackStackEntry) -> Unit,
     onProductList: (String, NavBackStackEntry) -> Unit,
     restartApp: (String) -> Unit,
     onNavigateTo: (String, NavBackStackEntry) -> Unit,
@@ -26,7 +25,6 @@ fun NavGraphBuilder.addHomeGraph(
 ) {
     feedScreen(
         onProductSelected = onProductSelected,
-        onProductCreate = onProductCreate,
         onNavigateTo = onNavigateTo,
         modifier = modifier,
     )

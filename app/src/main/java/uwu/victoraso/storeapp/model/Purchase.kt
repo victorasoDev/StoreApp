@@ -13,7 +13,7 @@ data class Purchase(
     val userPhone: String = "",
     val cardDetails: CardDetails = CardDetails("", "", "", ""),
     val price: Long = 0,
-    val date: String = "",
+    var date: String = "",
     val products: List<Product> = emptyList(),
 )
 

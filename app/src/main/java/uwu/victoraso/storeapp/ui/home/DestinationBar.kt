@@ -37,8 +37,11 @@ fun DestinationBar(
     modifier: Modifier = Modifier,
     title: String = "Welcome to StoreApp",
     imageVector: ImageVector = Icons.Outlined.ExpandMore,
+    destinationBarButtonVisible: Boolean = true,
     onDestinationBarButtonClick: () -> Unit
 ) {
+    val textPadding = if (destinationBarButtonVisible) 45.dp else 0.dp
+
     Column(modifier = modifier.statusBarsPadding()) {
         TopAppBar(
             backgroundColor = StoreAppTheme.colors.uiBackground.copy(alpha = AlphaNearOpaque),
@@ -55,9 +58,9 @@ fun DestinationBar(
                 modifier = Modifier
                     .weight(1f)
                     .align(CenterVertically)
-                    .padding(start = 45.dp)
+                    .padding(textPadding)
             )
-            DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
+            if (destinationBarButtonVisible) DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
         }
         StoreAppDivider()
     }
@@ -66,8 +69,6 @@ fun DestinationBar(
 @Composable
 fun DestinationBarWithLogo(
     modifier: Modifier = Modifier,
-    imageVector: ImageVector = Icons.Outlined.ExpandMore,
-    onDestinationBarButtonClick: () -> Unit,
     onLogoButtonClick: () -> Unit
 ) {
     Column(modifier = modifier.statusBarsPadding()) {
@@ -82,7 +83,7 @@ fun DestinationBarWithLogo(
                 modifier = Modifier
                     .weight(1f)
                     .align(CenterVertically)
-                    .padding(start = 50.dp, top = 8.dp, bottom = 8.dp)
+                    .padding(vertical = 8.dp)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -90,7 +91,6 @@ fun DestinationBarWithLogo(
                         onLogoButtonClick()
                     }
             )
-            DestinationBarIconButton(onDestinationBarButtonClick, imageVector, modifier.align(CenterVertically))
         }
         StoreAppDivider()
     }

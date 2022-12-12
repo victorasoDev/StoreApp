@@ -14,14 +14,12 @@ fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.feedScreen(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
-    onProductCreate: (NavBackStackEntry) -> Unit,
     onNavigateTo: (String, NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable(TopLevelDestination.FEED.route) { from ->
         Feed(
             onProductClick = { id, category -> onProductSelected(id, category, from) },
-            onProductCreate = { onProductCreate(from) },
             onNavigateTo = { category -> onNavigateTo(category, from) },
             modifier = modifier,
         )

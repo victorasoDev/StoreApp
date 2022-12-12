@@ -130,16 +130,14 @@ private fun PaymentProductItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ProductImage(
-            imageUrl = cartProduct.imageUrl,
+            imageUrl = cartProduct.iconUrl,
             contentDescription = null,
             modifier = Modifier.size(40.dp)
         )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Column {
             Text(
                 text = cartProduct.name,
-                style = MaterialTheme.typography.subtitle1,
+                style = MaterialTheme.typography.subtitle2,
                 color = StoreAppTheme.colors.textSecondary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -149,11 +147,11 @@ private fun PaymentProductItem(
             )
             Text(
                 text = formatPrice(cartProduct.price),
-                style = MaterialTheme.typography.subtitle1,
+                style = MaterialTheme.typography.subtitle2,
                 color = StoreAppTheme.colors.textPrimary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                modifier = Modifier.padding(start = 8.dp)
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp)
             )
         }
         Icon(

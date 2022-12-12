@@ -1,15 +1,19 @@
 package uwu.victoraso.storeapp.ui.log.login
 
 import StoreAppTextButton
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -67,7 +71,10 @@ fun LoginScreenContent(
         rememberMe = screenUiState.loginUiState.rememberMe
     }
 
-    Column(verticalArrangement = Arrangement.Center, modifier = modifier.fillMaxSize()) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier.fillMaxSize().background(brush = Brush.verticalGradient(colors = StoreAppTheme.colors.gradientPurple))
+    ) {
         Spacer(
             Modifier.windowInsetsTopHeight(
                 WindowInsets.statusBars.add(WindowInsets(top = 56.dp))
@@ -87,6 +94,12 @@ fun LoginScreenContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.g_k_store_logo),
+                    tint = StoreAppTheme.colors.uiBackground,
+                    contentDescription = "Store logo",
+                    modifier = Modifier.size(150.dp).padding(vertical = 16.dp).align(CenterHorizontally)
+                )
                 /** Email TextField **/
                 StoreAppEmailTextField(
                     value = email,

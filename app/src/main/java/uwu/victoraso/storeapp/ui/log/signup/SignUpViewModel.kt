@@ -71,7 +71,7 @@ constructor(
 
             storageService.updateUserId(oldUserId, newUserId) { error ->
                 if (error != null) { Log.d(DEBUG_TAG, "NonFatalCrash") }
-                else openAndPopUp(MainDestinations.HOME_ROUTE, MainDestinations.SIGNUP_ROUTE)
+                else openAndPopUp(MainDestinations.LOGIN_ROUTE, MainDestinations.SIGNUP_ROUTE)
             }
         }
     }

@@ -118,13 +118,6 @@ class StoreAppState(
         }
     }
 
-    fun navigateToCreateProduct(from: NavBackStackEntry) {
-        // In order to discard duplicated navigation events, check the lifecycle
-        if (from.lifecycleIsResumed()) {
-            navController.navigate(MainDestinations.PRODUCT_CREATE_ROUTE)
-        }
-    }
-
     fun navigateTo(route: String, from: NavBackStackEntry) {
         // In order to discard duplicated navigation events, check the lifecycle
         if (from.lifecycleIsResumed()) {

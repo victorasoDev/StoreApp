@@ -17,6 +17,7 @@ import uwu.victoraso.storeapp.repositories.Result
 import uwu.victoraso.storeapp.repositories.asResult
 import uwu.victoraso.storeapp.repositories.userpreferences.UserPreferencesRepository
 import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_LOGIN
+import uwu.victoraso.storeapp.ui.utils.encrypt
 import uwu.victoraso.storeapp.ui.utils.isValidEmail
 import javax.inject.Inject
 
@@ -98,7 +99,7 @@ constructor(
     private fun saveCredentials(email: String, password: String, rememberMe: Boolean) {
         viewModelScope.launch { userPreferencesRepository.setUserEmail(email) }
         viewModelScope.launch { userPreferencesRepository.setRememberMe(rememberMe) }
-        if (rememberMe) viewModelScope.launch { userPreferencesRepository.setUserPassword(password) }/**TODO: encryptar la pass**/
+        if (rememberMe) viewModelScope.launch { userPreferencesRepository.setUserPassword(password.encrypt(password)) }/**TODO: encryptar la pass**/
     }
 
     private fun updateUserId(oldUserId: String, onClearAndNavigate: (String) -> Unit) {

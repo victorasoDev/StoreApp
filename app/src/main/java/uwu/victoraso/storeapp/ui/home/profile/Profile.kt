@@ -81,6 +81,7 @@ private fun Profile(
             DestinationBar(
                 modifier = Modifier.align(Alignment.TopCenter),
                 title = stringResource(id = R.string.user_profile_title, userProfile.name),
+                destinationBarButtonVisible = false,
                 onDestinationBarButtonClick = { }
             )
         }

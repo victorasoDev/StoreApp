@@ -63,7 +63,6 @@ fun StoreApp(
             ) {
                 storeAppNavGraph(
                     onProductSelected = appState::navigateToProductDetail,
-                    onProductCreate = appState::navigateToCreateProduct,
                     onPopUp = appState::navigateAndPopUp,
                     onClearAndNavigate = appState::clearAndNavigate,
                     onNavigateTo = appState::navigateTo,
@@ -76,7 +75,6 @@ fun StoreApp(
 
 private fun NavGraphBuilder.storeAppNavGraph(
     onProductSelected: (Long, String, NavBackStackEntry) -> Unit,
-    onProductCreate: (NavBackStackEntry) -> Unit,
     onPopUp: (String, String) -> Unit,
     onClearAndNavigate: (String) -> Unit,
     onNavigateTo: (String, NavBackStackEntry) -> Unit,
@@ -86,7 +84,7 @@ private fun NavGraphBuilder.storeAppNavGraph(
         route = MainDestinations.HOME_ROUTE,
         startDestination = TopLevelDestination.FEED.route
     ) {
-        addHomeGraph(onProductSelected, onProductCreate, onNavigateTo, onClearAndNavigate, onNavigateTo)
+        addHomeGraph(onProductSelected, onNavigateTo, onClearAndNavigate, onNavigateTo)
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.CATEGORY_ID_KEY}}/{${MainDestinations.PRODUCT_ID_KEY}}",

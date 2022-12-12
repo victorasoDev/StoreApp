@@ -25,7 +25,6 @@ import uwu.victoraso.storeapp.ui.home.DestinationBarWithLogo
 fun Feed(
     onProductClick: (Long, String) -> Unit,
     onNavigateTo: (String) -> Unit,
-    onProductCreate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FeedViewModel = hiltViewModel()
 ) {
@@ -37,7 +36,6 @@ fun Feed(
         productCollections = productsCollections,
         onProductClick = onProductClick,
         onNavigateTo = onNavigateTo,
-        onProductCreate = onProductCreate,
         modifier = modifier,
     )
 }
@@ -48,7 +46,6 @@ private fun Feed(
     productCollections: List<ProductCollection>,
     onProductClick: (Long, String) -> Unit,
     onNavigateTo: (String) -> Unit,
-    onProductCreate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (feedUiState.processors) {
@@ -56,10 +53,7 @@ private fun Feed(
             StoreAppSurface(modifier = modifier.fillMaxSize()) {
                 Column {
                     DestinationBarWithLogo(
-                        onDestinationBarButtonClick = onProductCreate,
-                        onLogoButtonClick = {
-
-                        }
+                        onLogoButtonClick = {}
                     )
                     FeedContent(
                         headerProductState = feedUiState.headerProduct,

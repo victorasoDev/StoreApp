@@ -41,7 +41,6 @@ import uwu.victoraso.storeapp.ui.components.StoreAppSurface
 import uwu.victoraso.storeapp.ui.components.StoreAppTopBar
 import uwu.victoraso.storeapp.ui.productcollection.ProductListItem
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG
 import uwu.victoraso.storeapp.ui.utils.formatDate
 import uwu.victoraso.storeapp.ui.utils.formatPrice
 
@@ -82,6 +81,9 @@ fun PurchaseHistory(
     onProductSelected: (Long, String) -> Unit,
     modifier: Modifier
 ) {
+    Log.d("debugprueba", purchaseHistory.toString())
+    purchaseHistory.sortedBy { it.date }
+    Log.d("debugprueba", purchaseHistory.toString())
     LazyColumn(modifier = modifier, state = rememberLazyListState()) {
         item {
             Spacer(
@@ -102,7 +104,6 @@ fun PurchaseListItem(
     purchase: Purchase,
     onProductSelected: (Long, String) -> Unit
 ) {
-    Log.d(DEBUG_TAG, "recompose PurchaseListItem")
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     val transition = updateTransition(targetState = isExpanded, label = "expanded")
 
@@ -115,7 +116,7 @@ fun PurchaseListItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = { isExpanded = !isExpanded }) {
-            Row(verticalAlignment = Alignment.Top) {
+            Row(verticalAlignment = Top) {
                 Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Open cart items" )
                 Text(text = purchase.products.size.toString(), Modifier.align(Top))
             }
@@ -136,7 +137,6 @@ fun PurchaseListItem(
                 text = stringResource(id = R.string.purchase_details_total_price, formatPrice(purchase.price)),
                 modifier = Modifier.align(End).padding(end = 16.dp)
             )
-            Log.d(DEBUG_TAG, "isExpanded $isExpanded")
             if (isExpanded) {
                 transition.AnimatedVisibility(
                     enter = fadeIn(animationSpec = tween(500)) + expandVertically(

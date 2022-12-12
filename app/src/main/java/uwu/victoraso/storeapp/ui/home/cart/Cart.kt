@@ -180,13 +180,11 @@ fun CartContent(
         }
         totalCost = cart.cartItems.sumOf { it.price }
         items(cart.cartItems) { cartProduct ->
-            SwipeDismissBehavior {
-                CartItem(
-                    cartProduct = cartProduct,
-                    removeProduct = removeProduct,
-                    onProductClick = onProductClick
-                )
-            }
+            CartItem(
+                cartProduct = cartProduct,
+                removeProduct = removeProduct,
+                onProductClick = onProductClick
+            )
         }
 
         item {

@@ -28,6 +28,7 @@ private val LightColorPalette = StoreAppColors(
     error = FunctionalRed,
     gradientDarkLavander = listOf(Lavender6, Lavender4, Lavender6),
     gradientLavander = listOf(Lavender4, Lavender3, Lavender4),
+    gradientPurple = listOf(Lavender3, Lavender5, Lavender7),
     tornado1 = listOf(Shadow4, Ocean3),
     isDark = false
 )
@@ -51,6 +52,7 @@ private val DarkColorPalette = StoreAppColors(
     error = FunctionalRedDark,
     gradientDarkLavander = listOf(Lavender7, Lavender5, Lavender7),
     gradientLavander = listOf(Lavender5, Lavender4, Lavender5),
+    gradientPurple = listOf(Lavender3, Lavender5, Lavender7),
     tornado1 = listOf(Shadow4, Ocean3),
     isDark = true
 )
@@ -68,6 +70,7 @@ private val LocalStoreAppColors = staticCompositionLocalOf<StoreAppColors> {
 @Stable
 class StoreAppColors(
     gradientLavander: List<Color>,
+    gradientPurple: List<Color>,
     gradientDarkLavander: List<Color>,
     brand: Color,
     brandSecondary: Color,
@@ -92,6 +95,8 @@ class StoreAppColors(
     var gradientDarkLavander by mutableStateOf(gradientDarkLavander)
         private set
     var gradientLavander by mutableStateOf(gradientLavander)
+        private set
+    var gradientPurple by mutableStateOf(gradientPurple)
         private set
     var brand by mutableStateOf(brand)
         private set
@@ -175,6 +180,7 @@ class StoreAppColors(
         iconSecondary = iconSecondary,
         iconInteractive = iconInteractive,
         iconInteractiveInactive = iconInteractiveInactive,
+        gradientPurple = gradientPurple,
         error = error,
         isDark = isDark,
     )

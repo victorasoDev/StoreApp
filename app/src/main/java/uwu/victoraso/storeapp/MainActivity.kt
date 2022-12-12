@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -18,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import uwu.victoraso.storeapp.ui.utils.DEBUG_TAG_WISHLIST
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -63,7 +61,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-//TODO: notifications -> https://developer.android.com/training/notify-user/build-notification
-//TODO: sendEmail (cuando hagas el checkOut) -> https://www.geeksforgeeks.org/send-email-in-an-android-application-using-jetpack-compose/
-//TODO: login -> https://firebase.blog/posts/2022/05/adding-firebase-auth-to-jetpack-compose-app && https://firebase.google.com/docs/auth/android/firebaseui && https://stackoverflow.com/a/67156998/19807589

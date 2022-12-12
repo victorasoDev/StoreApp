@@ -1,7 +1,6 @@
 package uwu.victoraso.storeapp.ui.home.cart
 
 import androidx.compose.animation.*
-import androidx.compose.animation.R
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
