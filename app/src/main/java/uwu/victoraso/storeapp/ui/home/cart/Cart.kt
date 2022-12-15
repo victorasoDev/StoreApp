@@ -57,6 +57,7 @@ fun Cart(
         removeProduct = viewModel::removeProduct,
         changeCartName = viewModel::changeCartName,
         insertCart = viewModel::insertCart,
+        deleteCart = viewModel::deleteCart,
         setSelectedCartIndex = viewModel::setSelectedCartIndex,
         inspiredByCart = inspiredByCart,
         cartUiState = cart,
@@ -71,6 +72,7 @@ fun Cart(
 fun Cart(
     removeProduct: (Long, Long) -> Unit,
     changeCartName: (Cart) -> Unit,
+    deleteCart: (Cart) -> Unit,
     insertCart: (Cart) -> Unit,
     setSelectedCartIndex: (Int) -> Unit,
     inspiredByCart: InspiredByCartProductsUiState,
@@ -108,9 +110,11 @@ fun Cart(
                     Column(modifier = Modifier.align(Alignment.TopCenter)) {
                         DestinationBar(
                             title = nameTextFieldValue,
+                            cart = mainCart,
                             onTitleValueChange = { nameTextFieldValue = it },
                             imageVector = Icons.Outlined.ExpandMore,
                             onDestinationBarButtonClick = { dropdownMenuExpanded = !dropdownMenuExpanded },
+                            onDeleteCartClick = deleteCart,
                             onChangeCartNameClick = { changeCartName(mainCart.copy(name = it)) }
                         )
                         Box(

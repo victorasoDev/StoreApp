@@ -83,6 +83,12 @@ constructor(
         }
     }
 
+    fun deleteCart(cart: Cart) {
+        viewModelScope.launch {
+            cartRepository.deleteCart(listOf(cart.id.toString()))
+        }
+    }
+
     fun insertCart(cart: Cart) {
         viewModelScope.launch(Dispatchers.IO) {
             cartRepository.insertCart(CartEntity(name = cart.name))

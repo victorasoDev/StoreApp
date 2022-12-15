@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.runtime.*
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import uwu.victoraso.storeapp.R
+import uwu.victoraso.storeapp.model.Cart
 import uwu.victoraso.storeapp.ui.components.StoreAppDivider
 import uwu.victoraso.storeapp.ui.theme.AlphaNearOpaque
 import uwu.victoraso.storeapp.ui.theme.StoreAppTheme
@@ -100,10 +102,12 @@ fun DestinationBarWithLogo(
 fun DestinationBar(
     modifier: Modifier = Modifier,
     title: String,
+    cart: Cart,
     onTitleValueChange: (String) -> Unit,
     imageVector: ImageVector = Icons.Outlined.ExpandMore,
     onDestinationBarButtonClick: () -> Unit,
-    onChangeCartNameClick: (String) -> Unit
+    onChangeCartNameClick: (String) -> Unit,
+    onDeleteCartClick: (Cart) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -167,6 +171,16 @@ fun DestinationBar(
                         nameTextFieldVisible = false
                     },
                     imageVector = Icons.Outlined.Save,
+                    modifier = modifier.align(CenterVertically)
+                )
+                DestinationBarIconButton(
+                    newCartName = title,
+                    onDestinationBarButtonClick = {
+                        onDeleteCartClick(cart)
+                        focusManager.clearFocus()
+                        nameTextFieldVisible = false
+                    },
+                    imageVector = Icons.Outlined.Delete,
                     modifier = modifier.align(CenterVertically)
                 )
             }

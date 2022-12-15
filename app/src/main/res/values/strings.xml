@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StoreApp</string>
+    <string name="app_name">Keys Store App</string>
 
     <!-- Home Tabs -->
     <string name="home_feed">Home</string>
